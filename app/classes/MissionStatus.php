@@ -2,7 +2,6 @@
 
 namespace app\classes;
 
-
 class MissionStatus
 {
     private int $id;
