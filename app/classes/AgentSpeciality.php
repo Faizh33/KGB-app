@@ -47,7 +47,7 @@ class AgentSpeciality
         return null;
     }
 
-    public function getAgentsBySpeciality(int $specialityId): ?array
+    public function getAgentsBySpecialityId(int $specialityId): ?array
     {
         if (isset(self::$agentSpecialities[$specialityId])) {
             return self::$agentSpecialities[$specialityId];
@@ -131,26 +131,54 @@ class AgentSpeciality
         return true;
     }
 
-    // Méthode pour supprimer une association agent/spécialité dans la base de donnée et dans la classe
-    public function deleteAgentSpecialityById($agentId, $specialityId): bool
+    // Méthode pour supprimer une association agent/spécialité dans la base de donnée et dans la classe à partir de l'id de l'agent
+    public function deleteSpecialitiesByAgentId($agentId): bool
     {
-        // Supprimer l'association de la base de données
-        $query = "DELETE FROM Agents_Specialities WHERE agent_id = :agentId AND speciality_id = :specialityId";
+        // Supprimer les associations de la base de données
+        $query = "DELETE FROM Agents_Specialities WHERE agent_id = :agentId";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':agentId', $agentId);
-        $stmt->bindParam(':specialityId', $specialityId);
         $stmt->execute();
 
-        // Supprimer l'association de la classe
-        if (isset(self::$agentSpecialities[$agentId]) && isset(self::$agentSpecialities[$specialityId])) {
+        // Supprimer les associations de la classe
+        if (isset(self::$agentSpecialities[$agentId])) {
+            $agentSpecialities = self::$agentSpecialities[$agentId];
             unset(self::$agentSpecialities[$agentId]);
-            unset(self::$agentSpecialities[$specialityId]);
+
+            foreach ($agentSpecialities as $agentSpeciality) {
+                unset(self::$agentSpecialities[$agentSpeciality->getSpecialityId()]);
+            }
+
             return true;
         }
 
         return false;
     }
 
+    // Méthode pour supprimer une association agent/spécialité dans la base de donnée et dans la classe à partir de l'id de la spécialité
+    public function deleteAgentsBySpecialityId($specialityId): bool
+    {
+        // Supprimer les associations de la base de données
+        $query = "DELETE FROM Agents_Specialities WHERE speciality_id = :specialityId";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':specialityId', $specialityId);
+        $stmt->execute();
+
+        // Supprimer les associations de la classe
+        $deleted = false;
+
+        foreach (self::$agentSpecialities as $agentId => $agentSpeciality) {
+            if ($agentSpeciality->getSpecialityId() === $specialityId) {
+                unset(self::$agentSpecialities[$agentId]);
+                unset(self::$agentSpecialities[$specialityId]);
+                $deleted = true;
+            }
+        }
+
+        return $deleted;
+    }
+
+    //Getters
     public function getAgentId(): string
     {
         return $this->agentId;
