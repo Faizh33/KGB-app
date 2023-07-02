@@ -19,6 +19,7 @@ class MissionType
         self::$missionTypes[$id] = $this;
     }
 
+    //Méthode qui récupère un type de mission en fonction de son id
     public function getMissionTypeById($id)
     {
         if (isset(self::$missionTypes[$id])) {
@@ -40,6 +41,7 @@ class MissionType
         return null;
     }
 
+    //Méthode qui récupère tous les types de mission de la base de donnée et les insère dans la classe
     public function getAllMissionTypes(): array
     {
         $query = "SELECT * FROM MissionTypes";
@@ -63,8 +65,22 @@ class MissionType
         return $missionTypes;
     }
 
+    //Méthode qui ajoute un nouveau type de mission
     public function addMissionType(string $type): ?MissionType
     {
+        // Vérifier si le statut de mission existe déjà dans la base de données
+        $query = "SELECT * FROM MissionTypes WHERE type = :type";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':type', $type);
+        $stmt->execute();
+
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($row) {
+            return null;
+        }
+
+        // Insérer le nouveau statut de mission dans la base de données et dans la classe
         $query = "INSERT INTO MissionTypes (type) VALUES (:type)";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':type', $type);
@@ -79,6 +95,7 @@ class MissionType
         return $newMissionType;
     }
 
+    // Méthode qui met à jour les propriétés du type de mission dans la base de données et dans la classe
     public function updateProperties(array $propertiesToUpdate): bool
     {
         $id = $this->getId();
@@ -100,6 +117,7 @@ class MissionType
         return true;
     }
 
+    //Méthode qui supprime un type de mission dans la base de donnée et dans la classe en fonction de son id
     public function deleteMissionTypeById($id): bool
     {
         $query = "DELETE FROM MissionTypes WHERE id = :id";
@@ -116,7 +134,6 @@ class MissionType
     }
 
     // Getters et Setters
-
     public function getId(): int
     {
         return $this->id;

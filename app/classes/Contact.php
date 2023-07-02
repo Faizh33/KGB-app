@@ -14,6 +14,7 @@ class Contact extends Person
         $this->codeName = $codeName;
     }
 
+    //Méthode qui récupère un contact en fonction de son id
     public static function getContactById($pdo, $id): ?Contact
     {
         $person = parent::getPersonById($pdo, $id);
@@ -34,6 +35,7 @@ class Contact extends Person
         return null;
     }
 
+    //Méthode qui récupère tous les contacts de la base de données et les insére dans la classe
     public static function getAllContacts($pdo): array
     {
         $persons = parent::getAllPersons($pdo);
@@ -55,6 +57,7 @@ class Contact extends Person
         return $contacts;
     }
 
+    //Méthode qui ajoute un nouveau contact dans la base de données et dans la classe
     public function addContactProperties($pdo, string $lastName, string $firstName, string $birthDate, string $nationality, string $codeName): ?Contact
     {
         $person = parent::addPersonProperties($pdo, $lastName, $firstName, $birthDate, $nationality);
@@ -72,6 +75,7 @@ class Contact extends Person
         return null;
     }
 
+    //Méthode qui modifie les propriétés d'un contact en fonction de l'id
     public function updateContactProperties($propertiesToUpdate): bool
     {
         $personUpdated = parent::updateProperties($propertiesToUpdate);
@@ -89,6 +93,7 @@ class Contact extends Person
         return false;
     }
 
+    //Méthode qui supprime un contact de la base de donnée et de la classe en fonction de l'id
     public function deleteContact(): bool
     {
         $personDeleted = parent::deletePersonById($this->id);
@@ -105,6 +110,7 @@ class Contact extends Person
         return false;
     }
 
+    //Getter et Setter
     public function getCodeName(): string
     {
         return $this->codeName;

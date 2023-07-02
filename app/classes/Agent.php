@@ -14,6 +14,7 @@ class Agent extends Person
         $this->identificationCode = $identificationCode;
     }
 
+    //Méthode qui récupère un agent en fonction de son id
     public static function getAgentById($pdo, $id): ?Agent
     {
         $person = parent::getPersonById($pdo, $id);
@@ -34,6 +35,7 @@ class Agent extends Person
         return null;
     }
 
+    //Méthode qui récupère tous les agents de la base de données et les insére dans la classe
     public static function getAllAgents($pdo): array
     {
         $persons = parent::getAllPersons($pdo);
@@ -55,6 +57,7 @@ class Agent extends Person
         return $agents;
     }
 
+    //Méthode qui ajoute un nouvel agent dans la base de données et dans la classe
     public function addAgentProperties($pdo, string $lastName, string $firstName, string $birthDate, string $nationality, string $identificationCode): ?Agent
     {
         $person = parent::addPersonProperties($pdo, $lastName, $firstName, $birthDate, $nationality);
@@ -72,6 +75,7 @@ class Agent extends Person
         return null;
     }
 
+    //Méthode qui modifie les propriétés d'un agent en fonction de l'id
     public function updateAgentProperties($propertiesToUpdate): bool
     {
         $personUpdated = parent::updateProperties($propertiesToUpdate);
@@ -89,6 +93,7 @@ class Agent extends Person
         return false;
     }
 
+    //Méthode qui supprime un agent de la base de donnée et de la classe en fonction de l'id
     public function deleteAgent(): bool
     {
         $personDeleted = parent::deletePersonById($this->id);
@@ -105,6 +110,7 @@ class Agent extends Person
         return false;
     }
 
+    //Getter et Setter
     public function getIdentificationCode(): string
     {
         return $this->identificationCode;

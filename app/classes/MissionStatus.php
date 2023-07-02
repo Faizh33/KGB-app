@@ -19,6 +19,7 @@ class MissionStatus
         self::$missionStatuses[$id] = $this;
     }
 
+    //Méthode qui récupère un statut de mission en fonction de son id
     public function getMissionStatusById($id)
     {
         if (isset(self::$missionStatuses[$id])) {
@@ -40,6 +41,7 @@ class MissionStatus
         return null;
     }
 
+    //Méthode qui récupère tous les statuts de mission de la base de donnée et les insère dans la classe
     public function getAllMissionStatuses(): array
     {
         $query = "SELECT * FROM MissionStatuses";
@@ -63,6 +65,7 @@ class MissionStatus
         return $missionStatuses;
     }
 
+    //Méthode qui ajoute un nouveau statut de mission
     public function addMissionStatus(string $status): ?MissionStatus
     {
         // Vérifier si le statut de mission existe déjà dans la base de données
@@ -91,7 +94,7 @@ class MissionStatus
         return $newMissionStatus;
     }
 
-        // Méthode qui met à jour les propriétés de la personne dans la base de données et dans la classe
+        // Méthode qui met à jour les propriétés du statut de mission dans la base de données et dans la classe
         public function updateProperties(array $propertiesToUpdate): bool
         {
             $id = $this->getId();
@@ -108,12 +111,13 @@ class MissionStatus
             $stmt->bindParam(':status', $this->status);
             $stmt->execute();
     
-            // Mettre à jour le tableau $persons
+            // Mettre à jour le tableau $missionStatuses
             self::$missionStatuses[$id] = $this;
     
             return true;
         }
 
+    //Méthode qui supprime un statut de mission dans la base de donnée et dans la classe en fonction de son id
     public function deleteMissionStatusById($id): bool
     {
         // Supprimer le statut de mission de la base de données
@@ -130,6 +134,7 @@ class MissionStatus
         return false;
     }
 
+    //Getters et Setters
     public function getId(): int
     {
         return $this->id;
