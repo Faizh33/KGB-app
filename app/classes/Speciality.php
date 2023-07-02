@@ -2,6 +2,8 @@
 
 namespace app\classes;
 
+require_once 'AgentSpeciality.php';
+
 class Speciality
 {
     private int $id;
@@ -117,24 +119,38 @@ class Speciality
         return true;
     }
 
-    //Méthode pour supprimer une spécialité dans la base de donnée et dans la classe
     public function deleteSpecialityById($id): bool
     {
+        // Vérifier si l'ID existe en base de données
+        $query = "SELECT * FROM Specialities WHERE id = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+    
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if (!$row) {
+            return false;
+        }
+    
         // Supprimer la spécialité de la base de données
         $query = "DELETE FROM Specialities WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-
+    
+        // Supprimer les associations agent/spécialité correspondantes en utilisant une instance de la classe AgentSpeciality
+        $agentSpeciality = new AgentSpeciality($this->pdo, '', $id);
+        $agentSpeciality->deleteAgentsBySpecialityId($id);
+    
         // Supprimer la spécialité de la classe
         if (isset(self::$specialities[$id])) {
             unset(self::$specialities[$id]);
             return true;
         }
-
+    
         return false;
     }
-
+    
     //Getters et Setters
     public function getId(): int
     {
