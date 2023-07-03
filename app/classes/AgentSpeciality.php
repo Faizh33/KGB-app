@@ -20,6 +20,38 @@ class AgentSpeciality
         self::$agentSpecialities[$specialityId] = $this;
     }
 
+    public function getAllAgentSpeciality(): array
+    {
+        $query = "SELECT agent_id, speciality_id FROM Agents_Specialities";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+
+        $agentSpecialitiesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $agentSpecialities = [];
+
+        foreach ($agentSpecialitiesData as $agentSpecialityData) {
+            $agentId = $agentSpecialityData['agent_id'];
+            $specialityId = $agentSpecialityData['speciality_id'];
+
+            // Vérifier si l'association existe déjà dans la classe
+            if (isset(self::$agentSpecialities[$agentId]) && isset(self::$agentSpecialities[$specialityId])) {
+                $agentSpeciality = self::$agentSpecialities[$agentId];
+                $agentSpecialities[] = $agentSpeciality;
+            } else {
+                // Si l'association n'existe pas dans la classe, créer un nouvel objet AgentSpeciality
+                $agentSpeciality = new AgentSpeciality($this->pdo, $agentId, $specialityId);
+                $agentSpecialities[] = $agentSpeciality;
+
+                // Ajouter l'association à la classe
+                self::$agentSpecialities[$agentId] = $agentSpeciality;
+                self::$agentSpecialities[$specialityId] = $agentSpeciality;
+            }
+        }
+
+        return $agentSpecialities;
+    }
+
     public function getSpecialitiesByAgentId(string $agentId): ?array
     {
         if (isset(self::$agentSpecialities[$agentId])) {
