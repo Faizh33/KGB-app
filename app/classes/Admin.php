@@ -10,10 +10,11 @@ class Admin
     public function __construct($pdo)
     {
         $this->pdo = $pdo;
-        $this->loadAdmins();
+        $this->getAllAdmins();
     }
 
-    private function loadAdmins(): void
+    //Méthode qui récupère tous les admins présents en base de données
+    private function getAllAdmins(): void
     {
         $query = "SELECT * FROM Admins";
         $stmt = $this->pdo->prepare($query);
@@ -30,6 +31,7 @@ class Admin
         }
     }
 
+    //Méthode qui vérifie si les informations d'identification correspondent aux données présentes dans la classe
     public function verifyCredentials(string $email, string $password): bool
     {
         foreach (self::$admins as $adminData) {
