@@ -50,14 +50,23 @@ class Mission
 
         $missions = [];
         foreach ($missionsData as $missionData) {
-            $missionId = $missionData['id'];
+            $id = $missionData['id'];
+            $title = $missionData['title'];
+            $description = $missionData['description'];
+            $codeName = $missionData['codeName'];
+            $country = $missionData['country'];
+            $startDate = $missionData['startDate'];
+            $endDate = $missionData['endDate'];
+            $speciality = $missionData['speciality_id'];
+            $missionStatus = $missionData['missionstatuses_id'];
+            $missionType = $missionData['missiontype_id'];
 
-            if (!isset(self::$missions[$missionId])) {
-                $mission = new Mission($this->pdo, $missionId, $missionData['title'], $missionData['description'], $missionData['codeName'], $missionData['country'], $missionData['startDate'], $missionData['endDate'], $missionData['speciality_id'], $missionData['missionstatuses_id'], $missionData['missiontype_id']);
-                self::$missions[$missionId] = $mission;
+            if (!isset(self::$missions[$id])) {
+                $mission = new Mission($this->pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
+                self::$missions[$id] = $mission;
             }
 
-            $missions[] = self::$missions[$missionId];
+            $missions[] = self::$missions[$id];
         }
 
         return $missions;
@@ -114,32 +123,19 @@ class Mission
         $stmt->bindParam(':country', $country);
         $stmt->bindParam(':startDate', $startDate);
         $stmt->bindParam(':endDate', $endDate);
-        $stmt->bindParam(':specialityId', $speciality->getId());
-        $stmt->bindParam(':missionStatusId', $missionStatus->getId());
-        $stmt->bindParam(':missionTypeId', $missionType->getId());
+        $stmt->bindParam(':speciality_id', $speciality);
+        $stmt->bindParam(':missionstatuses_id', $missionStatus);
+        $stmt->bindParam(':missiontype_id', $missionType);
         $stmt->execute();
 
         // Créer une nouvelle instance de Mission
-        $newMission = new Mission(
-            $this->pdo,
-            $id,
-            $title,
-            $description,
-            $codeName,
-            $country,
-            $startDate,
-            $endDate,
-            $speciality,
-            $missionStatus,
-            $missionType
-        );
+        $newMission = new Mission($this->pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
 
         // Ajouter la nouvelle mission au tableau des missions
         self::$missions[$id] = $newMission;
 
         return $newMission;
     }
-
 
     // Méthode qui met à jour les propriétés de la mission dans la base de données et dans la classe
     public function updateProperties(array $propertiesToUpdate): bool
