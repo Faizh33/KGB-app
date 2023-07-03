@@ -21,6 +21,7 @@ class Speciality
         self::$specialities[$id] = $this;
     }
 
+    //Méthode qui récupère une spécialité en fonction de son id
     public function getSpecialityById($id)
     {
         if (isset(self::$specialities[$id])) {
@@ -42,6 +43,7 @@ class Speciality
         return null;
     }
 
+    //Méthode qui récupère tous les agents de la base de données et les insére dans la classe
     public function getAllSpecialities(): array
     {
         $query = "SELECT * FROM Specialities";
@@ -113,7 +115,7 @@ class Speciality
         $stmt->bindParam(':speciality', $this->speciality);
         $stmt->execute();
 
-        // Mettre à jour le tableau $persons
+        // Mettre à jour le tableau $specialities
         self::$specialities[$id] = $this;
 
         return true;
@@ -129,6 +131,7 @@ class Speciality
     
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
         if (!$row) {
+
             return false;
         }
     
