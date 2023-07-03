@@ -39,12 +39,16 @@ class Person
         $stmt->bindParam(":id", $id);
         $stmt->execute();
     
-        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $personDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $lastName = $personDatas['lastName'];
+        $firstName = $personDatas['firstName'];
+        $birthDate = $personDatas['birthDate'];
+        $nationality = $personDatas['nationality'];
     
-        if ($row) {
-            $person = new Person($this->pdo, $row['id'], $row['lastName'], $row['firstName'], $row['birthDate'], $row['nationality']);
-            self::$persons[$id] = $person;
-            return $person;
+        if ($personDatas) {
+            $personDatas = new Person($this->pdo, $id, $lastName, $firstName, $birthDate, $nationality);
+            self::$persons[$id] = $personDatas;
+            return $personDatas;
         }
     
         return null;
@@ -61,14 +65,18 @@ class Person
 
         $persons = [];
         foreach ($personsData as $personData) {
-            $personId = $personData['id'];
+            $id = $personData['id'];
+            $lastName = $personData['lastName'];
+            $firstName = $personData['firstName'];
+            $birthDate = $personData['birthDate'];
+            $nationality = $personData['nationality'];
 
-            if (!isset(self::$persons[$personId])) {
-                $person = new Person($this->pdo, $personData['id'], $personData['lastName'], $personData['firstName'], $personData['birthDate'], $personData['nationality']);
-                self::$persons[$personId] = $person;
+            if (!isset(self::$persons[$id])) {
+                $person = new Person($this->pdo, $id, $lastName, $firstName, $birthDate, $nationality);
+                self::$persons[$id] = $person;
             }
 
-            $persons[] = self::$persons[$personId];
+            $persons[] = self::$persons[$id];
         }
 
         return $persons;
