@@ -30,7 +30,8 @@ class Speciality
 
         $query = "SELECT * FROM Specialities WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute(['id' => $id]);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
 
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
