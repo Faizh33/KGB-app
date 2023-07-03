@@ -139,29 +139,31 @@ class MissionContact
         return $newMissionContact;
     }
 
-    public function updateProperties(array $propertiesToUpdate): bool
+    public function updateContactProperties(array $propertiesToUpdate): bool
     {
-        $query = "UPDATE Missions_contacts SET ";
+        $contactId = $this->getContactId();
 
-        foreach ($propertiesToUpdate as $property => $value) {
-            if ($this->$property !== $value) {
-                $this->$property = $value;
-                $query .= "$property = :$property, ";
+        $updatedMissionAgents = [];
+
+        foreach (self::$missionContacts[$contactId] as $missionContact) {
+            foreach ($propertiesToUpdate as $property => $value) {
+                if ($missionContact->$property !== $value) {
+                    $missionContact->$property = $value;
+                }
             }
+            $updatedMissionContacts[] = $missionContact;
         }
 
-        $query = rtrim($query, ', ');
-        $query .= " WHERE mission_id = :missionId AND contact_id = :contactId";
-
+        $query = "UPDATE Missions_contacts SET contact_id = :newContactId WHERE mission_id = :missionId AND contact_id = :contactId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':missionId', $this->missionId);
-        $stmt->bindValue(':contactId', $this->contactId);
+        $stmt->bindParam(':newContactId', $this->contactId);
+        $stmt->bindParam(':missionId', $this->missionId);
+        $stmt->bindParam(':contactId', $contactId);
+        $stmt->execute();
 
-        foreach ($propertiesToUpdate as $property => $value) {
-            $stmt->bindValue(":$property", $value);
-        }
+        self::$missionContacts[$contactId] = $updatedMissionContacts;
 
-        return $stmt->execute();
+        return true;
     }
 
     public function deleteContactsByMissionId(string $missionId): bool

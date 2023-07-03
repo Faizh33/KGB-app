@@ -139,29 +139,31 @@ class MissionAgent
         return $newMissionAgent;
     }
 
-    public function updateProperties(array $propertiesToUpdate): bool
+    public function updateAgentProperties(array $propertiesToUpdate): bool
     {
-        $query = "UPDATE Missions_agents SET ";
+        $agentId = $this->getAgentId();
 
-        foreach ($propertiesToUpdate as $property => $value) {
-            if ($this->$property !== $value) {
-                $this->$property = $value;
-                $query .= "$property = :$property, ";
+        $updatedMissionAgents = [];
+
+        foreach (self::$missionAgents[$agentId] as $missionAgent) {
+            foreach ($propertiesToUpdate as $property => $value) {
+                if ($missionAgent->$property !== $value) {
+                    $missionAgent->$property = $value;
+                }
             }
+            $updatedMissionAgents[] = $missionAgent;
         }
 
-        $query = rtrim($query, ', ');
-        $query .= " WHERE mission_id = :missionId AND agent_id = :agentId";
-
+        $query = "UPDATE Missions_agents SET agent_id = :newAgentId WHERE mission_id = :missionId AND agent_id = :agentId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':missionId', $this->missionId);
-        $stmt->bindValue(':agentId', $this->agentId);
+        $stmt->bindParam(':newAgentId', $this->agentId);
+        $stmt->bindParam(':missionId', $this->missionId);
+        $stmt->bindParam(':agentId', $agentId);
+        $stmt->execute();
 
-        foreach ($propertiesToUpdate as $property => $value) {
-            $stmt->bindValue(":$property", $value);
-        }
+        self::$missionAgents[$agentId] = $updatedMissionAgents;
 
-        return $stmt->execute();
+        return true;
     }
 
     public function deleteAgentsByMissionId(string $missionId): bool
