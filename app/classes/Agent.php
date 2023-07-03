@@ -2,7 +2,8 @@
 
 namespace app\classes;
 
-require_once 'person.php';
+require_once 'Person.php';
+require_once 'AgentSpeciality.php';
 
 class Agent extends Person
 {
@@ -93,22 +94,33 @@ class Agent extends Person
         return false;
     }
 
-    //Méthode qui supprime un agent de la base de donnée et de la classe en fonction de l'id
+    // Méthode qui supprime un agent de la base de donnée et de la classe en fonction de l'id
     public function deleteAgent(): bool
     {
+        // Vérifier l'existence de l'agent
+        $agent = self::getAgentById($this->pdo, $this->id);
+        if (!$agent) {
+            return false; // L'agent n'existe pas, retourner false
+        }
+    
+        // Supprimer les associations AgentSpeciality pour cet agent
+        $agentSpeciality = new AgentSpeciality($this->pdo, $this->id, 0);
+        $agentSpeciality->deleteSpecialitiesByAgentId($this->id);
+    
+        // Supprimer l'agent lui-même
         $personDeleted = parent::deletePersonById($this->id);
-
+    
         if ($personDeleted) {
             $query = "DELETE FROM Agents WHERE id = :id";
             $stmt = $this->pdo->prepare($query);
             $stmt->bindParam(':id', $this->id);
             $stmt->execute();
-
+    
             return true;
         }
-
+    
         return false;
-    }
+    }    
 
     //Getter et Setter
     public function getIdentificationCode(): string
