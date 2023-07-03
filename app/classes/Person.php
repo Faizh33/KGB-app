@@ -82,7 +82,7 @@ class Person
         return $persons;
     }
 
-    public function addPersonProperties(string $lastName, string $firstName, string $birthDate, string $nationality): ?Person
+    public function addPerson(string $lastName, string $firstName, string $birthDate, string $nationality): ?Person
     {
         // Vérifier si la personne existe déjà dans la base de données
         $query = "SELECT * FROM Persons WHERE lastName = :lastName AND firstName = :firstName AND birthDate = :birthDate AND nationality = :nationality";
