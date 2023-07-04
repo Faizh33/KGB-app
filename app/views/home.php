@@ -39,7 +39,7 @@ $missions = $missionObj->getAllMissions();
             <div id="logButton">
                 <?php
                 if (isset($_SESSION['admin'])) {
-                    echo "<a href='../controllers/logout.php' id='logLink'>Déconnexion</a>";
+                    echo "<a href='../controllers/logoutController.php' id='logLink'>Déconnexion</a>";
                 } else {
                     echo "<a href='loginForm.php' id='logLink'>Se connecter</a>";
                 }
