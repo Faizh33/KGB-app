@@ -33,6 +33,14 @@ class MissionAgent
         self::$missionAgents[$agentId][] = $this;
     }
 
+    /**
+     * Recherche un MissionAgent existant dans la classe en fonction de l'ID de la mission et de l'ID de l'agent.
+     *
+     * @param string $missionId L'ID de la mission.
+     * @param string $agentId L'ID de l'agent.
+     *
+     * @return MissionAgent|null Retourne le MissionAgent correspondant s'il existe, sinon retourne null.
+     */
     private function findExistingMissionAgent(string $missionId, string $agentId): ?MissionAgent
     {
         if (isset(self::$missionAgents[$missionId])) {
@@ -45,6 +53,11 @@ class MissionAgent
         return null;
     }
 
+    /**
+     * Récupère tous les MissionAgent de la base de données et les insère dans la classe.
+     *
+     * @return array Un tableau contenant tous les MissionAgent.
+     */
     public function getAllMissionAgents(): array
     {
         $query = "SELECT mission_id, agent_id FROM Missions_agents";
@@ -71,6 +84,12 @@ class MissionAgent
         return $missionAgents;
     }
 
+    /**
+     * Récupère tous les agents associés à une mission donnée.
+     *
+     * @param string $missionId L'ID de la mission.
+     * @return array Un tableau contenant tous les agents associés à la mission.
+     */
     public function getAgentsByMissionId(string $missionId): array
     {
         if (isset(self::$missionAgents[$missionId])) {
@@ -82,11 +101,14 @@ class MissionAgent
         $stmt->bindParam(':missionId', $missionId);
         $stmt->execute();
 
-        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $missionAgentDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $missionAgents = [];
 
-        foreach ($rows as $row) {
-            $missionAgent = new MissionAgent($this->pdo, $row['mission_id'], $row['agent_id']);
+        foreach ($missionAgentDatas as $missionAgentData) {
+            $missionId = $missionAgentData['mission_id'];
+            $agentId = $missionAgentData['agent_id'];
+
+            $missionAgent = new MissionAgent($this->pdo, $missionId, $agentId);
             $missionAgents[] = $missionAgent;
         }
 
@@ -95,6 +117,12 @@ class MissionAgent
         return $missionAgents;
     }
 
+    /**
+     * Récupère toutes les missions associées à un agent donné.
+     *
+     * @param string $agentId L'ID de l'agent.
+     * @return array Un tableau contenant toutes les missions associées à l'agent.
+     */
     public function getMissionsByAgentId(string $agentId): array
     {
         if (isset(self::$missionAgents[$agentId])) {
@@ -106,11 +134,14 @@ class MissionAgent
         $stmt->bindParam(':agentId', $agentId);
         $stmt->execute();
 
-        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $missionAgentDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $missionAgents = [];
 
-        foreach ($rows as $row) {
-            $missionAgent = new MissionAgent($this->pdo, $row['mission_id'], $row['agent_id']);
+        foreach ($missionAgentDatas as $missionAgentData) {
+            $missionId = $missionAgentData['mission_id'];
+            $agentId = $missionAgentData['agent_id'];
+
+            $missionAgent = new MissionAgent($this->pdo, $missionId, $agentId);
             $missionAgents[] = $missionAgent;
         }
 
@@ -119,6 +150,13 @@ class MissionAgent
         return $missionAgents;
     }
 
+    /**
+     * Ajoute un agent à une mission.
+     *
+     * @param string $missionId L'ID de la mission.
+     * @param string $agentId L'ID de l'agent.
+     * @return MissionAgent|null L'objet MissionAgent créé si l'ajout est réussi, sinon null.
+     */
     public function addAgentToMission(string $missionId, string $agentId): ?MissionAgent
     {
         $existingMissionAgent = $this->findExistingMissionAgent($missionId, $agentId);
@@ -139,13 +177,20 @@ class MissionAgent
         return $newMissionAgent;
     }
 
-    public function updateAgentProperties(array $propertiesToUpdate): bool
+    /**
+     * Met à jour les propriétés d'un agent dans une mission spécifiée.
+     *
+     * @param string $missionId L'ID de la mission.
+     * @param array $propertiesToUpdate Les propriétés à mettre à jour.
+     * @return bool Indique si la mise à jour a réussi.
+     */
+    public function updateAgentProperties(string $missionId, array $propertiesToUpdate): bool
     {
         $agentId = $this->getAgentId();
 
         $updatedMissionAgents = [];
 
-        foreach (self::$missionAgents[$agentId] as $missionAgent) {
+        foreach (self::$missionAgents[$missionId] as $missionAgent) {
             foreach ($propertiesToUpdate as $property => $value) {
                 if ($missionAgent->$property !== $value) {
                     $missionAgent->$property = $value;
@@ -157,15 +202,21 @@ class MissionAgent
         $query = "UPDATE Missions_agents SET agent_id = :newAgentId WHERE mission_id = :missionId AND agent_id = :agentId";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':newAgentId', $this->agentId);
-        $stmt->bindParam(':missionId', $this->missionId);
+        $stmt->bindParam(':missionId', $missionId);
         $stmt->bindParam(':agentId', $agentId);
         $stmt->execute();
 
-        self::$missionAgents[$agentId] = $updatedMissionAgents;
+        self::$missionAgents[$missionId] = $updatedMissionAgents;
 
         return true;
     }
 
+    /**
+     * Supprime tous les agents d'une mission spécifiée.
+     *
+     * @param string $missionId L'ID de la mission.
+     * @return bool Indique si la suppression a réussi.
+     */
     public function deleteAgentsByMissionId(string $missionId): bool
     {
         $query = "DELETE FROM Missions_agents WHERE mission_id = :missionId";
@@ -178,6 +229,12 @@ class MissionAgent
         return true;
     }
 
+    /**
+     * Supprime toutes les missions d'un agent spécifié.
+     *
+     * @param string $agentId L'ID de l'agent.
+     * @return bool Indique si la suppression a réussi.
+     */
     public function deleteMissionsByAgentId(string $agentId): bool
     {
         $query = "DELETE FROM Missions_agents WHERE agent_id = :agentId";
@@ -190,6 +247,7 @@ class MissionAgent
         return true;
     }
 
+    //Getters
     public function getMissionId(): string
     {
         return $this->missionId;

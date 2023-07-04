@@ -33,6 +33,13 @@ class MissionTarget
         self::$missionTargets[$targetId][] = $this;
     }
 
+    /**
+     * Recherche une mission cible existante pour une mission et une cible spécifiées.
+     *
+     * @param string $missionId L'ID de la mission.
+     * @param string $targetId L'ID de la cible.
+     * @return MissionTarget|null La mission cible existante ou null si elle n'existe pas.
+     */
     private function findExistingMissionTarget(string $missionId, string $targetId): ?MissionTarget
     {
         if (isset(self::$missionTargets[$missionId])) {
@@ -45,6 +52,11 @@ class MissionTarget
         return null;
     }
 
+    /**
+     * Récupère toutes les missions cibles de la base de données.
+     *
+     * @return array Un tableau contenant toutes les missions cibles.
+     */
     public function getAllMissionTargets(): array
     {
         $query = "SELECT mission_id, target_id FROM Missions_targets";
@@ -71,6 +83,12 @@ class MissionTarget
         return $missionTargets;
     }
 
+    /**
+     * Récupère les cibles associées à une mission donnée.
+     *
+     * @param string $missionId L'identifiant de la mission.
+     * @return array Un tableau contenant les cibles associées à la mission.
+     */
     public function getTargetsByMissionId(string $missionId): array
     {
         if (isset(self::$missionTargets[$missionId])) {
@@ -82,11 +100,14 @@ class MissionTarget
         $stmt->bindParam(':missionId', $missionId);
         $stmt->execute();
 
-        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $missionTargetDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $missionTargets = [];
 
-        foreach ($rows as $row) {
-            $missionTarget = new MissionTarget($this->pdo, $row['mission_id'], $row['target_id']);
+        foreach ($missionTargetDatas as $missionTargetData) {
+            $missionId = $missionTargetData['mission_id'];
+            $targetId = $missionTargetData['target_id'];
+
+            $missionTarget = new MissionTarget($this->pdo, $missionId, $targetId);
             $missionTargets[] = $missionTarget;
         }
 
@@ -95,6 +116,12 @@ class MissionTarget
         return $missionTargets;
     }
 
+    /**
+     * Récupère les missions associées à une cible donnée.
+     *
+     * @param string $targetId L'identifiant de la cible.
+     * @return array Un tableau contenant les missions associées à la cible.
+     */
     public function getMissionsByTargetId(string $targetId): array
     {
         if (isset(self::$missionTargets[$targetId])) {
@@ -119,6 +146,13 @@ class MissionTarget
         return $missionTargets;
     }
 
+    /**
+     * Ajoute une cible à une mission donnée.
+     *
+     * @param string $missionId L'identifiant de la mission.
+     * @param string $targetId L'identifiant de la cible.
+     * @return MissionTarget|null L'objet MissionTarget correspondant à la nouvelle association ou null si elle existe déjà.
+     */
     public function addTargetToMission(string $missionId, string $targetId): ?MissionTarget
     {
         $existingMissionTarget = $this->findExistingMissionTarget($missionId, $targetId);
@@ -139,13 +173,20 @@ class MissionTarget
         return $newMissionTarget;
     }
 
-    public function updateTargetProperties(array $propertiesToUpdate): bool
+    /**
+     * Met à jour les propriétés d'une cible dans une mission donnée.
+     *
+     * @param string $missionId L'identifiant de la mission.
+     * @param array $propertiesToUpdate Les propriétés à mettre à jour sous la forme [nomPropriete => nouvelleValeur].
+     * @return bool Indique si la mise à jour a été effectuée avec succès.
+     */
+    public function updateTargetProperties(string $missionId, array $propertiesToUpdate): bool
     {
         $targetId = $this->getTargetId();
 
         $updatedMissionTargets = [];
 
-        foreach (self::$missionTargets[$targetId] as $missionTarget) {
+        foreach (self::$missionTargets[$missionId] as $missionTarget) {
             foreach ($propertiesToUpdate as $property => $value) {
                 if ($missionTarget->$property !== $value) {
                     $missionTarget->$property = $value;
@@ -157,15 +198,21 @@ class MissionTarget
         $query = "UPDATE Missions_targets SET target_id = :newTargetId WHERE mission_id = :missionId AND target_id = :targetId";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':newTargetId', $this->targetId);
-        $stmt->bindParam(':missionId', $this->missionId);
+        $stmt->bindParam(':missionId', $missionId);
         $stmt->bindParam(':targetId', $targetId);
         $stmt->execute();
 
-        self::$missionTargets[$targetId] = $updatedMissionTargets;
+        self::$missionTargets[$missionId] = $updatedMissionTargets;
 
         return true;
     }
 
+    /**
+     * Supprime toutes les cibles associées à une mission donnée.
+     *
+     * @param string $missionId L'identifiant de la mission.
+     * @return bool Indique si la suppression a été effectuée avec succès.
+     */
     public function deleteTargetsByMissionId(string $missionId): bool
     {
         $query = "DELETE FROM Missions_targets WHERE mission_id = :missionId";
@@ -178,6 +225,12 @@ class MissionTarget
         return true;
     }
 
+    /**
+     * Supprime toutes les missions associées à une cible donnée.
+     *
+     * @param string $targetId L'identifiant de la cible.
+     * @return bool Indique si la suppression a été effectuée avec succès.
+     */
     public function deleteMissionsByTargetId(string $targetId): bool
     {
         $query = "DELETE FROM Missions_targets WHERE target_id = :targetId";
@@ -190,6 +243,7 @@ class MissionTarget
         return true;
     }
 
+    //Getters
     public function getMissionId(): string
     {
         return $this->missionId;

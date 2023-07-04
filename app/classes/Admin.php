@@ -13,25 +13,38 @@ class Admin
         $this->getAllAdmins();
     }
 
-    //Méthode qui récupère tous les admins présents en base de données
+    /**
+     * Récupère tous les administrateurs présents en base de données.
+     */
     private function getAllAdmins(): void
     {
+        // Requête pour sélectionner tous les administrateurs
         $query = "SELECT * FROM Admins";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
 
+        // Récupération des données des administrateurs
         $adminsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
+        // Parcours des données des administrateurs
         foreach ($adminsData as $adminData) {
             $adminId = $adminData['id'];
 
             if (!isset(self::$admins[$adminId])) {
+                // Ajout des données de l'administrateur au tableau statique $admins
                 self::$admins[$adminId] = $adminData;
             }
         }
     }
 
-    //Méthode qui vérifie si les informations d'identification correspondent aux données présentes dans la classe
+    /**
+     * Vérifie si les informations d'identification correspondent aux données présentes dans la classe.
+     *
+     * @param string $email    L'adresse e-mail à vérifier.
+     * @param string $password Le mot de passe à vérifier.
+     *
+     * @return bool True si les informations d'identification sont valides, false sinon.
+     */
     public function verifyCredentials(string $email, string $password): bool
     {
         foreach (self::$admins as $adminData) {

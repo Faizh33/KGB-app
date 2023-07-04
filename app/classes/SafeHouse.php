@@ -151,9 +151,9 @@ class SafeHouse {
         $stmt->bindParam(':type', $type);
         $stmt->execute();
 
-        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $safeHouseDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        if ($row) {
+        if ($safeHouseDatas) {
             // La planque existe déjà, retourner null
             return null;
         }
@@ -226,8 +226,8 @@ class SafeHouse {
         $stmt->bindParam(':id', $id);
         $stmt->execute();
 
-        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-        if (!$row) {
+        $safeHouseDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if (!$safeHouseDatas) {
             // L'ID n'existe pas, retourner false pour indiquer une suppression non réussie
             return false;
         }
