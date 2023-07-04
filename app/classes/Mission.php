@@ -16,9 +16,9 @@ class Mission
     private string $country;
     private string $startDate;
     private string $endDate;
-    private Speciality $speciality;
-    private MissionStatus $missionStatus;
-    private MissionType $missionType;
+    private ?Speciality $speciality;
+    private ?MissionStatus $missionStatus;
+    private ?MissionType $missionType;
     private \PDO $pdo;
 
     private static array $missions = [];
@@ -70,9 +70,21 @@ class Mission
             // Vérifier si la mission existe déjà dans la liste des missions
             if (!isset(self::$missions[$id])) {
                 // Récupérer les objets Speciality, MissionStatus et MissionType correspondants à partir de leurs identifiants
-                $speciality = $this->speciality->getSpecialityById($specialityId);
-                $missionStatus = $this->missionStatus->getMissionStatusById($missionStatusId);
-                $missionType = $this->missionType->getMissionTypeById($missionTypeId);
+                if (!$this->speciality) {
+                    $this->speciality = new Speciality($this->pdo);
+                }
+                $speciality = $this->speciality->getSpecialityById($this->pdo, $specialityId);
+
+                if (!$this->missionStatus) {
+                    $this->missionStatus = new MissionStatus($this->pdo);
+                }
+                $missionStatus = $this->missionStatus->getMissionStatusById($this->pdo, $missionStatusId);
+
+                if (!$this->missionType) {
+                    $this->missionType = new MissionType($this->pdo);
+                }
+                $missionType = $this->missionType->getMissionTypeById($this->pdo, $missionTypeId);
+
     
                 // Créer la mission en passant les objets récupérés
                 $mission = new Mission($this->pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
@@ -187,7 +199,7 @@ class Mission
             // Vérifier si la propriété est 'specialityId'
             if ($property === 'specialityId') {
                 // Récupérer l'objet Speciality correspondant à la nouvelle valeur de 'specialityId'
-                $speciality = $this->getSpeciality()->getSpecialityById($value);
+                $speciality = $this->getSpeciality()->getSpecialityById($this->pdo, $value);
                 if ($speciality) {
                     // Mettre à jour la propriété 'speciality' de la mission avec le nouvel objet Speciality
                     $this->setSpeciality($speciality);
@@ -196,7 +208,7 @@ class Mission
             // Vérifier si la propriété est 'missionStatusId'
             elseif ($property === 'missionStatusId') {
                 // Récupérer l'objet MissionStatus correspondant à la nouvelle valeur de 'missionStatusId'
-                $missionStatus = $this->getMissionStatus()->getMissionStatusById($value);
+                $missionStatus = $this->getMissionStatus()->getMissionStatusById($this->pdo, $value);
                 if ($missionStatus) {
                     // Mettre à jour la propriété 'missionStatus' de la mission avec le nouvel objet MissionStatus
                     $this->setMissionStatus($missionStatus);
@@ -205,7 +217,7 @@ class Mission
             // Vérifier si la propriété est 'missionTypeId'
             elseif ($property === 'missionTypeId') {
                 // Récupérer l'objet MissionType correspondant à la nouvelle valeur de 'missionTypeId'
-                $missionType = $this->getMissionType()->getMissionTypeById($value);
+                $missionType = $this->getMissionType()->getMissionTypeById($this->pdo, $value);
                 if ($missionType) {
                     // Mettre à jour la propriété 'missionType' de la mission avec le nouvel objet MissionType
                     $this->setMissionType($missionType);
