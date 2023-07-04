@@ -19,12 +19,11 @@ class Mission
     private Speciality $speciality;
     private MissionStatus $missionStatus;
     private MissionType $missionType;
-    private $pdo;
+    private \PDO $pdo;
 
     private static array $missions = [];
 
-    public function __construct($pdo, string $id, string $title, string $description, string $codeName, string $country, string $startDate, string $endDate, Speciality $speciality, MissionStatus $missionStatus, MissionType $missionType)
-    {
+    public function __construct($pdo, string $id = '', string $title = '', string $description = '', string $codeName = '', string $country = '', string $startDate = '', string $endDate = '', Speciality $speciality = null, MissionStatus $missionStatus = null, MissionType $missionType = null)    {
         $this->pdo = $pdo;
         $this->id = $id;
         $this->title = $title;
@@ -51,10 +50,10 @@ class Mission
         $query = "SELECT * FROM Missions";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
-
+    
         // Récupérer les données des missions
         $missionsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
+    
         $missions = [];
         foreach ($missionsData as $missionData) {
             $id = $missionData['id'];
@@ -64,24 +63,30 @@ class Mission
             $country = $missionData['country'];
             $startDate = $missionData['startDate'];
             $endDate = $missionData['endDate'];
-            $speciality = $missionData['speciality_id'];
-            $missionStatus = $missionData['missionstatuses_id'];
-            $missionType = $missionData['missiontype_id'];
-
+            $specialityId = $missionData['speciality_id'];
+            $missionStatusId = $missionData['missionstatuses_id'];
+            $missionTypeId = $missionData['missiontype_id'];
+    
             // Vérifier si la mission existe déjà dans la liste des missions
             if (!isset(self::$missions[$id])) {
-                // Si la mission n'existe pas, la créer et l'ajouter à la liste des missions
+                // Récupérer les objets Speciality, MissionStatus et MissionType correspondants à partir de leurs identifiants
+                $speciality = $this->speciality->getSpecialityById($specialityId);
+                $missionStatus = $this->missionStatus->getMissionStatusById($missionStatusId);
+                $missionType = $this->missionType->getMissionTypeById($missionTypeId);
+    
+                // Créer la mission en passant les objets récupérés
                 $mission = new Mission($this->pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
                 self::$missions[$id] = $mission;
             }
-
+    
             // Ajouter la mission à la liste des missions à retourner
             $missions[] = self::$missions[$id];
         }
-
+    
         // Retourner toutes les missions
         return $missions;
     }
+    
 
     /**
      * Récupère une mission à partir de son ID.

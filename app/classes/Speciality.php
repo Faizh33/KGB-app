@@ -12,7 +12,7 @@ class Speciality
 
     private static array $specialities = [];
 
-    public function __construct($pdo, int $id, string $speciality)
+    public function __construct($pdo, int $id = NULL, string $speciality = '')
     {
         $this->pdo = $pdo;
         $this->id = $id;

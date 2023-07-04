@@ -15,7 +15,7 @@ class Person
 
     protected static array $persons = [];
 
-    public function __construct($pdo, string $id, string $lastName, string $firstName, string $birthDate, string $nationality)
+    public function __construct($pdo, string $id = '', string $lastName = '', string $firstName = '', string $birthDate = '', string $nationality = '')
     {
         $this->pdo = $pdo;
         $this->id = $id;

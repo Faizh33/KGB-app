@@ -8,7 +8,7 @@ class Contact extends Person
 {
     protected string $codeName;
 
-    public function __construct($pdo, string $id, string $lastName, string $firstName, string $birthDate, string $nationality, string $codeName)
+    public function __construct($pdo, string $id = '', string $lastName = '', string $firstName = '', string $birthDate = '', string $nationality = '', string $codeName = '')
     {
         parent::__construct($pdo, $id, $lastName, $firstName, $birthDate, $nationality);
         $this->codeName = $codeName;

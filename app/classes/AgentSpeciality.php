@@ -10,7 +10,7 @@ class AgentSpeciality
 
     private static array $agentSpecialities = [];
 
-    public function __construct(\PDO $pdo, string $agentId, int $specialityId)
+    public function __construct(\PDO $pdo, string $agentId = '', int $specialityId = null)
     {
         $this->pdo = $pdo;
         $this->agentId = $agentId;

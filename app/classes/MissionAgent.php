@@ -10,7 +10,7 @@ class MissionAgent
 
     private static array $missionAgents = [];
 
-    public function __construct(\PDO $pdo, string $missionId, string $agentId)
+    public function __construct(\PDO $pdo, string $missionId = '', string $agentId = '')
     {
         $this->pdo = $pdo;
         $this->missionId = $missionId;

@@ -9,7 +9,7 @@ class Agent extends Person
 {
     protected string $identificationCode;
 
-    public function __construct($pdo, string $id, string $lastName, string $firstName, string $birthDate, string $nationality, string $identificationCode)
+    public function __construct($pdo, string $id = '', string $lastName = '', string $firstName = '', string $birthDate = '', string $nationality = '', string $identificationCode = '')
     {
         parent::__construct($pdo, $id, $lastName, $firstName, $birthDate, $nationality);
         $this->identificationCode = $identificationCode;

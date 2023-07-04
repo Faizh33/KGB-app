@@ -10,7 +10,7 @@ class MissionContact
 
     private static array $missionContacts = [];
 
-    public function __construct(\PDO $pdo, string $missionId, string $contactId)
+    public function __construct(\PDO $pdo, string $missionId = '', string $contactId = '')
     {
         $this->pdo = $pdo;
         $this->missionId = $missionId;

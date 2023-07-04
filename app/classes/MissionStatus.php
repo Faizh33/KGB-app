@@ -10,7 +10,7 @@ class MissionStatus
 
     private static array $missionStatuses = [];
 
-    public function __construct($pdo, int $id, string $status)
+    public function __construct($pdo, int $id = NULL, string $status = '')
     {
         $this->pdo = $pdo;
         $this->id = $id;

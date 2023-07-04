@@ -10,7 +10,7 @@ class MissionType
 
     private static array $missionTypes = [];
 
-    public function __construct($pdo, int $id, string $type)
+    public function __construct($pdo, int $id = NULL, string $type = '')
     {
         $this->pdo = $pdo;
         $this->id = $id;

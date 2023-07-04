@@ -15,7 +15,7 @@ class SafeHouse {
 
     private static array $safeHouses = [];
 
-    public function __construct($pdo, int $id, string $code, string $address, string $country, string $type, ?Mission $mission)
+    public function __construct($pdo, int $id = NULL, string $code = '', string $address = '', string $country = '', string $type = '', ?Mission $mission)
     {
         $this->pdo = $pdo;
         $this->id = $id;
