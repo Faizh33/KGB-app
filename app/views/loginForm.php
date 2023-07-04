@@ -10,7 +10,7 @@
     <div class="container">
         <div class="screen">
             <div class="screen_content">
-                <form action="../controller/loginController.php" method="post" class="login">
+                <form action="../controllers/loginController.php" method="post" class="login">
                     <div class="login_field">
                         <i class="login_icon fas fa-user"></i>
                         <input type="text" class="login_input" placeholder="Email" name="email">
