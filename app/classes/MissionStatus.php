@@ -13,7 +13,7 @@ class MissionStatus
     public function __construct($pdo, int $id = NULL, string $status = '')
     {
         $this->pdo = $pdo;
-        $this->id = $id;
+        $this->id = $id ?? 0;
         $this->status = $status;
 
         self::$missionStatuses[$id] = $this;
@@ -25,14 +25,14 @@ class MissionStatus
      * @param mixed $id L'identifiant de la mission.
      * @return MissionStatus|null Le statut de la mission ou null si non trouvé.
      */
-    public function getMissionStatusById($id)
+    public static function getMissionStatusById($pdo, int $id)
     {
         if (isset(self::$missionStatuses[$id])) {
             return self::$missionStatuses[$id];
         }
 
         $query = "SELECT * FROM MissionStatuses WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute(['id' => $id]);
 
         $statusDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -40,7 +40,7 @@ class MissionStatus
         $status = $statusDatas['status'];
 
         if ($statusDatas) {
-            $missionStatus = new MissionStatus($this->pdo, $id, $status);
+            $missionStatus = new MissionStatus($pdo, $id, $status);
             self::$missionStatuses[$id] = $missionStatus;
             return $missionStatus;
         }

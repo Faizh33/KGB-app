@@ -15,7 +15,7 @@ class Speciality
     public function __construct($pdo, int $id = NULL, string $speciality = '')
     {
         $this->pdo = $pdo;
-        $this->id = $id;
+        $this->id = $id ?? 0;
         $this->speciality = $speciality;
 
         self::$specialities[$id] = $this;
@@ -27,7 +27,7 @@ class Speciality
      * @param int $id L'ID de la spécialité à récupérer.
      * @return Speciality|null La spécialité correspondante si elle existe, sinon null.
      */
-    public function getSpecialityById($id)
+    public static function getSpecialityById($pdo, int $id)
     {
         if (isset(self::$specialities[$id])) {
             // Si la spécialité existe déjà dans le tableau $specialities, la retourner directement
@@ -35,7 +35,7 @@ class Speciality
         }
 
         $query = "SELECT * FROM Specialities WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
 
@@ -45,7 +45,7 @@ class Speciality
 
         if ($specialityDatas) {
             // Si la spécialité est trouvée dans la base de données, créer une nouvelle instance de Speciality
-            $speciality = new Speciality($this->pdo, $id, $specialityName);
+            $speciality = new Speciality($pdo, $id, $specialityName);
             // Ajouter la spécialité au tableau $specialities pour une utilisation future
             self::$specialities[$id] = $speciality;
             return $speciality;

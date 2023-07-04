@@ -13,7 +13,7 @@ class MissionType
     public function __construct($pdo, int $id = NULL, string $type = '')
     {
         $this->pdo = $pdo;
-        $this->id = $id;
+        $this->id = $id ?? 0;
         $this->type = $type;
 
         self::$missionTypes[$id] = $this;
@@ -26,7 +26,7 @@ class MissionType
      * @param int $id L'identifiant du type de mission à récupérer.
      * @return MissionType|null Le type de mission correspondant ou null si non trouvé.
      */
-    public function getMissionTypeById($id)
+    public static function getMissionTypeById($pdo, int $id)
     {
         // Vérifier si le type de mission existe déjà dans le tableau des types de mission
         if (isset(self::$missionTypes[$id])) {
@@ -35,7 +35,7 @@ class MissionType
 
         // Préparer la requête SQL pour sélectionner le type de mission avec l'identifiant donné
         $query = "SELECT * FROM MissionTypes WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
 
@@ -47,7 +47,7 @@ class MissionType
         // Vérifier si des données de type de mission ont été trouvées
         if ($typeDatas) {
             // Créer une nouvelle instance de la classe MissionType avec les données récupérées
-            $missionType = new MissionType($this->pdo, $id, $type);
+            $missionType = new MissionType($pdo, $id, $type);
 
             // Ajouter le type de mission au tableau des types de mission pour une utilisation ultérieure
             self::$missionTypes[$id] = $missionType;
