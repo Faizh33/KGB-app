@@ -2,7 +2,7 @@
     <form action="" method="post" id="form">
         <table>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="agentLastName" class="labelForm">Nom de famille</label>
                 </td>
                 <td>
@@ -10,7 +10,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="agentFirstName" class="labelForm">Prénom</label>
                 </td>
                 <td>
@@ -18,7 +18,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="agentBirthDate" class="labelForm">Date de naissance</label>
                 </td>
                 <td>
@@ -26,7 +26,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="agentNationality" class="labelForm">Nationalité</label>
                 </td>
                 <td>
@@ -34,7 +34,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="agentIdCode" class="labelForm">Code d'identification</label>
                 </td>
                 <td>

@@ -51,15 +51,15 @@ table {
 /*CSS des formulaires de création*/
 h2 {
     font-size: 3vw;
-    color: rgb(202, 219, 217);
+    color: rgb(107, 209, 199);
 }
 
 form {
     border: 0.5vw solid rgb(23, 157, 143);
-    width: 60%;
+    max-width: 60%;
     padding: 1vw;
     margin: auto;
-    background-color: rgb(215, 236, 235)
+    background-color: rgb(215, 236, 235);
 }
 
 td {
@@ -70,6 +70,13 @@ td {
 .labelForm {
     font-weight: bold;
     color: rgb(2, 59, 53);
+    font-size: 1.3vw;
+}
+
+td.labelColumn {
+    width: 30%;
+    text-align: right;
+    white-space: nowrap;
 }
 
 .labelChk {

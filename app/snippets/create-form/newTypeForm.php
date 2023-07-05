@@ -2,7 +2,7 @@
 <form action="" method="post" id="form">
     <table>
         <tr>
-            <td>
+            <td class="labelColumn">
                 <label for="type" class="labelForm">Type</label>
             </td>
             <td>

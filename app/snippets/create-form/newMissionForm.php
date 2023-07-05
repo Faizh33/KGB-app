@@ -16,11 +16,11 @@
         use app\classes\Speciality;
         use app\classes\MissionStatus;
     ?>
-    <h1>Créer une nouvelle mission</h1>
+    <h2>Créer une nouvelle mission</h2>
     <form action="" method="post" id="newMissionForm">
         <table>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="title" class="labelForm">Titre</label>
                 </td>
                 <td>
@@ -28,7 +28,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="description" class="labelForm">Description</label>
                 </td>
                 <td>
@@ -36,7 +36,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="codeName" class="labelForm">Nom de code</label>
                 </td>
                 <td>
@@ -44,7 +44,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="country" class="labelForm">Pays</label>
                 </td>
                 <td>
@@ -52,7 +52,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="startDate" class="labelForm">Date de début</label>
                 </td>
                 <td>
@@ -60,7 +60,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="endDate" class="labelForm">Date de fin</label>
                 </td>
                 <td>
@@ -68,7 +68,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <div class="labelForm">Agent(s)</div>
                 </td>
                 <td>
@@ -84,7 +84,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <div class="labelForm">Contact(s)</div>
                 </td>
                 <td>
@@ -100,7 +100,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <div class="labelForm">Cible(s)</div>
                 </td>
                 <td>
@@ -116,7 +116,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <div class="labelForm">Planque(s)</div>
                 </td>
                 <td>
@@ -132,7 +132,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="missionType" class="labelForm">Type de mission</label>
                 </td>
                 <td>
@@ -150,7 +150,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="missionSpeciality" class="labelForm">Spécialité</label>
                 </td>
                 <td>
@@ -168,7 +168,7 @@
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="labelColumn">
                     <label for="missionStatut" class="labelForm">Statut de mission</label>
                 </td>
                 <td>

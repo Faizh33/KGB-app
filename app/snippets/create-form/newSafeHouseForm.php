@@ -2,7 +2,7 @@
 <form action="" method="post" id="form">
     <table>
         <tr>
-            <td>
+            <td class="labelColumn">
                 <label for="code" class="labelForm">Spécialité</label>
             </td>
             <td>
@@ -10,7 +10,7 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <td class="labelColumn">
                 <label for="address" class="labelForm">Adresse</label>
             </td>
             <td>
@@ -18,7 +18,7 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <td class="labelColumn">
                 <label for="country" class="labelForm">Pays</label>
             </td>
             <td>
@@ -26,7 +26,7 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <td class="labelColumn">
                 <label for="type" class="labelForm">Type</label>
             </td>
             <td>
