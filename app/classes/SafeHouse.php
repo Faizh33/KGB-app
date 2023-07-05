@@ -2,6 +2,7 @@
 namespace app\classes;
 
 require_once("Mission.php");
+use app\classes\Mission;
 
 
 class SafeHouse {
@@ -92,44 +93,46 @@ class SafeHouse {
     }
 
 
-        /**
-     * Récupère toutes les planques depuis la base de données et les insère dans la classe.
-     *
-     * @return array Un tableau contenant toutes les planques.
-     */
-    public static function getAllSafeHouses($pdo): array
-    {
-        // Récupérer toutes les données des planques depuis la base de données
-        $query = "SELECT * FROM SafeHouses";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute();
-        $safeHousesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+ /**
+ * Récupère toutes les planques depuis la base de données et les insère dans la classe.
+ *
+ * @param PDO $pdo L'objet PDO pour la connexion à la base de données.
+ * @return array Un tableau contenant toutes les planques.
+ */
+public static function getAllSafeHouses(\PDO $pdo): array
+{
+    // Requête SQL pour récupérer toutes les planques depuis la base de données
+    $query = "SELECT * FROM SafeHouses";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
 
-        // Tableau pour stocker les instances de planques
-        $safeHouses = [];
+    $safeHousesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        // Parcourir les données des planques récupérées
-        foreach ($safeHousesData as $safeHouseData) {
-            $id = $safeHouseData['id'];
-            $code = $safeHouseData['code'];
-            $address = $safeHouseData['address'];
-            $country = $safeHouseData['country'];
-            $type = $safeHouseData['type'];
-            $mission = $safeHouseData['mission_id'];
+    $safeHouses = [];
 
-            // Vérifier si la planque existe déjà dans le tableau static $safeHouses
-            if (!isset(self::$safeHouses[$id])) {
-                // Créer une nouvelle instance de planque
-                $safeHouse = new SafeHouse($pdo, $id, $code, $address, $country, $type, $mission);
-                self::$safeHouses[$id] = $safeHouse;
-            }
+    foreach ($safeHousesData as $safeHouseData) {
+        $id = $safeHouseData['id'];
+        $code = $safeHouseData['code'];
+        $address = $safeHouseData['address'];
+        $country = $safeHouseData['country'];
+        $type = $safeHouseData['type'];
+        $missionId = $safeHouseData['mission_id'];
 
-            // Ajouter la planque au tableau des planques
-            $safeHouses[] = self::$safeHouses[$id];
+        // Vérifier si la mission existe et récupérer l'objet Mission correspondant
+        $mission = null;
+        if ($missionId !== null) {
+            $mission = new Mission($pdo);
+            $mission = $mission->getMissionById($missionId);
         }
 
-        return $safeHouses;
+        // Créer une nouvelle instance de SafeHouse avec les données récupérées
+        $safeHouse = new SafeHouse($pdo, $id, $code, $address, $country, $type, $mission);
+        $safeHouses[] = $safeHouse;
     }
+
+    return $safeHouses;
+}
+
 
     /**
      * Ajoute une nouvelle planque dans la base de données et dans la classe.
