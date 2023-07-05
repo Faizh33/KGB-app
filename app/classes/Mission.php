@@ -5,6 +5,9 @@ namespace app\classes;
 require_once "Speciality.php";
 require_once "MissionStatus.php";
 require_once "MissionType.php";
+require_once "MissionAgent.php";
+require_once "MissionContact.php";
+require_once "MissionTarget.php";
 require_once '../helpers/dataHelpers.php';
 
 class Mission
