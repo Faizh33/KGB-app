@@ -1,5 +1,5 @@
 <h2>Créer un nouvel agent</h2>
-    <form action="" method="post" id="form">
+    <form action="../controllers/insertAgentController.php" method="post" id="form">
         <table>
             <tr>
                 <td class="labelColumn">
