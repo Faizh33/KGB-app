@@ -51,7 +51,10 @@ table {
 /*CSS des formulaires de création*/
 h2 {
     font-size: 3vw;
-    color: rgb(107, 209, 199);
+    background: linear-gradient(120deg,rgb(54, 199, 185) 0%,white 80%);
+    background-clip: border-box;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 form {
@@ -60,6 +63,7 @@ form {
     padding: 1vw;
     margin: auto;
     background-color: rgb(215, 236, 235);
+    margin-bottom: 3vw;
 }
 
 td {
