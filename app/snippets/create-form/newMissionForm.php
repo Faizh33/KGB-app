@@ -77,7 +77,7 @@
                         $agents = Agent::getAllAgents($pdo);
                         foreach($agents as $agent) {
                             $agentId = $agent->getId(); ?>
-                            <input type="checkbox" name="agents[]" class="editChk" value='"<?php $agentId ?>"' id="editAgent <?php $agentId ?>">
+                            <input type="checkbox" name="agents[]" class="agent-checkbox" value='"<?php $agentId ?>"' id="editAgent <?php $agentId ?>">
                             <label for="editAgent <?php echo $agentId ?>" class="labelChk"> <?php echo $agent->getLastName() . ' ' . $agent->getFirstName() ?> </label><br>
                         <?php } ?>
                     </div>
@@ -93,7 +93,7 @@
                         $contacts = Contact::getAllContacts($pdo);
                         foreach($contacts as $contact) {
                             $contactId = $contact->getId(); ?>
-                            <input type="checkbox" name="contacts[]" class="editChk" value='"<?php $contactId ?>"' id="editContact <?php $contactId ?>">
+                            <input type="checkbox" name="contacts[]" class="contact-checkbox" value='"<?php $contactId ?>"' id="editContact <?php $contactId ?>">
                             <label for="editContact <?php echo $contactId ?>" class="labelChk"> <?php echo $contact->getLastName() . ' ' . $contact->getFirstName() ?> </label><br>
                         <?php } ?>
                     </div>
@@ -109,7 +109,7 @@
                         $targets = Target::getAllTargets($pdo);
                         foreach($targets as $target) {
                             $targetId = $target->getId(); ?>
-                            <input type="checkbox" name="targets[]" class="editChk" value='"<?php $targetId ?>"' id="editTarget <?php $targetId ?>">
+                            <input type="checkbox" name="targets[]" class="target-checkbox" value='"<?php $targetId ?>"' id="editTarget <?php $targetId ?>">
                             <label for="editTarget <?php echo $targetId ?>" class="labelChk"> <?php echo $target->getLastName() . ' ' . $target->getFirstName() ?> </label><br>
                         <?php } ?>
                     </div>
@@ -190,5 +190,5 @@
             <input type="submit" value="Enregistrer" class="formButton" />
         </div>       
     </form>
-</body>
-</html>
+    
+    <script src="../../../public/js/form-validation.js"></script>
