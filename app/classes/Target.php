@@ -65,10 +65,9 @@ class Target extends Person
             $stmt->execute();
 
             $targetData = $stmt->fetch(\PDO::FETCH_ASSOC);
-            $codeName = $targetData['code_name'];
 
             if ($targetData !== false) {
-                $codeName = $targetData['identification_code'];
+                $codeName = $targetData['code_name'];
                 $targets[] = new Target($pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $codeName);
             }
         }
