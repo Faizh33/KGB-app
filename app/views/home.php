@@ -13,15 +13,12 @@ use app\classes\MissionType;
 
 // Création de l'objet Mission
 $missionObj = new Mission($pdo);
-$specialityObj = new Speciality($pdo);
-$missionStatusObj = new MissionStatus($pdo);
-$missionTypeObj = new MissionType($pdo);
 
 // Récupération de toutes les missions
-$specialities = $specialityObj->getAllSpecialities();
-$missionStatuses = $missionStatusObj->getAllMissionStatuses();
-$missionTypes = $missionTypeObj->getAllMissionTypes();
-$missions = $missionObj->getAllMissions();
+$specialities = Speciality::getAllSpecialities($pdo);
+$missionStatuses = MissionStatus::getAllMissionStatuses($pdo);
+$missionTypes = MissionType::getAllMissionTypes($pdo);
+$missions = $missionObj->getAllMissions($pdo);
 
 ?>
 
@@ -66,7 +63,7 @@ $missions = $missionObj->getAllMissions();
                     $formattedStartDate = $startDateObj->format('d/m/Y');
                     echo $formattedStartDate;
                 ?></td>
-                <td><a href=""><?php echo $mission->getTitle(); ?></a></td>
+                <td><a href="missionDetails.php?mission=<?php echo $mission->getId(); ?>"><?php echo $mission->getTitle(); ?></a></td>
                 <td><?php echo $mission->getCodeName(); ?></td>
                 <td>
                 <?php
