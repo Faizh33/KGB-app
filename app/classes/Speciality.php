@@ -36,7 +36,7 @@ class Speciality
 
         $query = "SELECT * FROM Specialities WHERE id = :id";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', $id);
         $stmt->execute();
 
         $specialityDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -99,7 +99,7 @@ class Speciality
         // Vérifier si la spécialité existe déjà dans la base de données
         $query = "SELECT * FROM Specialities WHERE speciality = :speciality";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':speciality', $speciality);
+        $stmt->bindValue(':speciality', $speciality);
         $stmt->execute();
 
         $specialityDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -112,7 +112,7 @@ class Speciality
         // Insérer la nouvelle spécialité dans la base de données et dans la classe
         $query = "INSERT INTO Specialities (speciality) VALUES (:speciality)";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':speciality', $speciality);
+        $stmt->bindValue(':speciality', $speciality);
         $stmt->execute();
 
         // Récupérer l'id de la nouvelle spécialité insérée
@@ -147,8 +147,8 @@ class Speciality
 
         $query = "UPDATE Specialities SET speciality = :speciality WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':speciality', $this->speciality);
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':speciality', $this->speciality);
         $stmt->execute();
 
         // Mettre à jour le tableau $specialities avec la spécialité modifiée
@@ -169,7 +169,7 @@ class Speciality
         // Vérifier si l'ID existe en base de données
         $query = "SELECT * FROM Specialities WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', $id);
         $stmt->execute();
 
         $specialityDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -181,7 +181,7 @@ class Speciality
         // Supprimer la spécialité de la base de données
         $query = "DELETE FROM Specialities WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', $id);
         $stmt->execute();
 
         // Supprimer les associations agent/spécialité correspondantes en utilisant une instance de la classe AgentSpeciality

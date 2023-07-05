@@ -148,10 +148,10 @@ public static function getAllSafeHouses(\PDO $pdo): array
         // Vérifier si la planque existe déjà dans la base de données
         $query = "SELECT * FROM SafeHouses WHERE code = :code AND address = :address AND country = :country AND type = :type";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':code', $code);
-        $stmt->bindParam(':address', $address);
-        $stmt->bindParam(':country', $country);
-        $stmt->bindParam(':type', $type);
+        $stmt->bindValue(':code', $code);
+        $stmt->bindValue(':address', $address);
+        $stmt->bindValue(':country', $country);
+        $stmt->bindValue(':type', $type);
         $stmt->execute();
 
         $safeHouseDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -164,10 +164,10 @@ public static function getAllSafeHouses(\PDO $pdo): array
         // Insérer la nouvelle planque dans la base de données
         $query = "INSERT INTO SafeHouses (code, address, country, type) VALUES (:code, :address, :country, :type)";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':code', $code);
-        $stmt->bindParam(':address', $address);
-        $stmt->bindParam(':country', $country);
-        $stmt->bindParam(':type', $type);
+        $stmt->bindValue(':code', $code);
+        $stmt->bindValue(':address', $address);
+        $stmt->bindValue(':country', $country);
+        $stmt->bindValue(':type', $type);
         $stmt->execute();
 
         $id = $this->pdo->lastInsertId();
@@ -201,11 +201,11 @@ public static function getAllSafeHouses(\PDO $pdo): array
 
         $query = "UPDATE SafeHouses SET code = :code, address = :address, country = :country, type = :type WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':code', $this->code);
-        $stmt->bindParam(':address', $this->address);
-        $stmt->bindParam(':country', $this->country);
-        $stmt->bindParam(':type', $this->type);
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':code', $this->code);
+        $stmt->bindValue(':address', $this->address);
+        $stmt->bindValue(':country', $this->country);
+        $stmt->bindValue(':type', $this->type);
         $stmt->execute();
 
         // Mettre à jour le tableau $safeHouses avec la planque modifiée
@@ -226,7 +226,7 @@ public static function getAllSafeHouses(\PDO $pdo): array
         // Vérifier si l'ID existe en base de données
         $query = "SELECT * FROM SafeHouses WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', $id);
         $stmt->execute();
 
         $safeHouseDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -238,7 +238,7 @@ public static function getAllSafeHouses(\PDO $pdo): array
         // Supprimer la planque de la base de données
         $query = "DELETE FROM SafeHouses WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', $id);
         $stmt->execute();
 
         // Supprimer la planque de la classe

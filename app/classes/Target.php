@@ -30,7 +30,7 @@ class Target extends Person
             // Si la personne existe, exécuter la requête SQL pour récupérer les données de la cible
             $query = "SELECT * FROM Targets WHERE id = :id";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(":id", $id);
+            $stmt->bindValue(":id", $id);
             $stmt->execute();
 
             $targetData = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -95,8 +95,8 @@ class Target extends Person
             // Si l'ajout de la personne a réussi, insérer les données de la cible dans la table Targets
             $query = "INSERT INTO Targets (id, code_name) VALUES (:id, :codeName)";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(':id', $person->getId());
-            $stmt->bindParam(':codeName', $codeName);
+            $stmt->bindValue(':id', $person->getId());
+            $stmt->bindValue(':codeName', $codeName);
             $stmt->execute();
 
             // Créer une instance de la classe Target avec les données fournies et retourner cette instance
@@ -122,8 +122,8 @@ class Target extends Person
             // Si la mise à jour de la personne a réussi, mettre à jour le code de nom dans la table Targets
             $query = "UPDATE Targets SET code_name = :codeName WHERE id = :id";
             $stmt = $this->pdo->prepare($query);
-            $stmt->bindParam(':id', $id);
-            $stmt->bindParam(':codeName', $this->codeName);
+            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':codeName', $this->codeName);
             $stmt->execute();
 
             return true;
@@ -147,7 +147,7 @@ class Target extends Person
             // Si la suppression de la personne a réussi, supprimer la cible de la table Targets
             $query = "DELETE FROM Targets WHERE id = :id";
             $stmt = $this->pdo->prepare($query);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
 
             return true;

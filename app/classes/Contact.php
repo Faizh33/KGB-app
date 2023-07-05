@@ -30,7 +30,7 @@ class Contact extends Person
             // Si la personne existe, récupérer le contact associé dans la table "Contacts"
             $query = "SELECT * FROM Contacts WHERE id = :id";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(":id", $id);
+            $stmt->bindValue(":id", $id);
             $stmt->execute();
 
             $contactDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -98,8 +98,8 @@ class Contact extends Person
             // Si la personne a été ajoutée avec succès, insérer les données spécifiques du contact dans la table "Contacts"
             $query = "INSERT INTO Contacts (id, code_name) VALUES (:id, :codeName)";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(':id', $person->getId());
-            $stmt->bindParam(':codeName', $codeName);
+            $stmt->bindValue(':id', $person->getId());
+            $stmt->bindValue(':codeName', $codeName);
             $stmt->execute();
 
             // Créer une nouvelle instance de Contact en utilisant les données fournies et les données de la personne correspondante
@@ -125,8 +125,8 @@ class Contact extends Person
             // Si la mise à jour des propriétés de la personne a réussi, mettre à jour le nom de code du contact dans la table "Contacts"
             $query = "UPDATE Contacts SET code_name = :codeName WHERE id = :id";
             $stmt = $this->pdo->prepare($query);
-            $stmt->bindParam(':id', $id);
-            $stmt->bindParam(':codeName', $this->codeName);
+            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':codeName', $this->codeName);
             $stmt->execute();
 
             return true;
@@ -149,7 +149,7 @@ class Contact extends Person
             // Si la suppression de la personne a réussi, supprimer le contact de la table "Contacts"
             $query = "DELETE FROM Contacts WHERE id = :id";
             $stmt = $this->pdo->prepare($query);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
 
             return true;

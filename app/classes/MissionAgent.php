@@ -98,7 +98,7 @@ class MissionAgent
 
         $query = "SELECT * FROM Missions_agents WHERE mission_id = :missionId";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':missionId', $missionId);
+        $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
         $missionAgentDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -131,7 +131,7 @@ class MissionAgent
 
         $query = "SELECT * FROM Missions_agents WHERE agent_id = :agentId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':agentId', $agentId);
+        $stmt->bindValue(':agentId', $agentId);
         $stmt->execute();
 
         $missionAgentDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -166,8 +166,8 @@ class MissionAgent
 
         $query = "INSERT INTO Missions_agents (mission_id, agent_id) VALUES (:missionId, :agentId)";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':missionId', $missionId);
-        $stmt->bindParam(':agentId', $agentId);
+        $stmt->bindValue(':missionId', $missionId);
+        $stmt->bindValue(':agentId', $agentId);
         $stmt->execute();
 
         $newMissionAgent = new MissionAgent($this->pdo, $missionId, $agentId);
@@ -201,9 +201,9 @@ class MissionAgent
 
         $query = "UPDATE Missions_agents SET agent_id = :newAgentId WHERE mission_id = :missionId AND agent_id = :agentId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':newAgentId', $this->agentId);
-        $stmt->bindParam(':missionId', $missionId);
-        $stmt->bindParam(':agentId', $agentId);
+        $stmt->bindValue(':newAgentId', $this->agentId);
+        $stmt->bindValue(':missionId', $missionId);
+        $stmt->bindValue(':agentId', $agentId);
         $stmt->execute();
 
         self::$missionAgents[$missionId] = $updatedMissionAgents;

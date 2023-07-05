@@ -41,7 +41,7 @@ class Person
 
         $query = "SELECT * FROM Persons WHERE id = :id";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(":id", $id);
+        $stmt->bindValue(":id", $id);
         $stmt->execute();
 
         $personData = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -107,10 +107,10 @@ class Person
         // Vérifier si la personne existe déjà dans la base de données
         $query = "SELECT * FROM Persons WHERE lastName = :lastName AND firstName = :firstName AND birthDate = :birthDate AND nationality = :nationality";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':lastName', $lastName);
-        $stmt->bindParam(':firstName', $firstName);
-        $stmt->bindParam(':birthDate', $birthDate);
-        $stmt->bindParam(':nationality', $nationality);
+        $stmt->bindValue(':lastName', $lastName);
+        $stmt->bindValue(':firstName', $firstName);
+        $stmt->bindValue(':birthDate', $birthDate);
+        $stmt->bindValue(':nationality', $nationality);
         $stmt->execute();
 
         $personDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -123,11 +123,11 @@ class Person
         $id = generateUUID();
         $query = "INSERT INTO Persons (id, lastName, firstName, birthDate, nationality) VALUES (:id, :lastName, :firstName, :birthDate, :nationality)";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':lastName', $lastName);
-        $stmt->bindParam(':firstName', $firstName);
-        $stmt->bindParam(':birthDate', $birthDate);
-        $stmt->bindParam(':nationality', $nationality);
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':lastName', $lastName);
+        $stmt->bindValue(':firstName', $firstName);
+        $stmt->bindValue(':birthDate', $birthDate);
+        $stmt->bindValue(':nationality', $nationality);
         $stmt->execute();
 
         $newPerson = new Person($this->pdo, $id, $lastName, $firstName, $birthDate, $nationality);
@@ -155,11 +155,11 @@ class Person
 
         $query = "UPDATE Persons SET lastName = :lastName, firstName = :firstName, birthDate = :birthDate, nationality = :nationality WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':lastName', $this->lastName);
-        $stmt->bindParam(':firstName', $this->firstName);
-        $stmt->bindParam(':birthDate', $this->birthDate);
-        $stmt->bindParam(':nationality', $this->nationality);
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':lastName', $this->lastName);
+        $stmt->bindValue(':firstName', $this->firstName);
+        $stmt->bindValue(':birthDate', $this->birthDate);
+        $stmt->bindValue(':nationality', $this->nationality);
         $stmt->execute();
 
         // Mettre à jour le tableau $persons
@@ -184,7 +184,7 @@ class Person
         // Supprimer la personne de la base de données
         $query = "DELETE FROM Persons WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', $id);
         $stmt->execute();
 
         // Supprimer la personne de la classe

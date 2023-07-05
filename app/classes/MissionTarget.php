@@ -97,7 +97,7 @@ class MissionTarget
 
         $query = "SELECT * FROM Missions_targets WHERE mission_id = :missionId";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':missionId', $missionId);
+        $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
         $missionTargetDatas = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -130,7 +130,7 @@ class MissionTarget
 
         $query = "SELECT * FROM Missions_targets WHERE target_id = :targetId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':targetId', $targetId);
+        $stmt->bindValue(':targetId', $targetId);
         $stmt->execute();
 
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -162,8 +162,8 @@ class MissionTarget
 
         $query = "INSERT INTO Missions_targets (mission_id, target_id) VALUES (:missionId, :targetId)";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':missionId', $missionId);
-        $stmt->bindParam(':targetId', $targetId);
+        $stmt->bindValue(':missionId', $missionId);
+        $stmt->bindValue(':targetId', $targetId);
         $stmt->execute();
 
         $newMissionTarget = new MissionTarget($this->pdo, $missionId, $targetId);
@@ -197,9 +197,9 @@ class MissionTarget
 
         $query = "UPDATE Missions_targets SET target_id = :newTargetId WHERE mission_id = :missionId AND target_id = :targetId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':newTargetId', $this->targetId);
-        $stmt->bindParam(':missionId', $missionId);
-        $stmt->bindParam(':targetId', $targetId);
+        $stmt->bindValue(':newTargetId', $this->targetId);
+        $stmt->bindValue(':missionId', $missionId);
+        $stmt->bindValue(':targetId', $targetId);
         $stmt->execute();
 
         self::$missionTargets[$missionId] = $updatedMissionTargets;

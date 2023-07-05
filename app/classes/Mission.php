@@ -186,16 +186,16 @@ class Mission
         // Insérer la nouvelle mission dans la base de données
         $query = "INSERT INTO Missions (id, title, description, codeName, country, startDate, endDate, speciality_id, missionstatuses_id, missiontype_id) VALUES (:id, :title, :description, :codeName, :country, :startDate, :endDate, :specialityId, :missionStatusId, :missionTypeId)";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':title', $title);
-        $stmt->bindParam(':description', $description);
-        $stmt->bindParam(':codeName', $codeName);
-        $stmt->bindParam(':country', $country);
-        $stmt->bindParam(':startDate', $startDate);
-        $stmt->bindParam(':endDate', $endDate);
-        $stmt->bindParam(':specialityId', $speciality->getId());
-        $stmt->bindParam(':missionStatusId', $missionStatus->getId());
-        $stmt->bindParam(':missionTypeId', $missionType->getId());
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':title', $title);
+        $stmt->bindValue(':description', $description);
+        $stmt->bindValue(':codeName', $codeName);
+        $stmt->bindValue(':country', $country);
+        $stmt->bindValue(':startDate', $startDate);
+        $stmt->bindValue(':endDate', $endDate);
+        $stmt->bindValue(':specialityId', $speciality->getId());
+        $stmt->bindValue(':missionStatusId', $missionStatus->getId());
+        $stmt->bindValue(':missionTypeId', $missionType->getId());
         $stmt->execute();
 
         // Créer une nouvelle instance de Mission
@@ -256,16 +256,16 @@ class Mission
         // Requête SQL pour mettre à jour les propriétés de la mission dans la base de données
         $query = "UPDATE Missions SET title = :title, description = :description, codeName = :codeName, country = :country, startDate = :startDate, endDate = :endDate, speciality_id = :specialityId, missionstatuses_id = :missionStatusId, missiontype_id = :missionTypeId WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':title', $this->title);
-        $stmt->bindParam(':description', $this->description);
-        $stmt->bindParam(':codeName', $this->codeName);
-        $stmt->bindParam(':country', $this->country);
-        $stmt->bindParam(':startDate', $this->startDate);
-        $stmt->bindParam(':endDate', $this->endDate);
-        $stmt->bindParam(':specialityId', $this->speciality->getId());
-        $stmt->bindParam(':missionStatusId', $this->missionStatus->getId());
-        $stmt->bindParam(':missionTypeId', $this->missionType->getId());
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':title', $this->title);
+        $stmt->bindValue(':description', $this->description);
+        $stmt->bindValue(':codeName', $this->codeName);
+        $stmt->bindValue(':country', $this->country);
+        $stmt->bindValue(':startDate', $this->startDate);
+        $stmt->bindValue(':endDate', $this->endDate);
+        $stmt->bindValue(':specialityId', $this->speciality->getId());
+        $stmt->bindValue(':missionStatusId', $this->missionStatus->getId());
+        $stmt->bindValue(':missionTypeId', $this->missionType->getId());
         $stmt->execute();
 
         // Mettre à jour la mission dans la liste des missions
@@ -285,7 +285,7 @@ class Mission
         // Vérifier si l'ID existe en base de données
         $query = "SELECT * FROM Missions WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', $id);
         $stmt->execute();
 
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -296,7 +296,7 @@ class Mission
         // Supprimer la mission de la base de données
         $query = "DELETE FROM Missions WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', $id);
         $stmt->execute();
 
         // Supprimer les associations agent/mission correspondantes en utilisant une instance de la classe MissionAgent

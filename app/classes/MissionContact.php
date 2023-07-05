@@ -97,7 +97,7 @@ class MissionContact
 
         $query = "SELECT * FROM Missions_contacts WHERE mission_id = :missionId";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':missionId', $missionId);
+        $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -127,7 +127,7 @@ class MissionContact
 
         $query = "SELECT * FROM Missions_contacts WHERE contact_id = :contactId";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':contactId', $contactId);
+        $stmt->bindValue(':contactId', $contactId);
         $stmt->execute();
 
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -159,8 +159,8 @@ class MissionContact
 
         $query = "INSERT INTO Missions_contacts (mission_id, contact_id) VALUES (:missionId, :contactId)";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':missionId', $missionId);
-        $stmt->bindParam(':contactId', $contactId);
+        $stmt->bindValue(':missionId', $missionId);
+        $stmt->bindValue(':contactId', $contactId);
         $stmt->execute();
 
         $newMissionContact = new MissionContact($this->pdo, $missionId, $contactId);
@@ -193,9 +193,9 @@ class MissionContact
 
         $query = "UPDATE Missions_contacts SET contact_id = :newContactId WHERE mission_id = :missionId AND contact_id = :contactId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':newContactId', $this->contactId);
-        $stmt->bindParam(':missionId', $missionId);
-        $stmt->bindParam(':contactId', $contactId);
+        $stmt->bindValue(':newContactId', $this->contactId);
+        $stmt->bindValue(':missionId', $missionId);
+        $stmt->bindValue(':contactId', $contactId);
         $stmt->execute();
 
         self::$missionContacts[$missionId] = $updatedMissionContacts;
@@ -213,7 +213,7 @@ class MissionContact
     {
         $query = "DELETE FROM Missions_contacts WHERE mission_id = :missionId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':missionId', $missionId);
+        $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
         unset(self::$missionContacts[$missionId]);
@@ -231,7 +231,7 @@ class MissionContact
     {
         $query = "DELETE FROM Missions_contacts WHERE contact_id = :contactId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':contactId', $contactId);
+        $stmt->bindValue(':contactId', $contactId);
         $stmt->execute();
 
         unset(self::$missionContacts[$contactId]);

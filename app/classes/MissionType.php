@@ -36,7 +36,7 @@ class MissionType
         // Préparer la requête SQL pour sélectionner le type de mission avec l'identifiant donné
         $query = "SELECT * FROM MissionTypes WHERE id = :id";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', $id);
         $stmt->execute();
 
         // Récupérer les données du type de mission
@@ -106,7 +106,7 @@ class MissionType
         // Vérifier si le type de mission existe déjà dans la base de données
         $query = "SELECT * FROM MissionTypes WHERE type = :type";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':type', $type);
+        $stmt->bindValue(':type', $type);
         $stmt->execute();
 
         $typeDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -119,7 +119,7 @@ class MissionType
         // Insérer le nouveau type de mission dans la base de données et dans la classe
         $query = "INSERT INTO MissionTypes (type) VALUES (:type)";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':type', $type);
+        $stmt->bindValue(':type', $type);
         $stmt->execute();
 
         // Récupérer l'identifiant du nouveau type de mission inséré
@@ -153,8 +153,8 @@ class MissionType
         // Mettre à jour les propriétés dans la base de données
         $query = "UPDATE MissionTypes SET type = :type WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':type', $this->type);
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':type', $this->type);
         $stmt->execute();
 
         // Mettre à jour le tableau $missionTypes
@@ -174,7 +174,7 @@ class MissionType
         // Supprimer le type de mission de la base de données
         $query = "DELETE FROM MissionTypes WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', $id);
         $stmt->execute();
 
         // Vérifier si le type de mission existe dans le tableau des types de mission

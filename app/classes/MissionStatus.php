@@ -87,7 +87,7 @@ class MissionStatus
         // Vérifier si le statut de mission existe déjà dans la base de données
         $query = "SELECT * FROM MissionStatuses WHERE status = :status";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':status', $status);
+        $stmt->bindValue(':status', $status);
         $stmt->execute();
 
         $statusDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -99,7 +99,7 @@ class MissionStatus
         // Insérer le nouveau statut de mission dans la base de données et dans la classe
         $query = "INSERT INTO MissionStatuses (status) VALUES (:status)";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':status', $status);
+        $stmt->bindValue(':status', $status);
         $stmt->execute();
 
         $newMissionStatusId = $this->pdo->lastInsertId();
@@ -130,8 +130,8 @@ class MissionStatus
         // Mettre à jour les propriétés dans la base de données
         $query = "UPDATE MissionStatuses SET status = :status WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':status', $this->status);
+        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':status', $this->status);
         $stmt->execute();
 
         // Mettre à jour le tableau $missionStatuses

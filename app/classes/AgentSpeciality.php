@@ -65,7 +65,7 @@ class AgentSpeciality
         // Si les spécialités ne sont pas en mémoire cache, les récupérer depuis la base de données
         $query = "SELECT speciality_id FROM Agents_Specialities WHERE agent_id = :agentId";
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':agentId', $agentId);
+        $stmt->bindValue(':agentId', $agentId);
         $stmt->execute();
 
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -105,7 +105,7 @@ class AgentSpeciality
         // Requête SQL pour récupérer les IDs des agents ayant la spécialité spécifiée
         $query = "SELECT agent_id FROM Agents_Specialities WHERE speciality_id = :specialityId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':specialityId', $specialityId);
+        $stmt->bindValue(':specialityId', $specialityId);
         $stmt->execute();
 
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -151,8 +151,8 @@ class AgentSpeciality
         // Sinon, insérer la nouvelle spécialité dans la table Agents_Specialities
         $query = "INSERT INTO Agents_Specialities (agent_id, speciality_id) VALUES (:agentId, :specialityId)";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':agentId', $agentId);
-        $stmt->bindParam(':specialityId', $specialityId);
+        $stmt->bindValue(':agentId', $agentId);
+        $stmt->bindValue(':specialityId', $specialityId);
         $stmt->execute();
 
         // Créer un nouvel objet AgentSpeciality pour représenter la nouvelle spécialité
@@ -194,9 +194,9 @@ class AgentSpeciality
         // Mettre à jour la spécialité dans la table Agents_Specialities
         $query = "UPDATE Agents_Specialities SET speciality_id = :newSpecialityId WHERE agent_id = :agentId AND speciality_id = :specialityId";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindParam(':newSpecialityId', $this->specialityId);
-        $stmt->bindParam(':agentId', $agentId);
-        $stmt->bindParam(':specialityId', $specialityId);
+        $stmt->bindValue(':newSpecialityId', $this->specialityId);
+        $stmt->bindValue(':agentId', $agentId);
+        $stmt->bindValue(':specialityId', $specialityId);
         $stmt->execute();
 
         // Mettre à jour la liste des spécialités de l'agent

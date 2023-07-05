@@ -18,8 +18,8 @@ class Agent extends Person
     /**
      * Récupère un agent en fonction de son ID.
      *
-     * @param \PDO   $pdo L'objet PDO pour exécuter la requête SQL.
-     * @param int    $id  L'ID de l'agent à récupérer.
+     * @Value \PDO   $pdo L'objet PDO pour exécuter la requête SQL.
+     * @Value int    $id  L'ID de l'agent à récupérer.
      *
      * @return Agent|null L'instance de l'agent correspondant à l'ID donné, ou null si non trouvé.
      */
@@ -30,7 +30,7 @@ class Agent extends Person
         if ($person instanceof Person) {
             $query = "SELECT * FROM Agents WHERE id = :id";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(":id", $id);
+            $stmt->bindValue(":id", $id);
             $stmt->execute();
 
             $agentDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -49,7 +49,7 @@ class Agent extends Person
     /**
      * Récupère tous les agents de la base de données et les insère dans la classe.
      *
-     * @param \PDO $pdo L'objet PDO pour exécuter la requête SQL.
+     * @Value \PDO $pdo L'objet PDO pour exécuter la requête SQL.
      *
      * @return array Le tableau contenant toutes les instances d'agents récupérées de la base de données.
      */
@@ -78,12 +78,12 @@ class Agent extends Person
     /**
      * Ajoute un nouvel agent dans la base de données et dans la classe.
      *
-     * @param \PDO $pdo L'objet PDO pour exécuter la requête SQL.
-     * @param string $lastName Le nom de famille de l'agent.
-     * @param string $firstName Le prénom de l'agent.
-     * @param string $birthDate La date de naissance de l'agent.
-     * @param string $nationality La nationalité de l'agent.
-     * @param string $identificationCode Le code d'identification de l'agent.
+     * @Value \PDO $pdo L'objet PDO pour exécuter la requête SQL.
+     * @Value string $lastName Le nom de famille de l'agent.
+     * @Value string $firstName Le prénom de l'agent.
+     * @Value string $birthDate La date de naissance de l'agent.
+     * @Value string $nationality La nationalité de l'agent.
+     * @Value string $identificationCode Le code d'identification de l'agent.
      *
      * @return Agent|null L'instance de l'agent ajouté ou null si l'ajout a échoué.
      */
@@ -94,8 +94,8 @@ class Agent extends Person
         if ($person instanceof Person) {
             $query = "INSERT INTO Agents (id, identification_code) VALUES (:id, :identificationCode)";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(':id', $person->getId());
-            $stmt->bindParam(':identificationCode', $identificationCode);
+            $stmt->bindValue(':id', $person->getId());
+            $stmt->bindValue(':identificationCode', $identificationCode);
             $stmt->execute();
 
             return new Agent($pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $identificationCode);
@@ -107,7 +107,7 @@ class Agent extends Person
     /**
      * Modifie les propriétés d'un agent en fonction de l'id.
      *
-     * @param array $propertiesToUpdate Les propriétés à mettre à jour.
+     * @Value array $propertiesToUpdate Les propriétés à mettre à jour.
      *
      * @return bool Retourne true si les propriétés ont été mises à jour avec succès, sinon false.
      */
@@ -118,8 +118,8 @@ class Agent extends Person
         if ($personUpdated) {
             $query = "UPDATE Agents SET identification_code = :identificationCode WHERE id = :id";
             $stmt = $this->pdo->prepare($query);
-            $stmt->bindParam(':id', $id);
-            $stmt->bindParam(':identificationCode', $this->identificationCode);
+            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':identificationCode', $this->identificationCode);
             $stmt->execute();
 
             return true;
@@ -151,7 +151,7 @@ class Agent extends Person
         if ($personDeleted) {
             $query = "DELETE FROM Agents WHERE id = :id";
             $stmt = $this->pdo->prepare($query);
-            $stmt->bindParam(':id', $id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
 
             return true;
