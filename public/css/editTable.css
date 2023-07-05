@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=GFS+Didot&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=GFS+Didot&family=Roboto+Slab:wght@900&display=swap');
+
+
+body {
+    font-family: 'Didot', serif;
+    font-size: 1.3vw;
+}
+
+h1 {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5%;
+    margin-top: 3%;
+    font-family: 'Roboto Slab', serif;
+    font-size: 4vw;
+    color: rgb(2, 59, 53);
+}
+
+table, th, td {
+    border: 2px solid lightgray;
+    border-collapse: collapse;
+}
+
+table {
+    margin: auto;
+    width: 80%;
+}
+
+th, td {
+    padding: 1%;
+}
+
+th {
+    background-color: rgb(3, 114, 103);
+    color: white;
+    width: 10vw;
+}
+
+td {
+    padding-left: 2vw;
+}
+
+.missionDetailsButtons {
+    color: white;
+    background: rgb(3, 114, 103);
+    height: 1.5vw;
+    width: 6vw;
+    font-size: 1vw;
+    font-family: 'Didot', serif;
+    
+}
+
+.editInput, .editSelect {
+    font-size: 1vw;
+    border: 3px solid rgb(23, 157, 143);
+    height: 2vw;
+}
+
+.editInput {
+    width: 40vw;
+}
+
+.editSelect {
+    width: 20vw;
+}
