@@ -61,13 +61,13 @@ class Agent extends Person
         foreach ($persons as $person) {
             $query = "SELECT * FROM Agents WHERE id = :id";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(":id", $person->getId());
+            $stmt->bindValue(":id", $person->getId());
             $stmt->execute();
 
             $agentDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
-            $idCode = $agentDatas['identification_code'];
-
-            if ($agentDatas) {
+            
+            if ($agentDatas !== false) {
+                $idCode = $agentDatas['identification_code'];
                 $agents[] = new Agent($pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $idCode);
             }
         }
