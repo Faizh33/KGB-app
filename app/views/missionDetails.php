@@ -1,0 +1,403 @@
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+$missions = []; 
+include_once "../../config/database.php";
+include_once "../classes/Mission.php";
+include_once "../classes/MissionType.php";
+include_once "../classes/MissionAgent.php";
+include_once "../classes/Agent.php";
+include_once "../classes/MissionContact.php";
+include_once "../classes/Contact.php";
+include_once "../classes/MissionTarget.php";
+include_once "../classes/Target.php";
+include_once "../classes/SafeHouse.php";
+include_once "../classes/Speciality.php";
+include_once "../classes/MissionStatus.php";
+
+use app\classes\Mission;
+use app\classes\MissionType;
+use app\classes\MissionAgent;
+use app\classes\Agent;
+use app\classes\MissionContact;
+use app\classes\Contact;
+use app\classes\MissionTarget;
+use app\classes\Target;
+use app\classes\SafeHouse;
+use app\classes\Speciality;
+use app\classes\MissionStatus;
+
+// Vérifier si l'ID de la mission est passé en paramètre
+if (isset($_GET['mission'])) {
+    $missionId = $_GET['mission'];
+
+    // Créer une instance de la classe Mission
+    $mission = new Mission($pdo);
+
+    // Récupérer la mission spécifique en utilisant son ID
+    $mission = $mission->getMissionById($missionId);
+
+    // Ajout de la mission au cache
+    $missions[$mission->getId()] = $mission;
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../public/css/editTable.css">
+    <script src="../../public/js/edit-mission-form.js"></script>
+    <title>Détail de la mission</title>
+</head>
+<body>
+    <h1>Détail de la mission</h1>
+    <table>
+        <tbody>
+            <?php if ($mission->getId() != '') : ?>
+                <tr>
+                    <!-- Titre de la mission  -->
+                    <th scope="row">Titre</th>
+                    <td>
+                        <span id="missionTitle"><?php echo $mission->getTitle(); ?></span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                            <input type="text" class="editInput" id="editMissionTitle" style="display:none;">
+                        <?php endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td class="tdButtons">
+                            <button class="missionDetailsButtons" id="editTitleButton" onclick="editTitle()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveTitleButton" onclick="saveTitle()" style="visibility:hidden;;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <!-- Description de la mission  -->
+                    <th scope="row">Description</th>
+                    <td>
+                        <span id="missionDescription"><?php echo $mission->getDescription(); ?></span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                            <input type="text" class="editInput" id="editMissionDescription" style="display:none;">
+                        <?php endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td class="tdButtons">
+                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <!--  Nom de code de la mission -->
+                    <th scope="row">Nom de Code</th>
+                    <td>
+                        <span id="missionCodeName"><?php echo $mission->getCodeName(); ?></span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                            <input type="text" class="editInput" id="editMissionCodeName" style="display:none;">
+                        <?php endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td class="tdButtons">
+                            <button class="missionDetailsButtons" id="editCodeNameButton" onclick="editCodeName()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveCodeNameButton" onclick="saveCodeName()" style="visibility:hidden;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <!-- Pays de la mission -->
+                    <th scope="row">Pays</th>
+                    <td>
+                        <span id="missionCountry"><?php echo $mission->getCountry(); ?></span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                            <input type="text" class="editInput" id="editMissionCountry" style="display:none;">
+                        <?php endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td class="tdButtons">
+                            <button class="missionDetailsButtons" id="editCountryButton" onclick="editCountry()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveCountryButton" onclick="saveCountry()" style="visibility:hidden;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <!-- Date de début de la mission -->
+                    <th scope="row">Date de début</th>
+                    <td>
+                        <span id="missionStartDate">
+                            <?php 
+                                $startDate = $mission->getStartDate();
+                                $startDateObj = DateTime::createFromFormat('Y-m-d', $startDate);
+                                $formattedStartDate = $startDateObj->format('d/m/Y');
+                                echo $formattedStartDate; 
+                            ?>
+                        </span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                            <input type="date" class="editInput" id="editMissionStartDate" style="display:none;">
+                        <?php endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td class="tdButtons">
+                            <button class="missionDetailsButtons" id="editStartDateButton" onclick="editStartDate()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveStartDateButton" onclick="saveStartDate()" style="visibility:hidden;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <!-- Date de fin de la mission -->
+                    <th scope="row">Date de fin</th>
+                    <td>
+                        <span id="missionEndDate">
+                            <?php 
+                                $endDate = $mission->getEndDate();
+                                $endDateObj = DateTime::createFromFormat('Y-m-d', $endDate);
+                                $formattedEndDate = $endDateObj->format('d/m/Y');
+                                echo $formattedEndDate; 
+                            ?>
+                        </span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                            <input type="date" class="editInput" id="editMissionEndDate" style="display:none;">
+                        <?php endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td> 
+                            <button class="missionDetailsButtons" id="editEndDateButton" onclick="editEndDate()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveEndDateButton" onclick="saveEndDate()" style="visibility:hidden;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <!-- Type de mission -->
+                    <th scope="row">Type de mission</th>
+                    <td>
+                        <span id="missionType">
+                            <?php
+                                $missionType = MissionType::getMissionTypeById($pdo, $mission->getMissionType()->getId());
+                                echo $missionType->getType();
+                            ?>
+                        </span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                            <select class="editSelect" id="editMissionType" style="display:none;">
+                            <option value="">--Choisir un type--</option>
+                                <?php
+                                    $missionTypes = MissionType::getAllMissionTypes($pdo);
+                                    foreach($missionTypes as $missionType) {
+                                        $id = $missionType->getId();
+                                        $type = $missionType->getType();
+                                        echo "<option value=\"$id\">$type</option>";
+                                    }
+                                ?>
+                            </select>
+                        <?php endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td class="tdButtons">
+                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <!-- Agents participant à la mission -->
+                    <th scope="row">Agent(s)</th>
+                    <td>
+                        <span id="missionAgent">
+                            <?php 
+                                $missionAgents = MissionAgent::getAgentsByMissionId($pdo, $mission->getId());
+                                foreach($missionAgents as $missionAgent) {
+                                    $agentId = $missionAgent->getAgentId();
+                                    $agent = Agent::getAgentById($pdo, $agentId);
+                                    echo "<br>Nom : " . $agent->getLastName() . " " . $agent->getFirstName() . "<br>" . "Date de naissance: " . $agent->getBirthDate() . "<br>" . "Nationalité :  " . $agent->getNationality() . "<br>" . "Code d'identification : " . $agent->getIdentificationCode() . "<br><br>";
+                                }
+                            ?>
+                        </span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : 
+                            $agents = Agent::getAllAgents($pdo);
+                            foreach($agents as $agent) {
+                                $agentId = $agent->getId(); ?>
+                                <div class=chk style="display:none;">
+                                    <input type="checkbox" name="agents[]" class="editChk" value='"<?php $agentId ?>"' id="editAgent <?php $agentId ?>">
+                                    <label for="editAgent <?php echo $agentId ?>" class="labelChk"> <?php echo $agent->getLastName() . ' ' . $agent->getFirstName() ?> </label><br>
+                                </div>
+                            <?php } 
+                        endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td class="tdButtons">
+                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <!-- Contacts participant à la mission -->
+                    <th scope="row">Contact(s)</th>
+                    <td>
+                        <span id="missionContact">
+                            <?php 
+                                $missionContacts = MissionContact::getContactsByMissionId($pdo, $mission->getId());
+                                foreach($missionContacts as $missionContact) {
+                                    $contactId = $missionContact->getContactId();
+                                    $contact = Contact::getContactById($pdo, $contactId);
+                                    echo "<br>Nom : " . $contact->getLastName() . " " . $contact->getFirstName() . "<br>" . "Date de naissance: " . $contact->getBirthDate() . "<br>" . "Nationalité :  " . $contact->getNationality() . "<br>" . "Code d'identification : " . $contact->getCodeName() . "<br><br>";
+                                }
+                            ?>
+                        </span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : 
+                            $contacts = Contact::getAllContacts($pdo);
+                            foreach($contacts as $contact) {
+                                $contactId = $contact->getId(); ?>
+                                <div class=chk style="display:none;">
+                                    <input type="checkbox" name="contacts[]" class="editChk" value='"<?php $contactId ?>"' id="editContact <?php $contactId ?>">
+                                    <label for="editContact <?php echo $contactId ?>" class="labelChk"> <?php echo $contact->getLastName() . ' ' . $contact->getFirstName() ?> </label><br>
+                                </div>
+                            <?php } 
+                        endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td class="tdButtons">
+                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <!-- Cibles concernées par la mission -->
+                    <th scope="row">Cible(s)</th>
+                    <td>
+                        <span id="missionTarget">
+                            <?php 
+                                $missionTargets = MissionTarget::getTargetsByMissionId($pdo, $mission->getId());
+                                foreach($missionTargets as $missionTarget) {
+                                    $targetId = $missionTarget->getTargetId();
+                                    $target = Target::getTargetById($pdo, $targetId);
+                                    echo "<br>Nom : " . $target->getLastName() . " " . $target->getFirstName() . "<br>" . "Date de naissance: " . $target->getBirthDate() . "<br>" . "Nationalité :  " . $target->getNationality() . "<br>" . "Code d'identification : " . $target->getCodeName() . "<br><br>";
+                                }
+                            ?>
+                        </span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : 
+                            $targets = Target::getAllTargets($pdo);
+                            foreach($targets as $target) {
+                                $targetId = $target->getId(); ?>
+                                <div class=chk style="display:none;">
+                                    <input type="checkbox" name="targets[]" class="editChk" value='"<?php $targetId ?>"' id="editTarget <?php $targetId ?>">
+                                    <label for="editTarget <?php echo $targetId ?>" class="labelChk"> <?php echo $target->getLastName() . ' ' . $target->getFirstName() ?> </label><br>
+                                </div>
+                            <?php } 
+                        endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td class="tdButtons">
+                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <!-- Planques allouées à la mission -->
+                    <th scope="row">Planque(s)</th>
+                    <td>
+                        <span id="missionSafeHouse">
+                            <?php 
+                                $safeHouses = SafeHouse::getAllSafeHouses($pdo);
+                                foreach($safeHouses as $safeHouse) {
+                                    if($safeHouse->getMission()->getId() == $missionId) {
+                                        echo "<span class='missionSafeHouse'><br>Code : " . $safeHouse->getCode() . "<br>" . "Adresse: " . $safeHouse->getAddress() . "<br>" . "Pays :  " . $safeHouse->getCountry() . "<br>" . "Type : " . $safeHouse->getType() . "<br><br></span>";
+                                    }
+                                }
+                            ?>
+                        </span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : 
+                            $safeHouses = SafeHouse::getAllSafeHouses($pdo);
+                            foreach($safeHouses as $safeHouse) {
+                                $safeHouseId = $safeHouse->getId(); ?>
+                                <div class=chk style="display:none;">
+                                    <input type="checkbox" name="safeHouses[]" class="editChk" value='"<?php $safeHouseId ?>"' id="editSafeHouse <?php $safeHouseId ?>">
+                                    <label for="editSafeHouse <?php echo $safeHouseId ?>" class="labelChk"> <?php echo $safeHouse->getAddress() . ', ' . $safeHouse->getCountry() ?> </label><br>
+                                </div>
+                            <?php } 
+                        endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td class="tdButtons">
+                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <!-- Spécialité nécessaire à la mission -->
+                    <th scope="row">Spécialité</th>
+                    <td>
+                        <span id="missionSpeciality">
+                            <?php
+                                $missionSpeciality = Speciality::getSpecialityById($pdo, $mission->getSpeciality()->getId());
+                                echo $missionSpeciality->getSpeciality();
+                            ?>
+                        </span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                            <select class="editSelect" id="editMissionSpeciality" style="display:none;">
+                            <option value="">--Choisir une spécialité--</option>
+                                <?php
+                                    $missionSpecialitys = Speciality::getAllSpecialities($pdo);
+                                    foreach($missionSpecialitys as $missionSpeciality) {
+                                        $id = $missionSpeciality->getId();
+                                        $speciality = $missionSpeciality->getSpeciality();
+                                        echo "<option value=\"$id\">$speciality</option>";
+                                    }
+                                ?>
+                            </select>
+                        <?php endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td class="tdButtons">
+                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+
+
+                <tr>
+                    <!-- Statut de la mission -->
+                    <th scope="row">Statut</th>
+                    <td>
+                        <span id="missionStatus">
+                            <?php
+                                $missionStatus = MissionStatus::getMissionStatusById($pdo, $mission->getMissionStatus()->getId());
+                                echo $missionStatus->getStatus();
+                            ?>
+                        </span>
+                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                            <select class="editSelect" id="editMissionStatus" style="display:none;">
+                            <option value="">--Choisir une spécialité--</option>
+                                <?php
+                                    $missionStatuses = MissionStatus::getAllMissionStatuses($pdo);
+                                    foreach($missionStatuses as $missionStatus) {
+                                        $id = $missionStatus->getId();
+                                        $status = $missionStatus->getStatus();
+                                        echo "<option value=\"$id\">$status</option>";
+                                    }
+                                ?>
+                            </select>
+                        <?php endif; ?>
+                    </td>
+                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
+                        <td class="tdButtons">
+                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
+                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+            <?php else: ?>
+                <tr>
+                    <td colspan="3">La mission n'existe pas.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</body>
+</html>
