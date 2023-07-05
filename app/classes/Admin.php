@@ -10,17 +10,17 @@ class Admin
     public function __construct($pdo)
     {
         $this->pdo = $pdo;
-        $this->getAllAdmins();
+        $this->getAllAdmins($pdo);
     }
 
     /**
      * Récupère tous les administrateurs présents en base de données.
      */
-    private function getAllAdmins(): void
+    private static function getAllAdmins($pdo): void
     {
         // Requête pour sélectionner tous les administrateurs
         $query = "SELECT * FROM Admins";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute();
 
         // Récupération des données des administrateurs

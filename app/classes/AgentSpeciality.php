@@ -55,7 +55,7 @@ class AgentSpeciality
      * @param string $agentId  L'ID de l'agent.
      * @return array           Un tableau contenant les spécialités de l'agent.
      */
-    public function getSpecialitiesByAgentId(string $agentId): array
+    public static function getSpecialitiesByAgentId($pdo, string $agentId): array
     {
         // Vérifier si les spécialités de l'agent sont déjà présentes dans la mémoire cache
         if (isset(self::$agentSpecialities[$agentId])) {
@@ -64,7 +64,7 @@ class AgentSpeciality
 
         // Si les spécialités ne sont pas en mémoire cache, les récupérer depuis la base de données
         $query = "SELECT speciality_id FROM Agents_Specialities WHERE agent_id = :agentId";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(':agentId', $agentId);
         $stmt->execute();
 
@@ -76,14 +76,14 @@ class AgentSpeciality
             $specialityId = $row['speciality_id'];
 
             // Chercher une spécialité existante pour cet agent et cette spécialité
-            $existingAgentSpeciality = $this->findExistingAgentSpeciality($agentId, $specialityId);
+            $existingAgentSpeciality = AgentSpeciality::findExistingAgentSpeciality($agentId, $specialityId);
 
             // Si une spécialité existante est trouvée, l'ajouter au tableau des spécialités de l'agent
             if ($existingAgentSpeciality) {
                 $agentSpecialities[] = $existingAgentSpeciality;
             } else {
                 // Si aucune spécialité existante n'est trouvée, créer une nouvelle spécialité pour l'agent
-                $agentSpeciality = new AgentSpeciality($this->pdo, $agentId, $specialityId);
+                $agentSpeciality = new AgentSpeciality($pdo, $agentId, $specialityId);
                 $agentSpecialities[] = $agentSpeciality;
             }
         }

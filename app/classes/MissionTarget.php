@@ -57,10 +57,10 @@ class MissionTarget
      *
      * @return array Un tableau contenant toutes les missions cibles.
      */
-    public function getAllMissionTargets(): array
+    public static function getAllMissionTargets($pdo): array
     {
         $query = "SELECT mission_id, target_id FROM Missions_targets";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute();
 
         $missionTargetsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -71,11 +71,11 @@ class MissionTarget
             $missionId = $missionTargetData['mission_id'];
             $targetId = $missionTargetData['target_id'];
 
-            $existingMissionTarget = $this->findExistingMissionTarget($missionId, $targetId);
+            $existingMissionTarget = MissionTarget::findExistingMissionTarget($missionId, $targetId);
             if ($existingMissionTarget) {
                 $missionTargets[] = $existingMissionTarget;
             } else {
-                $missionTarget = new MissionTarget($this->pdo, $missionId, $targetId);
+                $missionTarget = new MissionTarget($pdo, $missionId, $targetId);
                 $missionTargets[] = $missionTarget;
             }
         }
@@ -89,14 +89,14 @@ class MissionTarget
      * @param string $missionId L'identifiant de la mission.
      * @return array Un tableau contenant les cibles associées à la mission.
      */
-    public function getTargetsByMissionId(string $missionId): array
+    public static function getTargetsByMissionId($pdo, string $missionId): array
     {
         if (isset(self::$missionTargets[$missionId])) {
             return self::$missionTargets[$missionId];
         }
 
         $query = "SELECT * FROM Missions_targets WHERE mission_id = :missionId";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(':missionId', $missionId);
         $stmt->execute();
 
@@ -107,7 +107,7 @@ class MissionTarget
             $missionId = $missionTargetData['mission_id'];
             $targetId = $missionTargetData['target_id'];
 
-            $missionTarget = new MissionTarget($this->pdo, $missionId, $targetId);
+            $missionTarget = new MissionTarget($pdo, $missionId, $targetId);
             $missionTargets[] = $missionTarget;
         }
 

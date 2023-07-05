@@ -64,11 +64,11 @@ class MissionType
      *
      * @return array Les types de mission récupérés.
      */
-    public function getAllMissionTypes(): array
+    public static function getAllMissionTypes($pdo): array
     {
         // Préparer la requête SQL pour sélectionner tous les types de mission
         $query = "SELECT * FROM MissionTypes";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute();
 
         // Récupérer les données de tous les types de mission
@@ -83,7 +83,7 @@ class MissionType
             // Vérifier si le type de mission n'est pas déjà présent dans le tableau des types de mission
             if (!isset(self::$missionTypes[$missionTypeId])) {
                 // Créer une nouvelle instance de la classe MissionType avec les données du type de mission
-                $missionType = new MissionType($this->pdo, $missionTypeId, $missionTypeData['type']);
+                $missionType = new MissionType($pdo, $missionTypeId, $missionTypeData['type']);
                 // Ajouter le type de mission au tableau des types de mission pour une utilisation ultérieure
                 self::$missionTypes[$missionTypeId] = $missionType;
             }

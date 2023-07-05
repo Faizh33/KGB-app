@@ -21,7 +21,7 @@ class Target extends Person
      * @param int $id L'ID de la cible à récupérer.
      * @return Target|null La cible correspondante, ou null si la cible n'existe pas.
      */
-    public function getTargetById($pdo, $id): ?Target
+    public static function getTargetById($pdo, string $id): ?Target
     {
         // Appeler la méthode getPersonById de la classe parente pour récupérer la personne correspondante
         $person = parent::getPersonById($pdo, $id);
@@ -51,7 +51,7 @@ class Target extends Person
      * @param PDO $pdo L'objet PDO pour la connexion à la base de données.
      * @return array Un tableau contenant toutes les cibles récupérées.
      */
-    public function getAllTargets($pdo): array
+    public static function getAllTargets($pdo): array
     {
         // Appeler la méthode getAllPersons de la classe parente pour récupérer toutes les personnes
         $persons = parent::getAllPersons($pdo);

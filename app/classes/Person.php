@@ -33,14 +33,14 @@ class Person
      * @param int $id L'ID de la personne à récupérer.
      * @return Person|null La personne correspondante si elle existe, sinon null.
      */
-    public function getPersonById($id): ?Person
+    public static function getPersonById($pdo, string $id): ?Person
     {
         if (isset(self::$persons[$id])) {
             return self::$persons[$id];
         }
 
         $query = "SELECT * FROM Persons WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(":id", $id);
         $stmt->execute();
 
@@ -51,7 +51,7 @@ class Person
         $nationality = $personData['nationality'];
 
         if ($personData) {
-            $person = new Person($this->pdo, $id, $lastName, $firstName, $birthDate, $nationality);
+            $person = new Person($pdo, $id, $lastName, $firstName, $birthDate, $nationality);
             self::$persons[$id] = $person;
             return $person;
         }
@@ -64,10 +64,10 @@ class Person
      *
      * @return array Un tableau contenant toutes les personnes.
      */
-    public function getAllPersons(): array
+    public static function getAllPersons($pdo): array
     {
         $query = "SELECT * FROM Persons";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute();
 
         $personsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -81,7 +81,7 @@ class Person
             $nationality = $personData['nationality'];
 
             if (!isset(self::$persons[$id])) {
-                $person = new Person($this->pdo, $id, $lastName, $firstName, $birthDate, $nationality);
+                $person = new Person($pdo, $id, $lastName, $firstName, $birthDate, $nationality);
                 self::$persons[$id] = $person;
             }
 

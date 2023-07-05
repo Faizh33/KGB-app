@@ -23,7 +23,7 @@ class Agent extends Person
      *
      * @return Agent|null L'instance de l'agent correspondant à l'ID donné, ou null si non trouvé.
      */
-    public function getAgentById($pdo, $id): ?Agent
+    public static function getAgentById($pdo, $id): ?Agent
     {
         $person = parent::getPersonById($pdo, $id);
 
@@ -53,7 +53,7 @@ class Agent extends Person
      *
      * @return array Le tableau contenant toutes les instances d'agents récupérées de la base de données.
      */
-    public function getAllAgents($pdo): array
+    public static function getAllAgents($pdo): array
     {
         $persons = parent::getAllPersons($pdo);
         $agents = [];

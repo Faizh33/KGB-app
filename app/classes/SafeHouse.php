@@ -57,7 +57,7 @@ class SafeHouse {
      * @param int $id L'identifiant de la planque.
      * @return SafeHouse|null La planque correspondante ou null si aucune planque n'est trouvée.
      */
-    public function getSafeHouseById($id)
+    public static function getSafeHouseById($pdo, int $id)
     {
         // Vérifie si la planque est déjà stockée dans le tableau static $safeHouses
         if (isset(self::$safeHouses[$id])) {
@@ -66,7 +66,7 @@ class SafeHouse {
 
         // Requête SQL pour récupérer les données de la planque depuis la base de données
         $query = "SELECT * FROM SafeHouses WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute(['id' => $id]);
 
         $safeHouseData = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -80,7 +80,7 @@ class SafeHouse {
             $mission = $safeHouseData['mission_id'];
 
             // Crée une nouvelle instance de SafeHouse avec les données récupérées
-            $safeHouse = new SafeHouse($this->pdo, $id, $code, $address, $country, $type, $mission);
+            $safeHouse = new SafeHouse($pdo, $id, $code, $address, $country, $type, $mission);
 
             // Stocke la nouvelle instance dans le tableau static $safeHouses
             self::$safeHouses[$id] = $safeHouse;
@@ -97,11 +97,11 @@ class SafeHouse {
      *
      * @return array Un tableau contenant toutes les planques.
      */
-    public function getAllSafeHouses(): array
+    public static function getAllSafeHouses($pdo): array
     {
         // Récupérer toutes les données des planques depuis la base de données
         $query = "SELECT * FROM SafeHouses";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute();
         $safeHousesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -120,7 +120,7 @@ class SafeHouse {
             // Vérifier si la planque existe déjà dans le tableau static $safeHouses
             if (!isset(self::$safeHouses[$id])) {
                 // Créer une nouvelle instance de planque
-                $safeHouse = new SafeHouse($this->pdo, $id, $code, $address, $country, $type, $mission);
+                $safeHouse = new SafeHouse($pdo, $id, $code, $address, $country, $type, $mission);
                 self::$safeHouses[$id] = $safeHouse;
             }
 

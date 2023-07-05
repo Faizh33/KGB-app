@@ -53,10 +53,10 @@ class MissionStatus
      *
      * @return array Les statuts de mission.
      */
-    public function getAllMissionStatuses(): array
+    public static function getAllMissionStatuses($pdo): array
     {
         $query = "SELECT * FROM MissionStatuses";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute();
 
         $missionStatusesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -66,7 +66,7 @@ class MissionStatus
             $missionStatusId = $missionStatusData['id'];
 
             if (!isset(self::$missionStatuses[$missionStatusId])) {
-                $missionStatus = new MissionStatus($this->pdo, $missionStatusId, $missionStatusData['status']);
+                $missionStatus = new MissionStatus($pdo, $missionStatusId, $missionStatusData['status']);
                 self::$missionStatuses[$missionStatusId] = $missionStatus;
             }
 

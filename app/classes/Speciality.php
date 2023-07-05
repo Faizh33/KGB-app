@@ -60,10 +60,10 @@ class Speciality
      *
      * @return array Un tableau contenant toutes les spécialités.
      */
-    public function getAllSpecialities(): array
+    public static function getAllSpecialities($pdo): array
     {
         $query = "SELECT * FROM Specialities";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute();
 
         $specialitiesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -75,7 +75,7 @@ class Speciality
 
             if (!isset(self::$specialities[$id])) {
                 // Si la spécialité n'existe pas encore dans le tableau $specialities, créer une nouvelle instance de Speciality
-                $speciality = new Speciality($this->pdo, $id, $specialityName);
+                $speciality = new Speciality($pdo, $id, $specialityName);
                 // Ajouter la spécialité au tableau $specialities
                 self::$specialities[$id] = $speciality;
             }

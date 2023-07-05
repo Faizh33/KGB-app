@@ -21,7 +21,7 @@ class Contact extends Person
      * @param int $id L'identifiant du contact à récupérer.
      * @return Contact|null Le contact correspondant à l'ID spécifié, ou null s'il n'existe pas.
      */
-    public function getContactById($pdo, $id): ?Contact
+    public static function getContactById($pdo, $id): ?Contact
     {
         // Récupérer la personne correspondante à l'ID
         $person = parent::getPersonById($pdo, $id);
@@ -53,7 +53,7 @@ class Contact extends Person
      * @param PDO $pdo L'objet PDO utilisé pour la connexion à la base de données.
      * @return array Un tableau contenant tous les contacts de la base de données.
      */
-    public function getAllContacts($pdo): array
+    public static function getAllContacts($pdo): array
     {
         // Récupérer toutes les personnes de la base de données
         $persons = parent::getAllPersons($pdo);

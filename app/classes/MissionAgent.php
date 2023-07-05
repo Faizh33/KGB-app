@@ -58,10 +58,10 @@ class MissionAgent
      *
      * @return array Un tableau contenant tous les MissionAgent.
      */
-    public function getAllMissionAgents(): array
+    public static function getAllMissionAgents($pdo): array
     {
         $query = "SELECT mission_id, agent_id FROM Missions_agents";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute();
 
         $missionAgentsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -72,11 +72,11 @@ class MissionAgent
             $missionId = $missionAgentData['mission_id'];
             $agentId = $missionAgentData['agent_id'];
 
-            $existingMissionAgent = $this->findExistingMissionAgent($missionId, $agentId);
+            $existingMissionAgent = MissionAgent::findExistingMissionAgent($missionId, $agentId);
             if ($existingMissionAgent) {
                 $missionAgents[] = $existingMissionAgent;
             } else {
-                $missionAgent = new MissionAgent($this->pdo, $missionId, $agentId);
+                $missionAgent = new MissionAgent($pdo, $missionId, $agentId);
                 $missionAgents[] = $missionAgent;
             }
         }
@@ -90,14 +90,14 @@ class MissionAgent
      * @param string $missionId L'ID de la mission.
      * @return array Un tableau contenant tous les agents associés à la mission.
      */
-    public function getAgentsByMissionId(string $missionId): array
+    public static function getAgentsByMissionId($pdo, string $missionId): array
     {
         if (isset(self::$missionAgents[$missionId])) {
             return self::$missionAgents[$missionId];
         }
 
         $query = "SELECT * FROM Missions_agents WHERE mission_id = :missionId";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(':missionId', $missionId);
         $stmt->execute();
 
@@ -108,7 +108,7 @@ class MissionAgent
             $missionId = $missionAgentData['mission_id'];
             $agentId = $missionAgentData['agent_id'];
 
-            $missionAgent = new MissionAgent($this->pdo, $missionId, $agentId);
+            $missionAgent = new MissionAgent($pdo, $missionId, $agentId);
             $missionAgents[] = $missionAgent;
         }
 

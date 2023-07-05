@@ -57,10 +57,10 @@ class MissionContact
      *
      * @return array Un tableau contenant toutes les associations MissionContact.
      */
-    public function getAllMissionContacts(): array
+    public static function getAllMissionContacts($pdo): array
     {
         $query = "SELECT mission_id, contact_id FROM Missions_contacts";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute();
 
         $missionContactsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -71,11 +71,11 @@ class MissionContact
             $missionId = $missionContactData['mission_id'];
             $contactId = $missionContactData['contact_id'];
 
-            $existingMissionContact = $this->findExistingMissionContact($missionId, $contactId);
+            $existingMissionContact = MissionContact::findExistingMissionContact($missionId, $contactId);
             if ($existingMissionContact) {
                 $missionContacts[] = $existingMissionContact;
             } else {
-                $missionContact = new MissionContact($this->pdo, $missionId, $contactId);
+                $missionContact = new MissionContact($pdo, $missionId, $contactId);
                 $missionContacts[] = $missionContact;
             }
         }
@@ -89,14 +89,14 @@ class MissionContact
      * @param string $missionId L'ID de la mission.
      * @return array Un tableau d'instances MissionContact représentant les contacts associés à la mission.
      */
-    public function getContactsByMissionId(string $missionId): array
+    public static function getContactsByMissionId($pdo, string $missionId): array
     {
         if (isset(self::$missionContacts[$missionId])) {
             return self::$missionContacts[$missionId];
         }
 
         $query = "SELECT * FROM Missions_contacts WHERE mission_id = :missionId";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(':missionId', $missionId);
         $stmt->execute();
 
@@ -104,7 +104,7 @@ class MissionContact
         $missionContacts = [];
 
         foreach ($rows as $row) {
-            $missionContact = new MissionContact($this->pdo, $row['mission_id'], $row['contact_id']);
+            $missionContact = new MissionContact($pdo, $row['mission_id'], $row['contact_id']);
             $missionContacts[] = $missionContact;
         }
 
@@ -119,14 +119,14 @@ class MissionContact
      * @param string $contactId L'ID du contact.
      * @return array Un tableau d'instances MissionContact représentant les missions associées au contact.
      */
-    public function getMissionsByContactId(string $contactId): array
+    public static function getMissionsByContactId($pdo, string $contactId): array
     {
         if (isset(self::$missionContacts[$contactId])) {
             return self::$missionContacts[$contactId];
         }
 
         $query = "SELECT * FROM Missions_contacts WHERE contact_id = :contactId";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(':contactId', $contactId);
         $stmt->execute();
 
@@ -134,7 +134,7 @@ class MissionContact
         $missionContacts = [];
 
         foreach ($rows as $row) {
-            $missionContact = new MissionContact($this->pdo, $row['mission_id'], $row['contact_id']);
+            $missionContact = new MissionContact($pdo, $row['mission_id'], $row['contact_id']);
             $missionContacts[] = $missionContact;
         }
 
