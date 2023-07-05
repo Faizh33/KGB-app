@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=GFS+Didot&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=GFS+Didot&family=Roboto+Slab:wght@900&display=swap');
+
+/*CSS principal*/
+body {
+    font-family: 'Didot', serif;
+    font-size: 1.3vw;
+    background-color: rgb(2, 59, 53);
+}
+
+h1, h2 {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5%;
+    margin-top: 3%;
+    font-family: 'Roboto Slab', serif;
+    color: white;
+}
+
+h1 {
+    font-size: 4vw;
+}
+
+/*CSS du tableau de boutons*/
+table {
+    width: 50%;
+    margin: auto;
+}
+
+.dashboardContainer {
+    width: 100%;
+}
+
+.dashboardButton {
+    margin: auto;
+    border-style: solid;
+    border-width: 0.5vw;
+    border-image: linear-gradient(45deg, rgb(170, 239, 232), white) 1;
+    width: 22vw;
+    height: 3vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2vw;
+    background: rgb(3, 114, 103);
+    color: white;
+    font-size: 1vw;
+    font-weight: bold;
+}
+
+/*CSS des formulaires de création*/
+h2 {
+    font-size: 3vw;
+    color: rgb(202, 219, 217);
+}
+
+form {
+    border: 0.5vw solid rgb(23, 157, 143);
+    width: 60%;
+    padding: 1vw;
+    margin: auto;
+    background-color: rgb(215, 236, 235)
+}
+
+td {
+    padding-bottom: 1vw;
+    padding-right: 3vw;
+}
+
+.labelForm {
+    font-weight: bold;
+    color: rgb(2, 59, 53);
+}
+
+.labelChk {
+    font-size: 1vw;
+}
+
+.formInput, textarea, .inputFormDate, .formChkBox {
+    border: 2px solid rgb(23, 157, 143);
+}
+
+.formInput {
+    height: 2vw;
+    width: 40vw;
+    font-size: 1vw;
+}
+
+textarea {
+    height: 8vw;
+    width: 40vw;
+    font-size: 1vw;
+    resize: none;
+}
+
+.inputFormDate {
+    height: 2vw;
+    width: 20vw;
+}
+
+.formChkBox {
+    overflow:scroll;
+    height:8vw;
+    width:30vw;
+    background-color: white;
+}
+
+.formButtonContainer {
+    display:flex;
+    justify-content: center;
+}
+
+.formButton {
+    width: 10vw;
+    height: 2vw;
+    font-size: 1vw;
+    background-color: rgb(23, 157, 143);
+    color: white;
+    border: 1px solid rgb(23, 157, 143);
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
