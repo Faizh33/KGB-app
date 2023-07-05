@@ -69,7 +69,7 @@ if (isset($_GET['mission'])) {
                         <?php endif; ?>
                     </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td class="tdButtons">
+                        <td>
                             <button class="missionDetailsButtons" id="editTitleButton" onclick="editTitle()">Modifier</button>
                             <button class="missionDetailsButtons" id="saveTitleButton" onclick="saveTitle()" style="visibility:hidden;;">Enregistrer</button>
                         </td>
@@ -85,7 +85,7 @@ if (isset($_GET['mission'])) {
                         <?php endif; ?>
                     </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td class="tdButtons">
+                        <td>
                             <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
                             <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
                         </td>
@@ -101,7 +101,7 @@ if (isset($_GET['mission'])) {
                         <?php endif; ?>
                     </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td class="tdButtons">
+                        <td>
                             <button class="missionDetailsButtons" id="editCodeNameButton" onclick="editCodeName()">Modifier</button>
                             <button class="missionDetailsButtons" id="saveCodeNameButton" onclick="saveCodeName()" style="visibility:hidden;">Enregistrer</button>
                         </td>
@@ -117,7 +117,7 @@ if (isset($_GET['mission'])) {
                         <?php endif; ?>
                     </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td class="tdButtons">
+                        <td>
                             <button class="missionDetailsButtons" id="editCountryButton" onclick="editCountry()">Modifier</button>
                             <button class="missionDetailsButtons" id="saveCountryButton" onclick="saveCountry()" style="visibility:hidden;">Enregistrer</button>
                         </td>
@@ -140,7 +140,7 @@ if (isset($_GET['mission'])) {
                         <?php endif; ?>
                     </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td class="tdButtons">
+                        <td>
                             <button class="missionDetailsButtons" id="editStartDateButton" onclick="editStartDate()">Modifier</button>
                             <button class="missionDetailsButtons" id="saveStartDateButton" onclick="saveStartDate()" style="visibility:hidden;">Enregistrer</button>
                         </td>
@@ -194,7 +194,7 @@ if (isset($_GET['mission'])) {
                         <?php endif; ?>
                     </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td class="tdButtons">
+                        <td>
                             <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
                             <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
                         </td>
@@ -226,7 +226,7 @@ if (isset($_GET['mission'])) {
                         endif; ?>
                     </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td class="tdButtons">
+                        <td>
                             <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
                             <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
                         </td>
@@ -258,7 +258,7 @@ if (isset($_GET['mission'])) {
                         endif; ?>
                     </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td class="tdButtons">
+                        <td>
                             <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
                             <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
                         </td>
@@ -290,7 +290,7 @@ if (isset($_GET['mission'])) {
                         endif; ?>
                     </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td class="tdButtons">
+                        <td>
                             <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
                             <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
                         </td>
@@ -322,7 +322,7 @@ if (isset($_GET['mission'])) {
                         endif; ?>
                     </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td class="tdButtons">
+                        <td>
                             <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
                             <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
                         </td>
@@ -353,7 +353,7 @@ if (isset($_GET['mission'])) {
                         <?php endif; ?>
                     </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td class="tdButtons">
+                        <td>
                             <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
                             <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
                         </td>
@@ -386,7 +386,7 @@ if (isset($_GET['mission'])) {
                         <?php endif; ?>
                     </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td class="tdButtons">
+                        <td>
                             <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
                             <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
                         </td>
