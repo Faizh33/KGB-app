@@ -33,10 +33,10 @@ $missions = $missionObj->getAllMissions($pdo);
 <body>
     <header id="homeHeader">
         <div id="logContainer">
-            <div id="logButton">
+            <div id="logButton" class="button">
                 <?php
                 if (isset($_SESSION['admin'])) {
-                    echo "<a href='../controllers/logoutController.php' id='logLink'>Déconnexion</a>";
+                    echo "<a href='../controllers/logoutController.php' class='link'>Déconnexion</a>";
                 } else {
                     echo "<a href='loginForm.php' id='logLink'>Se connecter</a>";
                 }
@@ -89,5 +89,15 @@ $missions = $missionObj->getAllMissions($pdo);
         <!-- Fermer la connexion -->
         <?php $pdo = null; ?>
     </table>
+        <?php if (isset($_SESSION['admin'])) { ?>
+            <div class="adminButtonContainer">
+                <div id="createButton" class="button adminButton" >
+                    <a href='../views/dashboardCreate.php' id='createLink' class="link">Créer</a>
+                </div>
+                <div id="editButton" class="button adminButton">
+                    <a href='../views/dashboardEdit.php' id='editLink' class="link">Modifier</a>
+                </div>
+            </div>
+        <?php } ?>
 </body>
 </html>
