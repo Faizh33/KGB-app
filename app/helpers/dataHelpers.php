@@ -14,3 +14,10 @@ function generateUUID() {
 
     return $uuid;
 }
+
+function valid_datas($datas){
+    $datas = trim($datas);
+    $datas = stripslashes($datas);
+    $datas = htmlspecialchars($datas);
+    return $datas;
+}
