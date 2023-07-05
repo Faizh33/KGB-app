@@ -98,7 +98,6 @@ class Mission
         // Retourner toutes les missions
         return $missions;
     }
-    
 
     /**
      * Récupère une mission à partir de son ID.
@@ -108,6 +107,7 @@ class Mission
      */
     public function getMissionById($id)
     {
+        // Vérifier si la mission est déjà présente dans le cache
         if (isset(self::$missions[$id])) {
             return self::$missions[$id];
         }
@@ -129,11 +129,30 @@ class Mission
             $country = $missionData['country'];
             $startDate = $missionData['startDate'];
             $endDate = $missionData['endDate'];
+            $specialityId = $missionData['speciality_id'];
+            $missionStatusId = $missionData['missionstatuses_id'];
+            $missionTypeId = $missionData['missiontype_id'];
+
+            // Récupérer les objets Speciality, MissionStatus et MissionType correspondants à partir de leurs identifiants
+            if (!$this->speciality) {
+                $this->speciality = new Speciality($this->pdo);
+            }
+            $speciality = $this->speciality->getSpecialityById($this->pdo, $specialityId);
+
+            if (!$this->missionStatus) {
+                $this->missionStatus = new MissionStatus($this->pdo);
+            }
+            $missionStatus = $this->missionStatus->getMissionStatusById($this->pdo, $missionStatusId);
+
+            if (!$this->missionType) {
+                $this->missionType = new MissionType($this->pdo);
+            }
+            $missionType = $this->missionType->getMissionTypeById($this->pdo, $missionTypeId);
 
             // Création d'une nouvelle instance de Mission
-            $mission = new Mission($this->pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $this->speciality, $this->missionStatus, $this->missionType);
+            $mission = new Mission($this->pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
 
-            // Ajout de la mission au tableau des missions
+            // Ajout de la mission au cache
             self::$missions[$id] = $mission;
 
             return $mission;
