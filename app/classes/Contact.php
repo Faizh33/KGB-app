@@ -64,14 +64,13 @@ class Contact extends Person
             // Pour chaque personne, récupérer le contact associé dans la table "Contacts"
             $query = "SELECT * FROM Contacts WHERE id = :id";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(":id", $person->getId());
+            $stmt->bindValue(":id", $person->getId());
             $stmt->execute();
 
             $contactDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
-            $codeName = $contactDatas['code_name'];
 
-            if ($contactDatas) {
-                // Créer une instance de Contact en utilisant les données récupérées et l'ajouter au tableau des contacts
+            if($contactDatas !== false) {
+                $codeName = $contactDatas['code_name'];
                 $contacts[] = new Contact($pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $codeName);
             }
         }

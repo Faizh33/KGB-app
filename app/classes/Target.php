@@ -61,14 +61,14 @@ class Target extends Person
             // Pour chaque personne, exécuter une requête SQL pour récupérer les données de la cible correspondante
             $query = "SELECT * FROM Targets WHERE id = :id";
             $stmt = $pdo->prepare($query);
-            $stmt->bindParam(":id", $person->getId());
+            $stmt->bindValue(":id", $person->getId());
             $stmt->execute();
 
             $targetData = $stmt->fetch(\PDO::FETCH_ASSOC);
             $codeName = $targetData['code_name'];
 
-            if ($targetData) {
-                // Si les données de la cible existent, créer une instance de la classe Target avec les données récupérées
+            if ($targetData !== false) {
+                $codeName = $targetData['identification_code'];
                 $targets[] = new Target($pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $codeName);
             }
         }
