@@ -40,7 +40,7 @@ class MissionContact
      * @param string $contactId L'ID du contact.
      * @return MissionContact|null L'instance MissionContact correspondante, ou null si aucune instance n'est trouvée.
      */
-    private function findExistingMissionContact(string $missionId, string $contactId): ?MissionContact
+    private static function findExistingMissionContact(string $missionId, string $contactId): ?MissionContact
     {
         if (isset(self::$missionContacts[$missionId])) {
             foreach (self::$missionContacts[$missionId] as $missionContact) {
@@ -150,20 +150,20 @@ class MissionContact
      * @param string $contactId L'ID du contact.
      * @return MissionContact|null L'instance de MissionContact représentant l'association entre la mission et le contact, ou null en cas d'erreur.
      */
-    public function addContactToMission(string $missionId, string $contactId): ?MissionContact
+    public static function addContactToMission($pdo, string $missionId, string $contactId): ?MissionContact
     {
-        $existingMissionContact = $this->findExistingMissionContact($missionId, $contactId);
+        $existingMissionContact = MissionContact::findExistingMissionContact($missionId, $contactId);
         if ($existingMissionContact) {
             return $existingMissionContact;
         }
 
         $query = "INSERT INTO Missions_contacts (mission_id, contact_id) VALUES (:missionId, :contactId)";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->bindValue(':contactId', $contactId);
         $stmt->execute();
 
-        $newMissionContact = new MissionContact($this->pdo, $missionId, $contactId);
+        $newMissionContact = new MissionContact($pdo, $missionId, $contactId);
         self::$missionContacts[$missionId][] = $newMissionContact;
         self::$missionContacts[$contactId][] = $newMissionContact;
 
@@ -176,9 +176,9 @@ class MissionContact
      * @param array $propertiesToUpdate Les propriétés à mettre à jour sous la forme [nomPropriete => nouvelleValeur].
      * @return bool Indique si la mise à jour a réussi ou non.
      */
-    public function updateContactProperties(string $missionId, array $propertiesToUpdate): bool
+    public static function updateContactProperties($pdo, string $missionId, array $propertiesToUpdate): bool
     {
-        $contactId = $this->getContactId();
+        $contactId = MissionContact::getContactId();
 
         $updatedMissionContacts = [];
 
@@ -192,8 +192,8 @@ class MissionContact
         }
 
         $query = "UPDATE Missions_contacts SET contact_id = :newContactId WHERE mission_id = :missionId AND contact_id = :contactId";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':newContactId', $this->contactId);
+        $stmt = $pdo->prepare($query);
+        $stmt->bindValue(':newContactId', $contactId);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->bindValue(':contactId', $contactId);
         $stmt->execute();
@@ -209,10 +209,10 @@ class MissionContact
      * @param string $missionId L'ID de la mission.
      * @return bool Indique si la suppression a réussi ou non.
      */
-    public function deleteContactsByMissionId(string $missionId): bool
+    public static function deleteContactsByMissionId($pdo, string $missionId): bool
     {
         $query = "DELETE FROM Missions_contacts WHERE mission_id = :missionId";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
@@ -227,10 +227,10 @@ class MissionContact
      * @param string $contactId L'ID du contact.
      * @return bool Indique si la suppression a réussi ou non.
      */
-    public function deleteMissionsByContactId(string $contactId): bool
+    public static function deleteMissionsByContactId($pdo, string $contactId): bool
     {
         $query = "DELETE FROM Missions_contacts WHERE contact_id = :contactId";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindValue(':contactId', $contactId);
         $stmt->execute();
 

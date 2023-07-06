@@ -40,7 +40,7 @@ class MissionTarget
      * @param string $targetId L'ID de la cible.
      * @return MissionTarget|null La mission cible existante ou null si elle n'existe pas.
      */
-    private function findExistingMissionTarget(string $missionId, string $targetId): ?MissionTarget
+    private static function findExistingMissionTarget(string $missionId, string $targetId): ?MissionTarget
     {
         if (isset(self::$missionTargets[$missionId])) {
             foreach (self::$missionTargets[$missionId] as $missionTarget) {
@@ -153,20 +153,20 @@ class MissionTarget
      * @param string $targetId L'identifiant de la cible.
      * @return MissionTarget|null L'objet MissionTarget correspondant à la nouvelle association ou null si elle existe déjà.
      */
-    public function addTargetToMission(string $missionId, string $targetId): ?MissionTarget
+    public static function addTargetToMission($pdo, string $missionId, string $targetId): ?MissionTarget
     {
-        $existingMissionTarget = $this->findExistingMissionTarget($missionId, $targetId);
+        $existingMissionTarget = MissionTarget::findExistingMissionTarget($missionId, $targetId);
         if ($existingMissionTarget) {
             return $existingMissionTarget;
         }
 
         $query = "INSERT INTO Missions_targets (mission_id, target_id) VALUES (:missionId, :targetId)";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->bindValue(':targetId', $targetId);
         $stmt->execute();
 
-        $newMissionTarget = new MissionTarget($this->pdo, $missionId, $targetId);
+        $newMissionTarget = new MissionTarget($pdo, $missionId, $targetId);
         self::$missionTargets[$missionId][] = $newMissionTarget;
         self::$missionTargets[$targetId][] = $newMissionTarget;
 
@@ -180,9 +180,9 @@ class MissionTarget
      * @param array $propertiesToUpdate Les propriétés à mettre à jour sous la forme [nomPropriete => nouvelleValeur].
      * @return bool Indique si la mise à jour a été effectuée avec succès.
      */
-    public function updateTargetProperties(string $missionId, array $propertiesToUpdate): bool
+    public static function updateTargetProperties($pdo, string $missionId, array $propertiesToUpdate): bool
     {
-        $targetId = $this->getTargetId();
+        $targetId = MissionTarget::getTargetId();
 
         $updatedMissionTargets = [];
 
@@ -196,8 +196,8 @@ class MissionTarget
         }
 
         $query = "UPDATE Missions_targets SET target_id = :newTargetId WHERE mission_id = :missionId AND target_id = :targetId";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':newTargetId', $this->targetId);
+        $stmt = $pdo->prepare($query);
+        $stmt->bindValue(':newTargetId', $targetId);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->bindValue(':targetId', $targetId);
         $stmt->execute();
@@ -213,10 +213,10 @@ class MissionTarget
      * @param string $missionId L'identifiant de la mission.
      * @return bool Indique si la suppression a été effectuée avec succès.
      */
-    public function deleteTargetsByMissionId(string $missionId): bool
+    public static function deleteTargetsByMissionId($pdo, string $missionId): bool
     {
         $query = "DELETE FROM Missions_targets WHERE mission_id = :missionId";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
@@ -231,10 +231,10 @@ class MissionTarget
      * @param string $targetId L'identifiant de la cible.
      * @return bool Indique si la suppression a été effectuée avec succès.
      */
-    public function deleteMissionsByTargetId(string $targetId): bool
+    public static function deleteMissionsByTargetId($pdo, string $targetId): bool
     {
         $query = "DELETE FROM Missions_targets WHERE target_id = :targetId";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindValue(':targetId', $targetId);
         $stmt->execute();
 
