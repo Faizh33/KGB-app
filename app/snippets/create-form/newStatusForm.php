@@ -1,5 +1,7 @@
 <h2>Créer un nouveau statut</h2>
-<form action="" method="post" id="form">
+
+<!--formulaire de création de statut -->
+<form action="../controllers/insertStatusController.php" method="post" id="form">
     <table>
         <tr>
             <td class="labelColumn">

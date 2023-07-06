@@ -1,5 +1,7 @@
 <h2>Créer un nouveau type de mission</h2>
-<form action="" method="post" id="form">
+
+<!--formulaire de création de type de mission -->
+<form action="../controllers/insertTypeController.php" method="post" id="form">
     <table>
         <tr>
             <td class="labelColumn">

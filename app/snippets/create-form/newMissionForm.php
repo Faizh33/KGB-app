@@ -17,7 +17,9 @@
         use app\classes\MissionStatus;
     ?>
     <h2>Créer une nouvelle mission</h2>
-    <form action="" method="post" id="newMissionForm">
+
+    <!--formulaire de création d'une mission -->
+    <form action="../controllers/insertMissionController.php" method="post" id="newMissionForm">
         <table>
             <tr>
                 <td class="labelColumn">
@@ -77,7 +79,7 @@
                         $agents = Agent::getAllAgents($pdo);
                         foreach($agents as $agent) {
                             $agentId = $agent->getId(); ?>
-                            <input type="checkbox" name="agents[]" class="agent-checkbox" value='"<?php $agentId ?>"' id="editAgent <?php $agentId ?>">
+                            <input type="checkbox" name="agents[]" class="agent-checkbox" value="<?php echo $agentId ?>" id="editAgent <?php echo $agentId ?>">
                             <label for="editAgent <?php echo $agentId ?>" class="labelChk"> <?php echo $agent->getLastName() . ' ' . $agent->getFirstName() ?> </label><br>
                         <?php } ?>
                     </div>
@@ -93,7 +95,7 @@
                         $contacts = Contact::getAllContacts($pdo);
                         foreach($contacts as $contact) {
                             $contactId = $contact->getId(); ?>
-                            <input type="checkbox" name="contacts[]" class="contact-checkbox" value='"<?php $contactId ?>"' id="editContact <?php $contactId ?>">
+                            <input type="checkbox" name="contacts[]" class="contact-checkbox" value="<?php echo $contactId ?>" id="editContact <?php echo $contactId ?>">
                             <label for="editContact <?php echo $contactId ?>" class="labelChk"> <?php echo $contact->getLastName() . ' ' . $contact->getFirstName() ?> </label><br>
                         <?php } ?>
                     </div>
@@ -109,7 +111,7 @@
                         $targets = Target::getAllTargets($pdo);
                         foreach($targets as $target) {
                             $targetId = $target->getId(); ?>
-                            <input type="checkbox" name="targets[]" class="target-checkbox" value='"<?php $targetId ?>"' id="editTarget <?php $targetId ?>">
+                            <input type="checkbox" name="targets[]" class="target-checkbox" value="<?php echo $targetId ?>" id="editTarget <?php echo $targetId ?>">
                             <label for="editTarget <?php echo $targetId ?>" class="labelChk"> <?php echo $target->getLastName() . ' ' . $target->getFirstName() ?> </label><br>
                         <?php } ?>
                     </div>
@@ -125,7 +127,7 @@
                             $safeHouses = SafeHouse::getAllSafeHouses($pdo);
                             foreach($safeHouses as $safeHouse) {
                                 $safeHouseId = $safeHouse->getId(); ?>
-                                <input type="checkbox" name="safeHouses[]" class="editChk" value='"<?php $safeHouseId ?>"' id="editSafeHouse <?php $safeHouseId ?>">
+                                <input type="checkbox" name="safeHouses[]" class="editChk" value="<?php echo $safeHouseId ?>" id="editSafeHouse <?php echo $safeHouseId ?>">
                                 <label for="editSafeHouse <?php echo $safeHouseId ?>" class="labelChk"> <?php echo $safeHouse->getAddress() . ', ' . $safeHouse->getCountry() ?> </label><br>
                             <?php } ?>
                     </div>
@@ -169,10 +171,10 @@
             </tr>
             <tr>
                 <td class="labelColumn">
-                    <label for="missionStatut" class="labelForm">Statut de mission</label>
+                    <label for="missionStatus" class="labelForm">Statut de mission</label>
                 </td>
                 <td>
-                    <select name="missionStatut" id="missionStatut">
+                    <select name="missionStatus" id="missionStatus">
                         <option value="">--Choisir un statut--</option>
                         <?php
                             $missionStatuses = MissionStatus::getAllMissionStatuses($pdo);
