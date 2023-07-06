@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=GFS+Didot&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=GFS+Didot&family=Roboto+Slab:wght@900&display=swap');
 
-/*CSS principal*/
 body {
     font-family: 'Didot', serif;
     font-size: 1.3vw;
     background-color: rgb(2, 59, 53);
 }
+
+
 
 h1, h2 {
     display: flex;
@@ -21,7 +22,7 @@ h1 {
     font-size: 4vw;
 }
 
-/*CSS du tableau de boutons*/
+/*CSS des boutons du dashboard*/
 table {
     width: 50%;
     margin: auto;
@@ -46,9 +47,10 @@ table {
     color: white;
     font-size: 1vw;
     font-weight: bold;
+    cursor: pointer;
 }
 
-/*CSS des formulaires de création*/
+/*CSS des formulaires*/
 h2 {
     font-size: 3vw;
     background: linear-gradient(120deg,rgb(54, 199, 185) 0%,white 80%);
@@ -63,7 +65,7 @@ form {
     padding: 1vw;
     margin: auto;
     background-color: rgb(215, 236, 235);
-    margin-bottom: 3vw;
+    margin-bottom: 1vw;
 }
 
 td {
@@ -132,4 +134,34 @@ textarea {
     display: flex;
     justify-content: center;
     text-align: center;
+    cursor: pointer;
 }
+
+/* Style du bouton de retour en arrière */
+.backButton {
+    cursor: pointer;
+    margin-left: 73%;
+    margin-bottom: 3vw;
+    display: flex;
+    align-items: center; 
+    width: 6vw;
+    height: 2.5vw;
+    background-color: rgb(23, 157, 143);
+    border: 0.2vw solid rgb(215, 236, 235);
+    border-radius: 5px;
+}
+
+.backText {
+    color: white;
+    font-weight: bold;
+    margin-left: 0.5vw;
+}
+    
+/*<div class="backButtonContainer" style="display:none;">
+    <button class="backButton">
+        <svg xmlns="http://www.w3.org/2000/svg" width="2vw" height="2vw" fill="currentColor" color="white" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+        </svg>
+        <span class="backText">Retour</span>
+    </button>
+</div>
