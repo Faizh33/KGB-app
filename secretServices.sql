@@ -225,6 +225,15 @@ VALUES
     ('Piratage'),
     ('Sécurisation');
 
+INSERT INTO SafeHouses (code, address, country, type)
+VALUES
+    ('21jo2rx0c9', '88 Place de la Madeleine 75009 PARIS', 'France', 'appartement'),
+    ('2ojx1rc029', '86 Victoria Road LITTLE BADDOW CM3 8PT', 'Angleterre', 'maison'),
+    ('rj0x2o129c', 'Avda. Explanada Barnuevo, 82 35430 Firgas', 'Espagne', 'villa'),
+    ('22x9cj0or1', 'Ziegelstr. 95 94143 Grainet', 'Allemagne', 'cabane'),
+    ('r9x20o1j2c', 'ul. Grzybowska 117 00-132 Warszawa', 'Pologne', 'hotel'),
+    ('1jro902cx2', '1079 Deer Haven Drive Greenville SC 29607', 'Etats-Unis', 'maison');
+
 INSERT INTO Missions
 VALUES
     (
@@ -283,19 +292,10 @@ VALUES
     ('61d26910-10cc-11ee-8afc-0a0027000006', '947487b4-10c9-11ee-8afc-0a0027000006'),
     ('61d27115-10cc-11ee-8afc-0a0027000006', '9474866c-10c9-11ee-8afc-0a0027000006');
 
-INSERT INTO SafeHouses (code, address, country, type)
-VALUES
-    ('21jo2rx0c9', '88 Place de la Madeleine 75009 PARIS', 'France', 'appartement'),
-    ('2ojx1rc029', '86 Victoria Road LITTLE BADDOW CM3 8PT', 'Angleterre', 'maison'),
-    ('rj0x2o129c', 'Avda. Explanada Barnuevo, 82 35430 Firgas', 'Espagne', 'villa'),
-    ('22x9cj0or1', 'Ziegelstr. 95 94143 Grainet', 'Allemagne', 'cabane'),
-    ('r9x20o1j2c', 'ul. Grzybowska 117 00-132 Warszawa', 'Pologne', 'hotel'),
-    ('1jro902cx2', '1079 Deer Haven Drive Greenville SC 29607', 'Etats-Unis', 'maison');
-
 INSERT INTO Missions_safehouses (mission_id, safehouse_id)
 VALUES
-    ('22x9cj0or1', '61d25a65-10cc-11ee-8afc-0a0027000006'),
-    ('r9x20o1j2c', '61d26910-10cc-11ee-8afc-0a0027000006');
+    ('61d25a65-10cc-11ee-8afc-0a0027000006', 4),
+    ('61d26910-10cc-11ee-8afc-0a0027000006', 5);
 
 INSERT INTO Admins
 VALUES 
