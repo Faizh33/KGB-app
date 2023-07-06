@@ -8,6 +8,7 @@ require_once "MissionType.php";
 require_once "MissionAgent.php";
 require_once "MissionContact.php";
 require_once "MissionTarget.php";
+require_once "MissionSafeHouse.php";
 require_once '../helpers/dataHelpers.php';
 
 class Mission
@@ -40,6 +41,11 @@ class Mission
         $this->missionType = $missionType;
 
         self::$missions[$id] = $this;
+    }
+
+    public function getMissions()
+    {
+        return self::$missions;
     }
 
     /**
@@ -176,9 +182,14 @@ class Mission
      * @param Speciality  $speciality     L'objet Speciality associé à la mission.
      * @param MissionStatus  $missionStatus  L'objet MissionStatus associé à la mission.
      * @param MissionType  $missionType    L'objet MissionType associé à la mission.
+     * @param array      $agents           Les agents associés à la mission.
+     * @param array      $contacts         Les contacts associés à la mission.
+     * @param array      $targets          Les cibles associées à la mission.
+     * @param array      $safeHouses       Les planques associées à la mission.
+     * 
      * @return Mission|null                Retourne l'objet Mission si l'ajout a réussi, sinon null.
      */
-    public function addMission(string $title, string $description, string $codeName, string $country, string $startDate, string $endDate, Speciality $speciality, MissionStatus $missionStatus, MissionType $missionType): ?Mission
+    public function addMission(string $title, string $description, string $codeName, string $country, string $startDate, string $endDate, Speciality $speciality, MissionStatus $missionStatus, MissionType $missionType, array $agents, array $contacts, array $targets, array $safeHouses): ?Mission
     {
         // Générer un nouvel ID pour la mission
         $id = generateUUID();
@@ -203,6 +214,26 @@ class Mission
 
         // Ajouter la nouvelle mission au tableau des missions
         self::$missions[$id] = $newMission;
+        
+        // Ajouter les données dans la table Missions_agents
+        foreach ($agents as $agentId) {
+            MissionAgent::addAgentToMission($this->pdo, $id, $agentId);
+        }
+
+        // Ajouter les données dans la table Missions_contacts
+        foreach ($contacts as $contactId) {
+            MissionContact::addContactToMission($this->pdo, $id, $contactId);
+        }
+
+        // Ajouter les données dans la table Missions_targets
+        foreach ($targets as $targetId) {
+            MissionTarget::addTargetToMission($this->pdo, $id, $targetId);
+        }
+
+        // Ajouter les données dans la table Missions_safehouses
+        foreach ($safeHouses as $safeHouseId) {
+            MissionSafeHouse::addSafeHouseToMission($this->pdo, $id, $safeHouseId);
+        }
 
         return $newMission;
     }
@@ -300,16 +331,16 @@ class Mission
         $stmt->execute();
 
         // Supprimer les associations agent/mission correspondantes en utilisant une instance de la classe MissionAgent
-        $missionAgent = new MissionAgent($this->pdo, '', $id);
-        $missionAgent->deleteAgentsByMissionId($id);
+        MissionAgent::deleteAgentsByMissionId($this->pdo, $id);
 
         // Supprimer les associations contact/mission correspondantes en utilisant une instance de la classe MissionContact
-        $missionContact = new MissionContact($this->pdo, '', $id);
-        $missionContact->deleteContactsByMissionId($id);
+        MissionContact::deleteContactsByMissionId($this->pdo, $id);
 
         // Supprimer les associations contact/mission correspondantes en utilisant une instance de la classe MissionContact
-        $missionTarget = new MissionTarget($this->pdo, '', $id);
-        $missionTarget->deleteTargetsByMissionId($id);
+        MissionTarget::deleteTargetsByMissionId($this->pdo, $id);
+
+        // Supprimer les associations contact/mission correspondantes en utilisant une instance de la classe MissionContact
+        MissionSafeHouse::deleteSafeHousesByMissionId($this->pdo, $id);
 
         // Supprimer la mission de la classe
         if (isset(self::$missions[$id])) {
