@@ -12,6 +12,15 @@
     <title>Tableau de bord</title>
 </head>
 <body>
+    <!-- Bouton de retour vers l'accueil -->
+    <header id="dashboardHeader">
+        <div id="homeBtnContainer">
+            <div id="homeBtn">
+                <a href='../views/home.php' id='homeBtnLink'>Accueil</a>
+            </div>
+        </div>
+    </header>
+
     <h1>Tableau de bord Administrateur</h1>
 
     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) :?>
@@ -68,6 +77,7 @@
             </tr>
         </table>
     </div>
+    <!-- inclusion des formulaires -->
     <div class="formContainer" id="missionForm" style="display:none;">
         <?php include_once "../snippets/create-form/newMissionForm.php"; ?>
     </div>
