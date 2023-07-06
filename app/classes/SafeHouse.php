@@ -1,71 +1,42 @@
 <?php
+
 namespace app\classes;
 
-require_once("Mission.php");
-use app\classes\Mission;
-
-
-class SafeHouse {
+class SafeHouse
+{
     private int $id;
     private string $code;
     private string $address;
     private string $country;
     private string $type;
-    private ?Mission $mission;
     private $pdo;
 
     private static array $safeHouses = [];
 
-    public function __construct($pdo, int $id = NULL, string $code = '', string $address = '', string $country = '', string $type = '', ?Mission $mission)
+    public function __construct($pdo, int $id = null, string $code = '', string $address = '', string $country = '', string $type = '')
     {
         $this->pdo = $pdo;
-        $this->id = $id;
+        $this->id = $id ?? 0;
         $this->code = $code;
         $this->address = $address;
         $this->country = $country;
         $this->type = $type;
-        $this->mission = $mission;
 
         self::$safeHouses[$id] = $this;
     }
 
     /**
-     * Assigner une mission à une planque, à la fois dans la classe et dans la base de données.
+     * Récupère une SafeHouse à partir de son identifiant.
      *
-     * @param int $id L'identifiant de la planque.
-     * @param Mission $mission La mission à assigner.
+     * @param mixed $id L'identifiant de la SafeHouse.
+     * @return SafeHouse|null La SafeHouse correspondante ou null si non trouvée.
      */
-    public function assignMission(int $id, Mission $mission): void
+    public static function getSafeHouseById($pdo, int $id): ?SafeHouse
     {
-        // Vérifie si la planque existe dans le tableau static $safeHouses
-        if (isset(self::$safeHouses[$id])) {
-            // Récupère la planque correspondante
-            $safeHouse = self::$safeHouses[$id];
-            
-            // Assigner la mission à la planque dans la classe
-            $safeHouse->mission = $mission;
-
-            // Mettre à jour le champ mission_id dans la base de données
-            $query = "UPDATE SafeHouses SET mission_id = :missionId WHERE id = :id";
-            $stmt = $safeHouse->pdo->prepare($query);
-            $stmt->execute(['missionId' => $mission->getId(), 'id' => $id]);
-        }
-    }
-
-        /**
-     * Récupère une planque en fonction de son identifiant.
-     *
-     * @param int $id L'identifiant de la planque.
-     * @return SafeHouse|null La planque correspondante ou null si aucune planque n'est trouvée.
-     */
-    public static function getSafeHouseById($pdo, int $id)
-    {
-        // Vérifie si la planque est déjà stockée dans le tableau static $safeHouses
         if (isset(self::$safeHouses[$id])) {
             return self::$safeHouses[$id];
         }
 
-        // Requête SQL pour récupérer les données de la planque depuis la base de données
         $query = "SELECT * FROM SafeHouses WHERE id = :id";
         $stmt = $pdo->prepare($query);
         $stmt->execute(['id' => $id]);
@@ -73,17 +44,15 @@ class SafeHouse {
         $safeHouseData = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         if ($safeHouseData) {
-            // Extrait les données de la planque de l'array associatif
-            $code = $safeHouseData['code'];
-            $address = $safeHouseData['address'];
-            $country = $safeHouseData['country'];
-            $type = $safeHouseData['type'];
-            $mission = $safeHouseData['mission_id'];
+            $safeHouse = new SafeHouse(
+                $pdo,
+                $safeHouseData['id'],
+                $safeHouseData['code'],
+                $safeHouseData['address'],
+                $safeHouseData['country'],
+                $safeHouseData['type']
+            );
 
-            // Crée une nouvelle instance de SafeHouse avec les données récupérées
-            $safeHouse = new SafeHouse($pdo, $id, $code, $address, $country, $type, $mission);
-
-            // Stocke la nouvelle instance dans le tableau static $safeHouses
             self::$safeHouses[$id] = $safeHouse;
 
             return $safeHouse;
@@ -92,76 +61,67 @@ class SafeHouse {
         return null;
     }
 
+    /**
+     * Récupère toutes les SafeHouses de la base de données.
+     *
+     * @return array Les SafeHouses.
+     */
+    public static function getAllSafeHouses($pdo): array
+    {
+        $query = "SELECT * FROM SafeHouses";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
 
- /**
- * Récupère toutes les planques depuis la base de données et les insère dans la classe.
- *
- * @param PDO $pdo L'objet PDO pour la connexion à la base de données.
- * @return array Un tableau contenant toutes les planques.
- */
-public static function getAllSafeHouses(\PDO $pdo): array
-{
-    // Requête SQL pour récupérer toutes les planques depuis la base de données
-    $query = "SELECT * FROM SafeHouses";
-    $stmt = $pdo->prepare($query);
-    $stmt->execute();
+        $safeHousesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-    $safeHousesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $safeHouses = [];
+        foreach ($safeHousesData as $safeHouseData) {
+            $safeHouseId = $safeHouseData['id'];
 
-    $safeHouses = [];
+            if (!isset(self::$safeHouses[$safeHouseId])) {
+                $safeHouse = new SafeHouse(
+                    $pdo,
+                    $safeHouseData['id'],
+                    $safeHouseData['code'],
+                    $safeHouseData['address'],
+                    $safeHouseData['country'],
+                    $safeHouseData['type']
+                );
 
-    foreach ($safeHousesData as $safeHouseData) {
-        $id = $safeHouseData['id'];
-        $code = $safeHouseData['code'];
-        $address = $safeHouseData['address'];
-        $country = $safeHouseData['country'];
-        $type = $safeHouseData['type'];
-        $missionId = $safeHouseData['mission_id'];
+                self::$safeHouses[$safeHouseId] = $safeHouse;
+            }
 
-        // Vérifier si la mission existe et récupérer l'objet Mission correspondant
-        $mission = null;
-        if ($missionId !== null) {
-            $mission = new Mission($pdo);
-            $mission = $mission->getMissionById($missionId);
+            $safeHouses[] = self::$safeHouses[$safeHouseId];
         }
 
-        // Créer une nouvelle instance de SafeHouse avec les données récupérées
-        $safeHouse = new SafeHouse($pdo, $id, $code, $address, $country, $type, $mission);
-        $safeHouses[] = $safeHouse;
+        return $safeHouses;
     }
 
-    return $safeHouses;
-}
-
-
     /**
-     * Ajoute une nouvelle planque dans la base de données et dans la classe.
+     * Ajoute une nouvelle SafeHouse.
      *
-     * @param string $code Le code de la planque.
-     * @param string $address L'adresse de la planque.
-     * @param string $country Le pays de la planque.
-     * @param string $type Le type de la planque.
-     * @return SafeHouse|null La nouvelle instance de la planque ajoutée, ou null si la planque existe déjà.
+     * @param string $code Le code de la SafeHouse.
+     * @param string $address L'adresse de la SafeHouse.
+     * @param string $country Le pays de la SafeHouse.
+     * @param string $type Le type de la SafeHouse.
+     * @return SafeHouse|null La nouvelle SafeHouse ajoutée, ou null si le code existe déjà.
+```php
      */
     public function addSafeHouse(string $code, string $address, string $country, string $type): ?SafeHouse
     {
-        // Vérifier si la planque existe déjà dans la base de données
-        $query = "SELECT * FROM SafeHouses WHERE code = :code AND address = :address AND country = :country AND type = :type";
+        // Vérifier si le code de la SafeHouse existe déjà dans la base de données
+        $query = "SELECT * FROM SafeHouses WHERE code = :code";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindValue(':code', $code);
-        $stmt->bindValue(':address', $address);
-        $stmt->bindValue(':country', $country);
-        $stmt->bindValue(':type', $type);
         $stmt->execute();
 
-        $safeHouseDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $safeHouseData = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-        if ($safeHouseDatas) {
-            // La planque existe déjà, retourner null
+        if ($safeHouseData) {
             return null;
         }
 
-        // Insérer la nouvelle planque dans la base de données
+        // Insérer la nouvelle SafeHouse dans la base de données et dans la classe
         $query = "INSERT INTO SafeHouses (code, address, country, type) VALUES (:code, :address, :country, :type)";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindValue(':code', $code);
@@ -170,35 +130,32 @@ public static function getAllSafeHouses(\PDO $pdo): array
         $stmt->bindValue(':type', $type);
         $stmt->execute();
 
-        $id = $this->pdo->lastInsertId();
+        $newSafeHouseId = $this->pdo->lastInsertId();
 
-        // Créer une nouvelle instance de SafeHouse avec les données fournies
-        $newSafeHouse = new SafeHouse($this->pdo, $id, $code, $address, $country, $type, null);
+        $newSafeHouse = new SafeHouse($this->pdo, $newSafeHouseId, $code, $address, $country, $type);
 
-        // Mettre à jour le tableau $safeHouses avec la nouvelle instance de planque
-        self::$safeHouses[$id] = $newSafeHouse;
+        self::$safeHouses[$newSafeHouseId] = $newSafeHouse;
 
-        // Retourner la nouvelle instance de la planque ajoutée
         return $newSafeHouse;
     }
 
     /**
-     * Met à jour les propriétés de la planque dans la base de données et dans la classe.
+     * Met à jour les propriétés d'une SafeHouse dans la base de données et dans la classe.
      *
-     * @param array $propertiesToUpdate Les propriétés à mettre à jour sous la forme d'un tableau associatif.
-     * @return bool Retourne true si la mise à jour a réussi, sinon false.
+     * @param int $id L'identifiant de la SafeHouse à mettre à jour.
+     * @param array $propertiesToUpdate Les propriétés à mettre à jour avec leurs nouvelles valeurs.
+     * @return bool Indique si la mise à jour a été effectuée avec succès.
      */
-    public function updateProperties(array $propertiesToUpdate): bool
+    public function updateSafeHouseProperties(int $id, array $propertiesToUpdate): bool
     {
-        $id = $this->getId();
-
+        // Mettre à jour les propriétés dans la classe
         foreach ($propertiesToUpdate as $property => $value) {
             if ($this->$property !== $value) {
-                // Mettre à jour la propriété de la planque dans la classe
                 $this->$property = $value;
             }
         }
 
+        // Mettre à jour les propriétés dans la base de données
         $query = "UPDATE SafeHouses SET code = :code, address = :address, country = :country, type = :type WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
         $stmt->bindValue(':id', $id);
@@ -208,72 +165,83 @@ public static function getAllSafeHouses(\PDO $pdo): array
         $stmt->bindValue(':type', $this->type);
         $stmt->execute();
 
-        // Mettre à jour le tableau $safeHouses avec la planque modifiée
+        // Mettre à jour le tableau $safeHouses
         self::$safeHouses[$id] = $this;
 
-        // Retourner true pour indiquer que la mise à jour a réussi
         return true;
     }
 
     /**
-     * Supprime une planque de la base de données et de la classe en utilisant son ID.
+     * Supprime une SafeHouse de la base de données et de la classe en fonction de son ID.
      *
-     * @param mixed $id L'ID de la planque à supprimer.
-     * @return bool Retourne true si la suppression est réussie, sinon false.
+     * @param int $id L'identifiant de la SafeHouse à supprimer.
+     * @return bool Indique si la suppression a été effectuée avec succès.
      */
     public function deleteSafeHouseById($id): bool
     {
-        // Vérifier si l'ID existe en base de données
-        $query = "SELECT * FROM SafeHouses WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':id', $id);
-        $stmt->execute();
-
-        $safeHouseDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
-        if (!$safeHouseDatas) {
-            // L'ID n'existe pas, retourner false pour indiquer une suppression non réussie
-            return false;
-        }
-
-        // Supprimer la planque de la base de données
+        // Supprimer la SafeHouse de la base de données
         $query = "DELETE FROM SafeHouses WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':id', $id);
-        $stmt->execute();
+        $stmt->execute(['id' => $id]);
 
-        // Supprimer la planque de la classe
+        // Supprimer la SafeHouse de la classe
         if (isset(self::$safeHouses[$id])) {
             unset(self::$safeHouses[$id]);
-            // Retourner true pour indiquer une suppression réussie
             return true;
         }
 
-        // Si la planque n'est pas trouvée dans la classe, retourner false pour indiquer une suppression non réussie
         return false;
     }
 
-    //Getters
-    public function getId():int {
+    // Getters et Setters
+
+    public function getId(): int
+    {
         return $this->id;
     }
 
-    public function getCode(): string {
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getCode(): string
+    {
         return $this->code;
     }
 
-    public function getAddress(): string {
+    public function setCode(string $code): void
+    {
+        $this->code = $code;
+    }
+
+    public function getAddress(): string
+    {
         return $this->address;
     }
-    
-    public function getCountry(): string {
+
+    public function setAddress(string $address): void
+    {
+        $this->address = $address;
+    }
+
+    public function getCountry(): string
+    {
         return $this->country;
     }
 
-    public function getType(): string {
+    public function setCountry(string $country): void
+    {
+        $this->country = $country;
+    }
+
+    public function getType(): string
+    {
         return $this->type;
     }
 
-    public function getMission(): ?Mission {
-        return $this->mission;
+    public function setType(string $type): void
+    {
+        $this->type = $type;
     }
-};
+}
