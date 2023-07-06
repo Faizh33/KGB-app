@@ -21,15 +21,15 @@ class Contact extends Person
      * @param int $id L'identifiant du contact à récupérer.
      * @return Contact|null Le contact correspondant à l'ID spécifié, ou null s'il n'existe pas.
      */
-    public static function getContactById($pdo, $id): ?Contact
+    public static function getContactById($id): ?Contact
     {
         // Récupérer la personne correspondante à l'ID
-        $person = parent::getPersonById($pdo, $id);
+        $person = parent::getPersonById($id);
 
         if ($person instanceof Person) {
             // Si la personne existe, récupérer le contact associé dans la table "Contacts"
             $query = "SELECT * FROM Contacts WHERE id = :id";
-            $stmt = $pdo->prepare($query);
+            $stmt = self::$pdo->prepare($query);
             $stmt->bindValue(":id", $id);
             $stmt->execute();
 
@@ -38,7 +38,7 @@ class Contact extends Person
 
             if ($contactDatas) {
                 // Créer et retourner une instance de Contact en utilisant les données récupérées
-                return new Contact($pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $codeName);
+                return new Contact(self::$pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $codeName);
             }
         }
 
@@ -53,17 +53,17 @@ class Contact extends Person
      * @param PDO $pdo L'objet PDO utilisé pour la connexion à la base de données.
      * @return array Un tableau contenant tous les contacts de la base de données.
      */
-    public static function getAllContacts($pdo): array
+    public static function getAllContacts(): array
     {
         // Récupérer toutes les personnes de la base de données
-        $persons = parent::getAllPersons($pdo);
+        $persons = parent::getAllPersons();
 
         $contacts = [];
 
         foreach ($persons as $person) {
             // Pour chaque personne, récupérer le contact associé dans la table "Contacts"
             $query = "SELECT * FROM Contacts WHERE id = :id";
-            $stmt = $pdo->prepare($query);
+            $stmt = self::$pdo->prepare($query);
             $stmt->bindValue(":id", $person->getId());
             $stmt->execute();
 
@@ -71,7 +71,7 @@ class Contact extends Person
 
             if($contactDatas !== false) {
                 $codeName = $contactDatas['code_name'];
-                $contacts[] = new Contact($pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $codeName);
+                $contacts[] = new Contact(self::$pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $codeName);
             }
         }
 
@@ -89,21 +89,21 @@ class Contact extends Person
      * @param string $codeName Le nom de code du contact.
      * @return Contact|null Le contact ajouté, ou null en cas d'erreur.
      */
-    public function addContact($pdo, string $lastName, string $firstName, string $birthDate, string $nationality, string $codeName): ?Contact
+    public static function addContact(string $lastName, string $firstName, string $birthDate, string $nationality, string $codeName): ?Contact
     {
         // Ajouter une personne à la base de données en utilisant la méthode addPerson de la classe parente
-        $person = parent::addPerson($pdo, $lastName, $firstName, $birthDate, $nationality);
+        $person = parent::addPerson($lastName, $firstName, $birthDate, $nationality);
 
         if ($person instanceof Person) {
             // Si la personne a été ajoutée avec succès, insérer les données spécifiques du contact dans la table "Contacts"
             $query = "INSERT INTO Contacts (id, code_name) VALUES (:id, :codeName)";
-            $stmt = $pdo->prepare($query);
+            $stmt = self::$pdo->prepare($query);
             $stmt->bindValue(':id', $person->getId());
             $stmt->bindValue(':codeName', $codeName);
             $stmt->execute();
 
             // Créer une nouvelle instance de Contact en utilisant les données fournies et les données de la personne correspondante
-            return new Contact($pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $codeName);
+            return new Contact(self::$pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $codeName);
         }
 
         return null;
@@ -116,17 +116,17 @@ class Contact extends Person
      * @param array $propertiesToUpdate Les propriétés à mettre à jour avec leurs nouvelles valeurs.
      * @return bool Indique si la mise à jour a été effectuée avec succès (true) ou non (false).
      */
-    public function updateContactProperties(string $id, array $propertiesToUpdate): bool
+    public static function updateContactProperties(string $id, array $propertiesToUpdate): bool
     {
         // Appeler la méthode updateProperties de la classe parente pour mettre à jour les propriétés de la personne
-        $personUpdated = parent::updateProperties($id, $propertiesToUpdate);
+        $personUpdated = parent::updatePersonProperties($id, $propertiesToUpdate);
 
         if ($personUpdated) {
             // Si la mise à jour des propriétés de la personne a réussi, mettre à jour le nom de code du contact dans la table "Contacts"
             $query = "UPDATE Contacts SET code_name = :codeName WHERE id = :id";
-            $stmt = $this->pdo->prepare($query);
+            $stmt = self::$pdo->prepare($query);
             $stmt->bindValue(':id', $id);
-            $stmt->bindValue(':codeName', $this->codeName);
+            $stmt->bindValue(':codeName', self::$codeName);
             $stmt->execute();
 
             return true;
@@ -140,7 +140,7 @@ class Contact extends Person
      *
      * @return bool Indique si la suppression a été effectuée avec succès (true) ou non (false).
      */
-    public function deleteContact(string $id): bool
+    public static function deleteContact(string $id): bool
     {
         // Appeler la méthode deletePersonById de la classe parente pour supprimer la personne correspondante dans la base de données
         $personDeleted = parent::deletePersonById($id);
@@ -148,7 +148,7 @@ class Contact extends Person
         if ($personDeleted) {
             // Si la suppression de la personne a réussi, supprimer le contact de la table "Contacts"
             $query = "DELETE FROM Contacts WHERE id = :id";
-            $stmt = $this->pdo->prepare($query);
+            $stmt = self::$pdo->prepare($query);
             $stmt->bindValue(':id', $id);
             $stmt->execute();
 

@@ -58,10 +58,10 @@ class MissionAgent
      *
      * @return array Un tableau contenant tous les MissionAgent.
      */
-    public static function getAllMissionAgents($pdo): array
+    public static function getAllMissionAgents(): array
     {
         $query = "SELECT mission_id, agent_id FROM Missions_agents";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute();
 
         $missionAgentsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -76,7 +76,7 @@ class MissionAgent
             if ($existingMissionAgent) {
                 $missionAgents[] = $existingMissionAgent;
             } else {
-                $missionAgent = new MissionAgent($pdo, $missionId, $agentId);
+                $missionAgent = new MissionAgent(self::$pdo, $missionId, $agentId);
                 $missionAgents[] = $missionAgent;
             }
         }
@@ -90,14 +90,14 @@ class MissionAgent
      * @param string $missionId L'ID de la mission.
      * @return array Un tableau contenant tous les agents associés à la mission.
      */
-    public static function getAgentsByMissionId($pdo, string $missionId): array
+    public static function getAgentsByMissionId(string $missionId): array
     {
         if (isset(self::$missionAgents[$missionId])) {
             return self::$missionAgents[$missionId];
         }
 
         $query = "SELECT * FROM Missions_agents WHERE mission_id = :missionId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
@@ -108,7 +108,7 @@ class MissionAgent
             $missionId = $missionAgentData['mission_id'];
             $agentId = $missionAgentData['agent_id'];
 
-            $missionAgent = new MissionAgent($pdo, $missionId, $agentId);
+            $missionAgent = new MissionAgent(self::$pdo, $missionId, $agentId);
             $missionAgents[] = $missionAgent;
         }
 
@@ -123,14 +123,14 @@ class MissionAgent
      * @param string $agentId L'ID de l'agent.
      * @return array Un tableau contenant toutes les missions associées à l'agent.
      */
-    public function getMissionsByAgentId(string $agentId): array
+    public static function getMissionsByAgentId(string $agentId): array
     {
         if (isset(self::$missionAgents[$agentId])) {
             return self::$missionAgents[$agentId];
         }
 
         $query = "SELECT * FROM Missions_agents WHERE agent_id = :agentId";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':agentId', $agentId);
         $stmt->execute();
 
@@ -141,7 +141,7 @@ class MissionAgent
             $missionId = $missionAgentData['mission_id'];
             $agentId = $missionAgentData['agent_id'];
 
-            $missionAgent = new MissionAgent($this->pdo, $missionId, $agentId);
+            $missionAgent = new MissionAgent(self::$pdo, $missionId, $agentId);
             $missionAgents[] = $missionAgent;
         }
 
@@ -157,7 +157,7 @@ class MissionAgent
      * @param string $agentId L'ID de l'agent.
      * @return MissionAgent|null L'objet MissionAgent créé si l'ajout est réussi, sinon null.
      */
-    public static function addAgentToMission($pdo, string $missionId, string $agentId): ?MissionAgent
+    public static function addAgentToMission(string $missionId, string $agentId): ?MissionAgent
     {
         $existingMissionAgent = MissionAgent::findExistingMissionAgent($missionId, $agentId);
         if ($existingMissionAgent) {
@@ -165,12 +165,12 @@ class MissionAgent
         }
 
         $query = "INSERT INTO Missions_agents (mission_id, agent_id) VALUES (:missionId, :agentId)";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->bindValue(':agentId', $agentId);
         $stmt->execute();
 
-        $newMissionAgent = new MissionAgent($pdo, $missionId, $agentId);
+        $newMissionAgent = new MissionAgent(self::$pdo, $missionId, $agentId);
         self::$missionAgents[$missionId][] = $newMissionAgent;
         self::$missionAgents[$agentId][] = $newMissionAgent;
 
@@ -184,7 +184,7 @@ class MissionAgent
      * @param array $propertiesToUpdate Les propriétés à mettre à jour.
      * @return bool Indique si la mise à jour a réussi.
      */
-    public static function updateAgentProperties($pdo, string $missionId, array $propertiesToUpdate): bool
+    public static function updateMissionAgentProperties(string $missionId, array $propertiesToUpdate): bool
     {
         $agentId = MissionAgent::getAgentId();
 
@@ -200,7 +200,7 @@ class MissionAgent
         }
 
         $query = "UPDATE Missions_agents SET agent_id = :newAgentId WHERE mission_id = :missionId AND agent_id = :agentId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':newAgentId', $agentId);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->bindValue(':agentId', $agentId);
@@ -217,10 +217,10 @@ class MissionAgent
      * @param string $missionId L'ID de la mission.
      * @return bool Indique si la suppression a réussi.
      */
-    public static function deleteAgentsByMissionId($pdo, string $missionId): bool
+    public static function deleteAgentsByMissionId(string $missionId): bool
     {
         $query = "DELETE FROM Missions_agents WHERE mission_id = :missionId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
@@ -235,10 +235,10 @@ class MissionAgent
      * @param string $agentId L'ID de l'agent.
      * @return bool Indique si la suppression a réussi.
      */
-    public static function deleteMissionsByAgentId($pdo, string $agentId): bool
+    public static function deleteMissionsByAgentId(string $agentId): bool
     {
         $query = "DELETE FROM Missions_agents WHERE agent_id = :agentId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':agentId', $agentId);
         $stmt->execute();
 

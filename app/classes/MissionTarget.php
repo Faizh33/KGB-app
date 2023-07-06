@@ -57,10 +57,10 @@ class MissionTarget
      *
      * @return array Un tableau contenant toutes les missions cibles.
      */
-    public static function getAllMissionTargets($pdo): array
+    public static function getAllMissionTargets(): array
     {
         $query = "SELECT mission_id, target_id FROM Missions_targets";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute();
 
         $missionTargetsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -75,7 +75,7 @@ class MissionTarget
             if ($existingMissionTarget) {
                 $missionTargets[] = $existingMissionTarget;
             } else {
-                $missionTarget = new MissionTarget($pdo, $missionId, $targetId);
+                $missionTarget = new MissionTarget(self::$pdo, $missionId, $targetId);
                 $missionTargets[] = $missionTarget;
             }
         }
@@ -89,14 +89,14 @@ class MissionTarget
      * @param string $missionId L'identifiant de la mission.
      * @return array Un tableau contenant les cibles associées à la mission.
      */
-    public static function getTargetsByMissionId($pdo, string $missionId): array
+    public static function getTargetsByMissionId(string $missionId): array
     {
         if (isset(self::$missionTargets[$missionId])) {
             return self::$missionTargets[$missionId];
         }
 
         $query = "SELECT * FROM Missions_targets WHERE mission_id = :missionId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
@@ -107,7 +107,7 @@ class MissionTarget
             $missionId = $missionTargetData['mission_id'];
             $targetId = $missionTargetData['target_id'];
 
-            $missionTarget = new MissionTarget($pdo, $missionId, $targetId);
+            $missionTarget = new MissionTarget(self::$pdo, $missionId, $targetId);
             $missionTargets[] = $missionTarget;
         }
 
@@ -122,14 +122,14 @@ class MissionTarget
      * @param string $targetId L'identifiant de la cible.
      * @return array Un tableau contenant les missions associées à la cible.
      */
-    public function getMissionsByTargetId(string $targetId): array
+    public static function getMissionsByTargetId(string $targetId): array
     {
         if (isset(self::$missionTargets[$targetId])) {
             return self::$missionTargets[$targetId];
         }
 
         $query = "SELECT * FROM Missions_targets WHERE target_id = :targetId";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':targetId', $targetId);
         $stmt->execute();
 
@@ -137,7 +137,7 @@ class MissionTarget
         $missionTargets = [];
 
         foreach ($rows as $row) {
-            $missionTarget = new MissionTarget($this->pdo, $row['mission_id'], $row['target_id']);
+            $missionTarget = new MissionTarget(self::$pdo, $row['mission_id'], $row['target_id']);
             $missionTargets[] = $missionTarget;
         }
 
@@ -153,7 +153,7 @@ class MissionTarget
      * @param string $targetId L'identifiant de la cible.
      * @return MissionTarget|null L'objet MissionTarget correspondant à la nouvelle association ou null si elle existe déjà.
      */
-    public static function addTargetToMission($pdo, string $missionId, string $targetId): ?MissionTarget
+    public static function addTargetToMission(string $missionId, string $targetId): ?MissionTarget
     {
         $existingMissionTarget = MissionTarget::findExistingMissionTarget($missionId, $targetId);
         if ($existingMissionTarget) {
@@ -161,12 +161,12 @@ class MissionTarget
         }
 
         $query = "INSERT INTO Missions_targets (mission_id, target_id) VALUES (:missionId, :targetId)";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->bindValue(':targetId', $targetId);
         $stmt->execute();
 
-        $newMissionTarget = new MissionTarget($pdo, $missionId, $targetId);
+        $newMissionTarget = new MissionTarget(self::$pdo, $missionId, $targetId);
         self::$missionTargets[$missionId][] = $newMissionTarget;
         self::$missionTargets[$targetId][] = $newMissionTarget;
 
@@ -180,7 +180,7 @@ class MissionTarget
      * @param array $propertiesToUpdate Les propriétés à mettre à jour sous la forme [nomPropriete => nouvelleValeur].
      * @return bool Indique si la mise à jour a été effectuée avec succès.
      */
-    public static function updateTargetProperties($pdo, string $missionId, array $propertiesToUpdate): bool
+    public static function updateMissionTargetProperties(string $missionId, array $propertiesToUpdate): bool
     {
         $targetId = MissionTarget::getTargetId();
 
@@ -196,7 +196,7 @@ class MissionTarget
         }
 
         $query = "UPDATE Missions_targets SET target_id = :newTargetId WHERE mission_id = :missionId AND target_id = :targetId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':newTargetId', $targetId);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->bindValue(':targetId', $targetId);
@@ -213,10 +213,10 @@ class MissionTarget
      * @param string $missionId L'identifiant de la mission.
      * @return bool Indique si la suppression a été effectuée avec succès.
      */
-    public static function deleteTargetsByMissionId($pdo, string $missionId): bool
+    public static function deleteTargetsByMissionId(string $missionId): bool
     {
         $query = "DELETE FROM Missions_targets WHERE mission_id = :missionId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
@@ -231,10 +231,10 @@ class MissionTarget
      * @param string $targetId L'identifiant de la cible.
      * @return bool Indique si la suppression a été effectuée avec succès.
      */
-    public static function deleteMissionsByTargetId($pdo, string $targetId): bool
+    public static function deleteMissionsByTargetId(string $targetId): bool
     {
         $query = "DELETE FROM Missions_targets WHERE target_id = :targetId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':targetId', $targetId);
         $stmt->execute();
 

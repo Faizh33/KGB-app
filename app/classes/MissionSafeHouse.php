@@ -57,10 +57,10 @@ class MissionSafeHouse
      *
      * @return array Un tableau contenant toutes les associations MissionSafeHouse.
      */
-    public static function getAllMissionSafeHouses($pdo): array
+    public static function getAllMissionSafeHouses(): array
     {
         $query = "SELECT mission_id, safehouse_id FROM Missions_safehouses";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute();
 
         $missionSafeHousesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -75,7 +75,7 @@ class MissionSafeHouse
             if ($existingMissionSafeHouse) {
                 $missionSafeHouses[] = $existingMissionSafeHouse;
             } else {
-                $missionSafeHouse = new MissionSafeHouse($pdo, $missionId, $safeHouseId);
+                $missionSafeHouse = new MissionSafeHouse(self::$pdo, $missionId, $safeHouseId);
                 $missionSafeHouses[] = $missionSafeHouse;
             }
         }
@@ -89,14 +89,14 @@ class MissionSafeHouse
      * @param string $missionId L'ID de la mission.
      * @return array Un tableau d'instances MissionSafeHouse représentant les planques associées à la mission.
      */
-    public static function getSafeHousesByMissionId($pdo, string $missionId): array
+    public static function getSafeHousesByMissionId(string $missionId): array
     {
         if (isset(self::$missionSafeHouses[$missionId])) {
             return self::$missionSafeHouses[$missionId];
         }
 
         $query = "SELECT * FROM Missions_safehouses WHERE mission_id = :missionId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
@@ -104,7 +104,7 @@ class MissionSafeHouse
         $missionSafeHouses = [];
 
         foreach ($rows as $row) {
-            $missionSafeHouse = new MissionSafeHouse($pdo, $row['mission_id'], $row['safehouse_id']);
+            $missionSafeHouse = new MissionSafeHouse(self::$pdo, $row['mission_id'], $row['safehouse_id']);
             $missionSafeHouses[] = $missionSafeHouse;
         }
 
@@ -119,14 +119,14 @@ class MissionSafeHouse
      * @param string $safeHouseId L'ID de la planque.
      * @return array Un tableau d'instances MissionSafeHouse représentant les missions associées à la planque.
      */
-    public static function getMissionsBySafeHouseId($pdo, string $safeHouseId): array
+    public static function getMissionsBySafeHouseId(string $safeHouseId): array
     {
         if (isset(self::$missionSafeHouses[$safeHouseId])) {
             return self::$missionSafeHouses[$safeHouseId];
         }
 
         $query = "SELECT * FROM Missions_safehouses WHERE safehouse_id = :safeHouseId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':safeHouseId', $safeHouseId);
         $stmt->execute();
 
@@ -134,7 +134,7 @@ class MissionSafeHouse
         $missionSafeHouses = [];
 
         foreach ($rows as $row) {
-            $missionSafeHouse = new MissionSafeHouse($pdo, $row['mission_id'], $row['safehouse_id']);
+            $missionSafeHouse = new MissionSafeHouse(self::$pdo, $row['mission_id'], $row['safehouse_id']);
             $missionSafeHouses[] = $missionSafeHouse;
         }
 
@@ -150,20 +150,20 @@ class MissionSafeHouse
      * @param string $safeHouseId L'ID de la planque.
      * @return MissionSafeHouse|null L'instance de MissionSafeHouse représentant l'association entre la mission et la planque, ou null en cas d'erreur.
      */
-    public static function addSafeHouseToMission($pdo, string $missionId, string $safeHouseId): ?MissionSafeHouse
+    public static function addSafeHouseToMission(string $missionId, string $safeHouseId): ?MissionSafeHouse
     {
-        $existingMissionSafeHouse = MissionSafeHouse::findExistingMissionSafeHouse($missionId, $safeHouseId);
+        $existingMissionSafeHouse = self::findExistingMissionSafeHouse($missionId, $safeHouseId);
         if ($existingMissionSafeHouse) {
             return $existingMissionSafeHouse;
         }
 
         $query = "INSERT INTO Missions_safehouses (mission_id, safehouse_id) VALUES (:missionId, :safeHouseId)";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->bindValue(':safeHouseId', $safeHouseId);
         $stmt->execute();
 
-        $newMissionSafeHouse = new MissionSafeHouse($pdo, $missionId, $safeHouseId);
+        $newMissionSafeHouse = new MissionSafeHouse(self::$pdo, $missionId, $safeHouseId);
         self::$missionSafeHouses[$missionId][] = $newMissionSafeHouse;
         self::$missionSafeHouses[$safeHouseId][] = $newMissionSafeHouse;
 
@@ -176,9 +176,9 @@ class MissionSafeHouse
      * @param array $propertiesToUpdate Les propriétés à mettre à jour sous la forme [nomPropriete => nouvelleValeur].
      * @return bool Indique si la mise à jour a réussi ou non.
      */
-    public static function updateSafeHouseProperties($pdo, string $missionId, array $propertiesToUpdate): bool
+    public static function updateSafeHouseProperties(string $missionId, array $propertiesToUpdate): bool
     {
-        $safeHouseId = MissionSafeHouse::getSafeHouseId();
+        $safeHouseId = self::getSafeHouseId();
 
         $updatedMissionSafeHouses = [];
 
@@ -192,7 +192,7 @@ class MissionSafeHouse
         }
 
         $query = "UPDATE Missions_safehouses SET safehouse_id = :newSafeHouseId WHERE mission_id = :missionId AND safehouse_id = :safeHouseId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':newSafeHouseId', $safeHouseId);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->bindValue(':safeHouseId', $safeHouseId);
@@ -209,10 +209,10 @@ class MissionSafeHouse
      * @param string $missionId L'ID de la mission.
      * @return bool Indique si la suppression a réussi ou non.
      */
-    public static function deleteSafeHousesByMissionId($pdo, string $missionId): bool
+    public static function deleteSafeHousesByMissionId(string $missionId): bool
     {
         $query = "DELETE FROM Missions_safehouses WHERE mission_id = :missionId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
@@ -227,10 +227,10 @@ class MissionSafeHouse
      * @param string $safeHouseId L'ID de la planque.
      * @return bool Indique si la suppression a réussi ou non.
      */
-    public function deleteMissionsBySafeHouseId($pdo, string $safeHouseId): bool
+    public  static function deleteMissionsBySafeHouseId(string $safeHouseId): bool
     {
         $query = "DELETE FROM Missions_safehouses WHERE safehouse_id = :safeHouseId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':safeHouseId', $safeHouseId);
         $stmt->execute();
 

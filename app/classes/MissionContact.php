@@ -57,10 +57,10 @@ class MissionContact
      *
      * @return array Un tableau contenant toutes les associations MissionContact.
      */
-    public static function getAllMissionContacts($pdo): array
+    public static function getAllMissionContacts(): array
     {
         $query = "SELECT mission_id, contact_id FROM Missions_contacts";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute();
 
         $missionContactsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -75,7 +75,7 @@ class MissionContact
             if ($existingMissionContact) {
                 $missionContacts[] = $existingMissionContact;
             } else {
-                $missionContact = new MissionContact($pdo, $missionId, $contactId);
+                $missionContact = new MissionContact(self::$pdo, $missionId, $contactId);
                 $missionContacts[] = $missionContact;
             }
         }
@@ -89,14 +89,14 @@ class MissionContact
      * @param string $missionId L'ID de la mission.
      * @return array Un tableau d'instances MissionContact représentant les contacts associés à la mission.
      */
-    public static function getContactsByMissionId($pdo, string $missionId): array
+    public static function getContactsByMissionId(string $missionId): array
     {
         if (isset(self::$missionContacts[$missionId])) {
             return self::$missionContacts[$missionId];
         }
 
         $query = "SELECT * FROM Missions_contacts WHERE mission_id = :missionId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
@@ -104,7 +104,7 @@ class MissionContact
         $missionContacts = [];
 
         foreach ($rows as $row) {
-            $missionContact = new MissionContact($pdo, $row['mission_id'], $row['contact_id']);
+            $missionContact = new MissionContact(self::$pdo, $row['mission_id'], $row['contact_id']);
             $missionContacts[] = $missionContact;
         }
 
@@ -119,14 +119,14 @@ class MissionContact
      * @param string $contactId L'ID du contact.
      * @return array Un tableau d'instances MissionContact représentant les missions associées au contact.
      */
-    public static function getMissionsByContactId($pdo, string $contactId): array
+    public static function getMissionsByContactId(string $contactId): array
     {
         if (isset(self::$missionContacts[$contactId])) {
             return self::$missionContacts[$contactId];
         }
 
         $query = "SELECT * FROM Missions_contacts WHERE contact_id = :contactId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':contactId', $contactId);
         $stmt->execute();
 
@@ -134,7 +134,7 @@ class MissionContact
         $missionContacts = [];
 
         foreach ($rows as $row) {
-            $missionContact = new MissionContact($pdo, $row['mission_id'], $row['contact_id']);
+            $missionContact = new MissionContact(self::$pdo, $row['mission_id'], $row['contact_id']);
             $missionContacts[] = $missionContact;
         }
 
@@ -150,7 +150,7 @@ class MissionContact
      * @param string $contactId L'ID du contact.
      * @return MissionContact|null L'instance de MissionContact représentant l'association entre la mission et le contact, ou null en cas d'erreur.
      */
-    public static function addContactToMission($pdo, string $missionId, string $contactId): ?MissionContact
+    public static function addContactToMission(string $missionId, string $contactId): ?MissionContact
     {
         $existingMissionContact = MissionContact::findExistingMissionContact($missionId, $contactId);
         if ($existingMissionContact) {
@@ -158,12 +158,12 @@ class MissionContact
         }
 
         $query = "INSERT INTO Missions_contacts (mission_id, contact_id) VALUES (:missionId, :contactId)";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->bindValue(':contactId', $contactId);
         $stmt->execute();
 
-        $newMissionContact = new MissionContact($pdo, $missionId, $contactId);
+        $newMissionContact = new MissionContact(self::$pdo, $missionId, $contactId);
         self::$missionContacts[$missionId][] = $newMissionContact;
         self::$missionContacts[$contactId][] = $newMissionContact;
 
@@ -176,7 +176,7 @@ class MissionContact
      * @param array $propertiesToUpdate Les propriétés à mettre à jour sous la forme [nomPropriete => nouvelleValeur].
      * @return bool Indique si la mise à jour a réussi ou non.
      */
-    public static function updateContactProperties($pdo, string $missionId, array $propertiesToUpdate): bool
+    public static function updateMissionContactProperties(string $missionId, array $propertiesToUpdate): bool
     {
         $contactId = MissionContact::getContactId();
 
@@ -192,7 +192,7 @@ class MissionContact
         }
 
         $query = "UPDATE Missions_contacts SET contact_id = :newContactId WHERE mission_id = :missionId AND contact_id = :contactId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':newContactId', $contactId);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->bindValue(':contactId', $contactId);
@@ -209,10 +209,10 @@ class MissionContact
      * @param string $missionId L'ID de la mission.
      * @return bool Indique si la suppression a réussi ou non.
      */
-    public static function deleteContactsByMissionId($pdo, string $missionId): bool
+    public static function deleteContactsByMissionId(string $missionId): bool
     {
         $query = "DELETE FROM Missions_contacts WHERE mission_id = :missionId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
         $stmt->execute();
 
@@ -227,10 +227,10 @@ class MissionContact
      * @param string $contactId L'ID du contact.
      * @return bool Indique si la suppression a réussi ou non.
      */
-    public static function deleteMissionsByContactId($pdo, string $contactId): bool
+    public static function deleteMissionsByContactId(string $contactId): bool
     {
         $query = "DELETE FROM Missions_contacts WHERE contact_id = :contactId";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':contactId', $contactId);
         $stmt->execute();
 

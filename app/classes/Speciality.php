@@ -27,7 +27,7 @@ class Speciality
      * @param int $id L'ID de la spécialité à récupérer.
      * @return Speciality|null La spécialité correspondante si elle existe, sinon null.
      */
-    public static function getSpecialityById($pdo, int $id)
+    public static function getSpecialityById(int $id)
     {
         if (isset(self::$specialities[$id])) {
             // Si la spécialité existe déjà dans le tableau $specialities, la retourner directement
@@ -35,7 +35,7 @@ class Speciality
         }
 
         $query = "SELECT * FROM Specialities WHERE id = :id";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 
@@ -45,7 +45,7 @@ class Speciality
 
         if ($specialityDatas) {
             // Si la spécialité est trouvée dans la base de données, créer une nouvelle instance de Speciality
-            $speciality = new Speciality($pdo, $id, $specialityName);
+            $speciality = new Speciality(self::$pdo, $id, $specialityName);
             // Ajouter la spécialité au tableau $specialities pour une utilisation future
             self::$specialities[$id] = $speciality;
             return $speciality;
@@ -60,10 +60,10 @@ class Speciality
      *
      * @return array Un tableau contenant toutes les spécialités.
      */
-    public static function getAllSpecialities($pdo): array
+    public static function getAllSpecialities(): array
     {
         $query = "SELECT * FROM Specialities";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute();
 
         $specialitiesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -75,7 +75,7 @@ class Speciality
 
             if (!isset(self::$specialities[$id])) {
                 // Si la spécialité n'existe pas encore dans le tableau $specialities, créer une nouvelle instance de Speciality
-                $speciality = new Speciality($pdo, $id, $specialityName);
+                $speciality = new Speciality(self::$pdo, $id, $specialityName);
                 // Ajouter la spécialité au tableau $specialities
                 self::$specialities[$id] = $speciality;
             }
@@ -94,11 +94,11 @@ class Speciality
      * @param string $speciality La spécialité à ajouter.
      * @return Speciality|null La nouvelle instance de Speciality si l'ajout est réussi, sinon null.
      */
-    public function addSpeciality(string $speciality): ?Speciality
+    public static function addSpeciality($pdo, string $speciality): ?Speciality
     {
         // Vérifier si la spécialité existe déjà dans la base de données
         $query = "SELECT * FROM Specialities WHERE speciality = :speciality";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindValue(':speciality', $speciality);
         $stmt->execute();
 
@@ -111,15 +111,15 @@ class Speciality
 
         // Insérer la nouvelle spécialité dans la base de données et dans la classe
         $query = "INSERT INTO Specialities (speciality) VALUES (:speciality)";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->bindValue(':speciality', $speciality);
         $stmt->execute();
 
         // Récupérer l'id de la nouvelle spécialité insérée
-        $newSpecialityId = $this->pdo->lastInsertId();
+        $newSpecialityId = $pdo->lastInsertId();
 
         // Créer une nouvelle instance de Speciality avec les données fournies
-        $newSpeciality = new Speciality($this->pdo, $newSpecialityId, $speciality);
+        $newSpeciality = new Speciality($pdo, $newSpecialityId, $speciality);
 
         // Ajouter la nouvelle spécialité au tableau $specialities
         self::$specialities[$newSpecialityId] = $newSpeciality;
@@ -134,28 +134,34 @@ class Speciality
      * @param array $propertiesToUpdate Les propriétés à mettre à jour sous la forme d'un tableau associatif.
      * @return bool Retourne true si la mise à jour a réussi, sinon false.
      */
-    public function updateProperties(array $propertiesToUpdate): bool
+    public static function updateSpecialityProperties(int $id, array $propertiesToUpdate): bool
     {
-        $id = $this->getId();
+        // Récupérer l'instance de la spécialité correspondant à l'ID
+        $speciality = self::getSpecialityById($id);
 
-        foreach ($propertiesToUpdate as $property => $value) {
-            if ($this->$property !== $value) {
-                // Mettre à jour la propriété de la spécialité dans la classe
-                $this->$property = $value;
+        if ($speciality) {
+            // Mettre à jour les propriétés dans la classe
+            foreach ($propertiesToUpdate as $property => $value) {
+                if ($speciality->$property !== $value) {
+                    $speciality->$property = $value;
+                }
             }
+
+            // Mettre à jour les propriétés dans la base de données
+            $query = "UPDATE Specialities SET speciality = :speciality WHERE id = :id";
+            $stmt = self::$pdo->prepare($query);
+            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':speciality', $speciality->speciality);
+            $stmt->execute();
+
+            // Mettre à jour le tableau $specialities avec la spécialité modifiée
+            self::$specialities[$id] = $speciality;
+
+            // Retourner true pour indiquer que la mise à jour a réussi
+            return true;
         }
 
-        $query = "UPDATE Specialities SET speciality = :speciality WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':id', $id);
-        $stmt->bindValue(':speciality', $this->speciality);
-        $stmt->execute();
-
-        // Mettre à jour le tableau $specialities avec la spécialité modifiée
-        self::$specialities[$id] = $this;
-
-        // Retourner true pour indiquer que la mise à jour a réussi
-        return true;
+        return false;
     }
 
     /**
@@ -164,11 +170,11 @@ class Speciality
      * @param mixed $id L'ID de la spécialité à supprimer.
      * @return bool Retourne true si la suppression est réussie, sinon false.
      */
-    public function deleteSpecialityById($id): bool
+    public static function deleteSpecialityById($id): bool
     {
         // Vérifier si l'ID existe en base de données
         $query = "SELECT * FROM Specialities WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 
@@ -180,12 +186,12 @@ class Speciality
 
         // Supprimer la spécialité de la base de données
         $query = "DELETE FROM Specialities WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 
         // Supprimer les associations agent/spécialité correspondantes en utilisant une instance de la classe AgentSpeciality
-        $agentSpeciality = new AgentSpeciality($this->pdo, '', $id);
+        $agentSpeciality = new AgentSpeciality(self::$pdo, '', $id);
         $agentSpeciality->deleteAgentsBySpecialityId($id);
 
         // Supprimer la spécialité de la classe

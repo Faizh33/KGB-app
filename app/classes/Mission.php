@@ -53,16 +53,16 @@ class Mission
      *
      * @return array   Un tableau contenant toutes les missions.
      */
-    public function getAllMissions(): array
+    public static function getAllMissions(): array
     {
         // Requête SQL pour récupérer toutes les missions
         $query = "SELECT * FROM Missions";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute();
-    
+
         // Récupérer les données des missions
         $missionsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    
+
         $missions = [];
         foreach ($missionsData as $missionData) {
             $id = $missionData['id'];
@@ -75,35 +75,23 @@ class Mission
             $specialityId = $missionData['speciality_id'];
             $missionStatusId = $missionData['missionstatuses_id'];
             $missionTypeId = $missionData['missiontype_id'];
-    
+
             // Vérifier si la mission existe déjà dans la liste des missions
             if (!isset(self::$missions[$id])) {
                 // Récupérer les objets Speciality, MissionStatus et MissionType correspondants à partir de leurs identifiants
-                if (!$this->speciality) {
-                    $this->speciality = new Speciality($this->pdo);
-                }
-                $speciality = $this->speciality->getSpecialityById($this->pdo, $specialityId);
+                $speciality = Speciality::getSpecialityById($specialityId);
+                $missionStatus = MissionStatus::getMissionStatusById($missionStatusId);
+                $missionType = MissionType::getMissionTypeById($missionTypeId);
 
-                if (!$this->missionStatus) {
-                    $this->missionStatus = new MissionStatus($this->pdo);
-                }
-                $missionStatus = $this->missionStatus->getMissionStatusById($this->pdo, $missionStatusId);
-
-                if (!$this->missionType) {
-                    $this->missionType = new MissionType($this->pdo);
-                }
-                $missionType = $this->missionType->getMissionTypeById($this->pdo, $missionTypeId);
-
-    
                 // Créer la mission en passant les objets récupérés
-                $mission = new Mission($this->pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
+                $mission = new Mission(self::$pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
                 self::$missions[$id] = $mission;
             }
-    
+
             // Ajouter la mission à la liste des missions à retourner
             $missions[] = self::$missions[$id];
         }
-    
+
         // Retourner toutes les missions
         return $missions;
     }
@@ -114,7 +102,7 @@ class Mission
      * @param string $id L'ID de la mission à récupérer.
      * @return Mission|null Retourne l'objet Mission correspondant à l'ID spécifié, sinon null.
      */
-    public function getMissionById($id)
+    public static function getMissionById($id)
     {
         // Vérifier si la mission est déjà présente dans le cache
         if (isset(self::$missions[$id])) {
@@ -123,7 +111,7 @@ class Mission
 
         // Requête pour récupérer les données de la mission depuis la base de données
         $query = "SELECT * FROM Missions WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute(['id' => $id]);
 
         // Récupération des données de la mission
@@ -143,23 +131,12 @@ class Mission
             $missionTypeId = $missionData['missiontype_id'];
 
             // Récupérer les objets Speciality, MissionStatus et MissionType correspondants à partir de leurs identifiants
-            if (!$this->speciality) {
-                $this->speciality = new Speciality($this->pdo);
-            }
-            $speciality = $this->speciality->getSpecialityById($this->pdo, $specialityId);
-
-            if (!$this->missionStatus) {
-                $this->missionStatus = new MissionStatus($this->pdo);
-            }
-            $missionStatus = $this->missionStatus->getMissionStatusById($this->pdo, $missionStatusId);
-
-            if (!$this->missionType) {
-                $this->missionType = new MissionType($this->pdo);
-            }
-            $missionType = $this->missionType->getMissionTypeById($this->pdo, $missionTypeId);
+            $speciality = Speciality::getSpecialityById($specialityId);
+            $missionStatus = MissionStatus::getMissionStatusById($missionStatusId);
+            $missionType = MissionType::getMissionTypeById($missionTypeId);
 
             // Création d'une nouvelle instance de Mission
-            $mission = new Mission($this->pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
+            $mission = new Mission(self::$pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
 
             // Ajout de la mission au cache
             self::$missions[$id] = $mission;
@@ -189,14 +166,14 @@ class Mission
      * 
      * @return Mission|null                Retourne l'objet Mission si l'ajout a réussi, sinon null.
      */
-    public function addMission(string $title, string $description, string $codeName, string $country, string $startDate, string $endDate, Speciality $speciality, MissionStatus $missionStatus, MissionType $missionType, array $agents, array $contacts, array $targets, array $safeHouses): ?Mission
+    public static function addMission(string $title, string $description, string $codeName, string $country, string $startDate, string $endDate, Speciality $speciality, MissionStatus $missionStatus, MissionType $missionType, array $agents, array $contacts, array $targets, array $safeHouses): ?Mission
     {
         // Générer un nouvel ID pour la mission
         $id = generateUUID();
 
         // Insérer la nouvelle mission dans la base de données
         $query = "INSERT INTO Missions (id, title, description, codeName, country, startDate, endDate, speciality_id, missionstatuses_id, missiontype_id) VALUES (:id, :title, :description, :codeName, :country, :startDate, :endDate, :specialityId, :missionStatusId, :missionTypeId)";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
         $stmt->bindValue(':title', $title);
         $stmt->bindValue(':description', $description);
@@ -210,29 +187,29 @@ class Mission
         $stmt->execute();
 
         // Créer une nouvelle instance de Mission
-        $newMission = new Mission($this->pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
+        $newMission = new Mission(self::$pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
 
         // Ajouter la nouvelle mission au tableau des missions
         self::$missions[$id] = $newMission;
         
         // Ajouter les données dans la table Missions_agents
         foreach ($agents as $agentId) {
-            MissionAgent::addAgentToMission($this->pdo, $id, $agentId);
+            MissionAgent::addAgentToMission($id, $agentId);
         }
 
         // Ajouter les données dans la table Missions_contacts
         foreach ($contacts as $contactId) {
-            MissionContact::addContactToMission($this->pdo, $id, $contactId);
+            MissionContact::addContactToMission($id, $contactId);
         }
 
         // Ajouter les données dans la table Missions_targets
         foreach ($targets as $targetId) {
-            MissionTarget::addTargetToMission($this->pdo, $id, $targetId);
+            MissionTarget::addTargetToMission($id, $targetId);
         }
 
         // Ajouter les données dans la table Missions_safehouses
         foreach ($safeHouses as $safeHouseId) {
-            MissionSafeHouse::addSafeHouseToMission($this->pdo, $id, $safeHouseId);
+            MissionSafeHouse::addSafeHouseToMission($id, $safeHouseId);
         }
 
         return $newMission;
@@ -244,63 +221,63 @@ class Mission
      * @param array $propertiesToUpdate   Les propriétés à mettre à jour avec leurs nouvelles valeurs.
      * @return bool                      Retourne true si la mise à jour a réussi, sinon false.
      */
-    public function updateMissionProperties(array $propertiesToUpdate): bool
+    public static function updateMissionProperties(Mission $mission, array $propertiesToUpdate): bool
     {
-        $id = $this->getId();
+        $id = $mission->getId();
 
         foreach ($propertiesToUpdate as $property => $value) {
             // Vérifier si la propriété est 'specialityId'
             if ($property === 'specialityId') {
                 // Récupérer l'objet Speciality correspondant à la nouvelle valeur de 'specialityId'
-                $speciality = $this->getSpeciality()->getSpecialityById($this->pdo, $value);
+                $speciality = Speciality::getSpecialityById($value);
                 if ($speciality) {
                     // Mettre à jour la propriété 'speciality' de la mission avec le nouvel objet Speciality
-                    $this->setSpeciality($speciality);
+                    $mission->setSpeciality($speciality);
                 }
             }
             // Vérifier si la propriété est 'missionStatusId'
             elseif ($property === 'missionStatusId') {
                 // Récupérer l'objet MissionStatus correspondant à la nouvelle valeur de 'missionStatusId'
-                $missionStatus = $this->getMissionStatus()->getMissionStatusById($this->pdo, $value);
+                $missionStatus = MissionStatus::getMissionStatusById($value);
                 if ($missionStatus) {
                     // Mettre à jour la propriété 'missionStatus' de la mission avec le nouvel objet MissionStatus
-                    $this->setMissionStatus($missionStatus);
+                    $mission->setMissionStatus($missionStatus);
                 }
             }
             // Vérifier si la propriété est 'missionTypeId'
             elseif ($property === 'missionTypeId') {
                 // Récupérer l'objet MissionType correspondant à la nouvelle valeur de 'missionTypeId'
-                $missionType = $this->getMissionType()->getMissionTypeById($this->pdo, $value);
+                $missionType = MissionType::getMissionTypeById($value);
                 if ($missionType) {
                     // Mettre à jour la propriété 'missionType' de la mission avec le nouvel objet MissionType
-                    $this->setMissionType($missionType);
+                    $mission->setMissionType($missionType);
                 }
             }
             else {
                 // Pour les autres propriétés, mettre à jour leur valeur si elle est différente de la nouvelle valeur
-                if ($this->$property !== $value) {
-                    $this->$property = $value;
+                if ($mission->$property !== $value) {
+                    $mission->$property = $value;
                 }
             }
         }
 
         // Requête SQL pour mettre à jour les propriétés de la mission dans la base de données
         $query = "UPDATE Missions SET title = :title, description = :description, codeName = :codeName, country = :country, startDate = :startDate, endDate = :endDate, speciality_id = :specialityId, missionstatuses_id = :missionStatusId, missiontype_id = :missionTypeId WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
-        $stmt->bindValue(':title', $this->title);
-        $stmt->bindValue(':description', $this->description);
-        $stmt->bindValue(':codeName', $this->codeName);
-        $stmt->bindValue(':country', $this->country);
-        $stmt->bindValue(':startDate', $this->startDate);
-        $stmt->bindValue(':endDate', $this->endDate);
-        $stmt->bindValue(':specialityId', $this->speciality->getId());
-        $stmt->bindValue(':missionStatusId', $this->missionStatus->getId());
-        $stmt->bindValue(':missionTypeId', $this->missionType->getId());
+        $stmt->bindValue(':title', $mission->title);
+        $stmt->bindValue(':description', $mission->description);
+        $stmt->bindValue(':codeName', $mission->codeName);
+        $stmt->bindValue(':country', $mission->country);
+        $stmt->bindValue(':startDate', $mission->startDate);
+        $stmt->bindValue(':endDate', $mission->endDate);
+        $stmt->bindValue(':specialityId', $mission->speciality->getId());
+        $stmt->bindValue(':missionStatusId', $mission->missionStatus->getId());
+        $stmt->bindValue(':missionTypeId', $mission->missionType->getId());
         $stmt->execute();
 
         // Mettre à jour la mission dans la liste des missions
-        self::$missions[$id] = $this;
+        Mission::$missions[$id] = $mission;
 
         return true;
     }
@@ -311,11 +288,11 @@ class Mission
      * @param string $id L'ID de la mission à supprimer.
      * @return bool Retourne true si la mission a été supprimée avec succès, sinon false.
      */
-    public function deleteMissionById($id): bool
+    public static function deleteMissionById($id): bool
     {
         // Vérifier si l'ID existe en base de données
         $query = "SELECT * FROM Missions WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 
@@ -326,21 +303,21 @@ class Mission
 
         // Supprimer la mission de la base de données
         $query = "DELETE FROM Missions WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 
         // Supprimer les associations agent/mission correspondantes en utilisant une instance de la classe MissionAgent
-        MissionAgent::deleteAgentsByMissionId($this->pdo, $id);
+        MissionAgent::deleteAgentsByMissionId($id);
 
         // Supprimer les associations contact/mission correspondantes en utilisant une instance de la classe MissionContact
-        MissionContact::deleteContactsByMissionId($this->pdo, $id);
+        MissionContact::deleteContactsByMissionId($id);
 
         // Supprimer les associations contact/mission correspondantes en utilisant une instance de la classe MissionContact
-        MissionTarget::deleteTargetsByMissionId($this->pdo, $id);
+        MissionTarget::deleteTargetsByMissionId($id);
 
         // Supprimer les associations contact/mission correspondantes en utilisant une instance de la classe MissionContact
-        MissionSafeHouse::deleteSafeHousesByMissionId($this->pdo, $id);
+        MissionSafeHouse::deleteSafeHousesByMissionId($id);
 
         // Supprimer la mission de la classe
         if (isset(self::$missions[$id])) {

@@ -16,11 +16,11 @@ class Admin
     /**
      * Récupère tous les administrateurs présents en base de données.
      */
-    private static function getAllAdmins($pdo): void
+    private static function getAllAdmins(): void
     {
         // Requête pour sélectionner tous les administrateurs
         $query = "SELECT * FROM Admins";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute();
 
         // Récupération des données des administrateurs

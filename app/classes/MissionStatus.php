@@ -25,14 +25,14 @@ class MissionStatus
      * @param mixed $id L'identifiant de la mission.
      * @return MissionStatus|null Le statut de la mission ou null si non trouvé.
      */
-    public static function getMissionStatusById($pdo, int $id)
+    public static function getMissionStatusById(int $id)
     {
         if (isset(self::$missionStatuses[$id])) {
             return self::$missionStatuses[$id];
         }
 
         $query = "SELECT * FROM MissionStatuses WHERE id = :id";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute(['id' => $id]);
 
         $statusDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -40,7 +40,7 @@ class MissionStatus
         $status = $statusDatas['status'];
 
         if ($statusDatas) {
-            $missionStatus = new MissionStatus($pdo, $id, $status);
+            $missionStatus = new MissionStatus(self::$pdo, $id, $status);
             self::$missionStatuses[$id] = $missionStatus;
             return $missionStatus;
         }
@@ -53,10 +53,10 @@ class MissionStatus
      *
      * @return array Les statuts de mission.
      */
-    public static function getAllMissionStatuses($pdo): array
+    public static function getAllMissionStatuses(): array
     {
         $query = "SELECT * FROM MissionStatuses";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute();
 
         $missionStatusesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -66,7 +66,7 @@ class MissionStatus
             $missionStatusId = $missionStatusData['id'];
 
             if (!isset(self::$missionStatuses[$missionStatusId])) {
-                $missionStatus = new MissionStatus($pdo, $missionStatusId, $missionStatusData['status']);
+                $missionStatus = new MissionStatus(self::$pdo, $missionStatusId, $missionStatusData['status']);
                 self::$missionStatuses[$missionStatusId] = $missionStatus;
             }
 
@@ -82,11 +82,11 @@ class MissionStatus
      * @param string $status Le statut de mission à ajouter.
      * @return MissionStatus|null Le nouveau statut de mission ajouté, ou null si le statut existe déjà.
      */
-    public function addMissionStatus(string $status): ?MissionStatus
+    public static function addMissionStatus(string $status): ?MissionStatus
     {
         // Vérifier si le statut de mission existe déjà dans la base de données
         $query = "SELECT * FROM MissionStatuses WHERE status = :status";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':status', $status);
         $stmt->execute();
 
@@ -98,13 +98,13 @@ class MissionStatus
 
         // Insérer le nouveau statut de mission dans la base de données et dans la classe
         $query = "INSERT INTO MissionStatuses (status) VALUES (:status)";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':status', $status);
         $stmt->execute();
 
-        $newMissionStatusId = $this->pdo->lastInsertId();
+        $newMissionStatusId = self::$pdo->lastInsertId();
 
-        $newMissionStatus = new MissionStatus($this->pdo, $newMissionStatusId, $status);
+        $newMissionStatus = new MissionStatus(self::$pdo, $newMissionStatusId, $status);
 
         self::$missionStatuses[$newMissionStatusId] = $newMissionStatus;
 
@@ -118,26 +118,33 @@ class MissionStatus
      * @param array $propertiesToUpdate Les propriétés à mettre à jour avec leurs nouvelles valeurs.
      * @return bool Indique si la mise à jour a été effectuée avec succès.
      */
-    public function updateMissionStatusProperties(int $id, array $propertiesToUpdate): bool
+    public static function updateMissionStatusProperties(int $id, array $propertiesToUpdate): bool
     {
-        // Mettre à jour les propriétés dans la classe
-        foreach ($propertiesToUpdate as $property => $value) {
-            if ($this->$property !== $value) {
-                $this->$property = $value;
+        // Récupérer l'instance du statut de mission correspondant à l'ID
+        $missionStatus = self::getMissionStatusById($id);
+
+        if ($missionStatus) {
+            // Mettre à jour les propriétés dans la classe
+            foreach ($propertiesToUpdate as $property => $value) {
+                if ($missionStatus->$property !== $value) {
+                    $missionStatus->$property = $value;
+                }
             }
+
+            // Mettre à jour les propriétés dans la base de données
+            $query = "UPDATE MissionStatuses SET status = :status WHERE id = :id";
+            $stmt = self::$pdo->prepare($query);
+            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':status', $missionStatus->status);
+            $stmt->execute();
+
+            // Mettre à jour le tableau $missionStatuses
+            self::$missionStatuses[$id] = $missionStatus;
+
+            return true;
         }
 
-        // Mettre à jour les propriétés dans la base de données
-        $query = "UPDATE MissionStatuses SET status = :status WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':id', $id);
-        $stmt->bindValue(':status', $this->status);
-        $stmt->execute();
-
-        // Mettre à jour le tableau $missionStatuses
-        self::$missionStatuses[$id] = $this;
-
-        return true;
+        return false;
     }
 
     /**
@@ -146,12 +153,13 @@ class MissionStatus
      * @param int $id L'identifiant du statut de mission à supprimer.
      * @return bool Indique si la suppression a été effectuée avec succès.
      */
-    public function deleteMissionStatusById($id): bool
+    public static function deleteMissionStatusById($id): bool
     {
         // Supprimer le statut de mission de la base de données
         $query = "DELETE FROM MissionStatuses WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute(['id' => $id]);
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
 
         // Supprimer le statut de mission de la classe
         if (isset(self::$missionStatuses[$id])) {

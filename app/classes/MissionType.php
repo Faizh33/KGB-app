@@ -26,7 +26,7 @@ class MissionType
      * @param int $id L'identifiant du type de mission à récupérer.
      * @return MissionType|null Le type de mission correspondant ou null si non trouvé.
      */
-    public static function getMissionTypeById($pdo, int $id)
+    public static function getMissionTypeById(int $id)
     {
         // Vérifier si le type de mission existe déjà dans le tableau des types de mission
         if (isset(self::$missionTypes[$id])) {
@@ -35,7 +35,7 @@ class MissionType
 
         // Préparer la requête SQL pour sélectionner le type de mission avec l'identifiant donné
         $query = "SELECT * FROM MissionTypes WHERE id = :id";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 
@@ -47,7 +47,7 @@ class MissionType
         // Vérifier si des données de type de mission ont été trouvées
         if ($typeDatas) {
             // Créer une nouvelle instance de la classe MissionType avec les données récupérées
-            $missionType = new MissionType($pdo, $id, $type);
+            $missionType = new MissionType(self::$pdo, $id, $type);
 
             // Ajouter le type de mission au tableau des types de mission pour une utilisation ultérieure
             self::$missionTypes[$id] = $missionType;
@@ -64,11 +64,11 @@ class MissionType
      *
      * @return array Les types de mission récupérés.
      */
-    public static function getAllMissionTypes($pdo): array
+    public static function getAllMissionTypes(): array
     {
         // Préparer la requête SQL pour sélectionner tous les types de mission
         $query = "SELECT * FROM MissionTypes";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute();
 
         // Récupérer les données de tous les types de mission
@@ -83,7 +83,7 @@ class MissionType
             // Vérifier si le type de mission n'est pas déjà présent dans le tableau des types de mission
             if (!isset(self::$missionTypes[$missionTypeId])) {
                 // Créer une nouvelle instance de la classe MissionType avec les données du type de mission
-                $missionType = new MissionType($pdo, $missionTypeId, $missionTypeData['type']);
+                $missionType = new MissionType(self::$pdo, $missionTypeId, $missionTypeData['type']);
                 // Ajouter le type de mission au tableau des types de mission pour une utilisation ultérieure
                 self::$missionTypes[$missionTypeId] = $missionType;
             }
@@ -101,11 +101,11 @@ class MissionType
      * @param string $type Le nom du nouveau type de mission.
      * @return MissionType|null Le nouveau type de mission ajouté ou null si le type existe déjà.
      */
-    public function addMissionType(string $type): ?MissionType
+    public static function addMissionType(string $type): ?MissionType
     {
         // Vérifier si le type de mission existe déjà dans la base de données
         $query = "SELECT * FROM MissionTypes WHERE type = :type";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':type', $type);
         $stmt->execute();
 
@@ -118,14 +118,14 @@ class MissionType
 
         // Insérer le nouveau type de mission dans la base de données et dans la classe
         $query = "INSERT INTO MissionTypes (type) VALUES (:type)";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':type', $type);
+        $stmt = self::$pdo->prepare($query);
+        $stmt->self::bindValue(':type', $type);
         $stmt->execute();
 
         // Récupérer l'identifiant du nouveau type de mission inséré
-        $newMissionTypeId = $this->pdo->lastInsertId();
+        $newMissionTypeId = self::$pdo->lastInsertId();
         // Créer une instance de la classe MissionType avec le nouveau type de mission
-        $newMissionType = new MissionType($this->pdo, $newMissionTypeId, $type);
+        $newMissionType = new MissionType(self::$pdo, $newMissionTypeId, $type);
         // Ajouter le nouveau type de mission au tableau des types de mission pour une utilisation ultérieure
         self::$missionTypes[$newMissionTypeId] = $newMissionType;
 
@@ -138,29 +138,33 @@ class MissionType
      * @param array $propertiesToUpdate Les propriétés à mettre à jour avec leurs nouvelles valeurs.
      * @return bool Indique si la mise à jour a été effectuée avec succès.
      */
-    public function updateProperties(array $propertiesToUpdate): bool
+    public static function updateMissionTypeProperties(int $id, array $propertiesToUpdate): bool
     {
-        // Récupérer l'identifiant du type de mission
-        $id = $this->getId();
+        // Récupérer l'instance du type de mission correspondant à l'ID
+        $missionType = self::getMissionTypeById($id);
 
-        // Mettre à jour les propriétés dans la classe
-        foreach ($propertiesToUpdate as $property => $value) {
-            if ($this->$property !== $value) {
-                $this->$property = $value;
+        if ($missionType) {
+            // Mettre à jour les propriétés dans la classe
+            foreach ($propertiesToUpdate as $property => $value) {
+                if ($missionType->$property !== $value) {
+                    $missionType->$property = $value;
+                }
             }
+
+            // Mettre à jour les propriétés dans la base de données
+            $query = "UPDATE MissionTypes SET type = :type WHERE id = :id";
+            $stmt = self::$pdo->prepare($query);
+            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':type', $missionType->type);
+            $stmt->execute();
+
+            // Mettre à jour le tableau $missionTypes
+            self::$missionTypes[$id] = $missionType;
+
+            return true;
         }
 
-        // Mettre à jour les propriétés dans la base de données
-        $query = "UPDATE MissionTypes SET type = :type WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':id', $id);
-        $stmt->bindValue(':type', $this->type);
-        $stmt->execute();
-
-        // Mettre à jour le tableau $missionTypes
-        self::$missionTypes[$id] = $this;
-
-        return true;
+        return false;
     }
 
     /**
@@ -169,11 +173,11 @@ class MissionType
      * @param mixed $id L'identifiant du type de mission à supprimer.
      * @return bool Indique si la suppression a été effectuée avec succès.
      */
-    public function deleteMissionTypeById($id): bool
+    public static function deleteMissionTypeById($id): bool
     {
         // Supprimer le type de mission de la base de données
         $query = "DELETE FROM MissionTypes WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 

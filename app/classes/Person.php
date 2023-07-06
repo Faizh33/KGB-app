@@ -33,14 +33,14 @@ class Person
      * @param int $id L'ID de la personne à récupérer.
      * @return Person|null La personne correspondante si elle existe, sinon null.
      */
-    public static function getPersonById($pdo, string $id): ?Person
+    public static function getPersonById(string $id): ?Person
     {
         if (isset(self::$persons[$id])) {
             return self::$persons[$id];
         }
 
         $query = "SELECT * FROM Persons WHERE id = :id";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(":id", $id);
         $stmt->execute();
 
@@ -51,7 +51,7 @@ class Person
         $nationality = $personData['nationality'];
 
         if ($personData) {
-            $person = new Person($pdo, $id, $lastName, $firstName, $birthDate, $nationality);
+            $person = new Person(self::$pdo, $id, $lastName, $firstName, $birthDate, $nationality);
             self::$persons[$id] = $person;
             return $person;
         }
@@ -64,10 +64,10 @@ class Person
      *
      * @return array Un tableau contenant toutes les personnes.
      */
-    public static function getAllPersons($pdo): array
+    public static function getAllPersons(): array
     {
         $query = "SELECT * FROM Persons";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute();
 
         $personsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -81,7 +81,7 @@ class Person
             $nationality = $personData['nationality'];
 
             if (!isset(self::$persons[$id])) {
-                $person = new Person($pdo, $id, $lastName, $firstName, $birthDate, $nationality);
+                $person = new Person(self::$pdo, $id, $lastName, $firstName, $birthDate, $nationality);
                 self::$persons[$id] = $person;
             }
 
@@ -102,11 +102,11 @@ class Person
      *
      * @return Person|null La nouvelle personne créée ou null si la personne existe déjà.
      */
-    public function addPerson($pdo, string $lastName, string $firstName, string $birthDate, string $nationality): ?Person
+    public static function addPerson(string $lastName, string $firstName, string $birthDate, string $nationality): ?Person
     {
         // Vérifier si la personne existe déjà dans la base de données
         $query = "SELECT * FROM Persons WHERE lastName = :lastName AND firstName = :firstName AND birthDate = :birthDate AND nationality = :nationality";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':lastName', $lastName);
         $stmt->bindValue(':firstName', $firstName);
         $stmt->bindValue(':birthDate', $birthDate);
@@ -122,7 +122,7 @@ class Person
         // Insérer la nouvelle personne dans la base de données et dans la classe
         $id = generateUUID();
         $query = "INSERT INTO Persons (id, lastName, firstName, birthDate, nationality) VALUES (:id, :lastName, :firstName, :birthDate, :nationality)";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
         $stmt->bindValue(':lastName', $lastName);
         $stmt->bindValue(':firstName', $firstName);
@@ -130,7 +130,7 @@ class Person
         $stmt->bindValue(':nationality', $nationality);
         $stmt->execute();
 
-        $newPerson = new Person($this->pdo, $id, $lastName, $firstName, $birthDate, $nationality);
+        $newPerson = new Person(self::$pdo, $id, $lastName, $firstName, $birthDate, $nationality);
 
         self::$persons[$id] = $newPerson;
 
@@ -144,28 +144,34 @@ class Person
      *
      * @return bool Retourne true si les propriétés ont été mises à jour avec succès, sinon false.
      */
-    public function updateProperties(string $id, array $propertiesToUpdate): bool
+    public static function updatePersonProperties(string $id, array $propertiesToUpdate): bool
     {
+        // Récupérer l'instance de la personne correspondant à l'ID
+        $person = self::getPersonById($id);
 
-        foreach ($propertiesToUpdate as $property => $value) {
-            if ($this->$property !== $value) {
-                $this->$property = $value;
+        if ($person) {
+            foreach ($propertiesToUpdate as $property => $value) {
+                if ($person->$property !== $value) {
+                    $person->$property = $value;
+                }
             }
+
+            $query = "UPDATE Persons SET lastName = :lastName, firstName = :firstName, birthDate = :birthDate, nationality = :nationality WHERE id = :id";
+            $stmt = self::$pdo->prepare($query);
+            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':lastName', $person->lastName);
+            $stmt->bindValue(':firstName', $person->firstName);
+            $stmt->bindValue(':birthDate', $person->birthDate);
+            $stmt->bindValue(':nationality', $person->nationality);
+            $stmt->execute();
+
+            // Mettre à jour le tableau $persons
+            self::$persons[$id] = $person;
+
+            return true;
         }
 
-        $query = "UPDATE Persons SET lastName = :lastName, firstName = :firstName, birthDate = :birthDate, nationality = :nationality WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':id', $id);
-        $stmt->bindValue(':lastName', $this->lastName);
-        $stmt->bindValue(':firstName', $this->firstName);
-        $stmt->bindValue(':birthDate', $this->birthDate);
-        $stmt->bindValue(':nationality', $this->nationality);
-        $stmt->execute();
-
-        // Mettre à jour le tableau $persons
-        self::$persons[$id] = $this;
-
-        return true;
+        return false;
     }
 
     /**
@@ -175,7 +181,7 @@ class Person
      *
      * @return bool Retourne true si la personne a été supprimée avec succès, sinon false.
      */
-    public function deletePersonById($id): bool
+    public static function deletePersonById($id): bool
     {
         if (empty($id)) {
             return false;
@@ -183,7 +189,7 @@ class Person
 
         // Supprimer la personne de la base de données
         $query = "DELETE FROM Persons WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 

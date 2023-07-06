@@ -31,27 +31,26 @@ class SafeHouse
      * @param mixed $id L'identifiant de la SafeHouse.
      * @return SafeHouse|null La SafeHouse correspondante ou null si non trouvée.
      */
-    public static function getSafeHouseById($pdo, int $id): ?SafeHouse
+    public static function getSafeHouseById(int $id): ?SafeHouse
     {
         if (isset(self::$safeHouses[$id])) {
             return self::$safeHouses[$id];
         }
 
         $query = "SELECT * FROM SafeHouses WHERE id = :id";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute(['id' => $id]);
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(":id", $id);
+        $stmt->execute();
 
         $safeHouseData = $stmt->fetch(\PDO::FETCH_ASSOC);
+        $id = $safeHouseData['id'];
+        $code = $safeHouseData['code'];
+        $address = $safeHouseData['address'];
+        $country = $safeHouseData['country'];
+        $type = $safeHouseData['type'];
 
         if ($safeHouseData) {
-            $safeHouse = new SafeHouse(
-                $pdo,
-                $safeHouseData['id'],
-                $safeHouseData['code'],
-                $safeHouseData['address'],
-                $safeHouseData['country'],
-                $safeHouseData['type']
-            );
+            $safeHouse = new SafeHouse( self::$pdo, $id, $code, $address, $country, $type);
 
             self::$safeHouses[$id] = $safeHouse;
 
@@ -66,32 +65,31 @@ class SafeHouse
      *
      * @return array Les SafeHouses.
      */
-    public static function getAllSafeHouses($pdo): array
+    public static function getAllSafeHouses(): array
     {
         $query = "SELECT * FROM SafeHouses";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->execute();
 
         $safeHousesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         $safeHouses = [];
         foreach ($safeHousesData as $safeHouseData) {
-            $safeHouseId = $safeHouseData['id'];
+            $id = $safeHouseData['id'];
+            $code = $safeHouseData['code'];
+            $address = $safeHouseData['address'];
+            $country = $safeHouseData['country'];
+            $type = $safeHouseData['type'];
 
-            if (!isset(self::$safeHouses[$safeHouseId])) {
-                $safeHouse = new SafeHouse(
-                    $pdo,
-                    $safeHouseData['id'],
-                    $safeHouseData['code'],
-                    $safeHouseData['address'],
-                    $safeHouseData['country'],
-                    $safeHouseData['type']
-                );
 
-                self::$safeHouses[$safeHouseId] = $safeHouse;
+
+            if (!isset(self::$safeHouses[$id])) {
+                $safeHouse = new SafeHouse(self::$pdo, $id, $code, $address, $country, $type);
+
+                self::$safeHouses[$id] = $safeHouse;
             }
 
-            $safeHouses[] = self::$safeHouses[$safeHouseId];
+            $safeHouses[] = self::$safeHouses[$id];
         }
 
         return $safeHouses;
@@ -105,13 +103,12 @@ class SafeHouse
      * @param string $country Le pays de la SafeHouse.
      * @param string $type Le type de la SafeHouse.
      * @return SafeHouse|null La nouvelle SafeHouse ajoutée, ou null si le code existe déjà.
-```php
      */
-    public function addSafeHouse(string $code, string $address, string $country, string $type): ?SafeHouse
+    public static function addSafeHouse(string $code, string $address, string $country, string $type): ?SafeHouse
     {
         // Vérifier si le code de la SafeHouse existe déjà dans la base de données
         $query = "SELECT * FROM SafeHouses WHERE code = :code";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':code', $code);
         $stmt->execute();
 
@@ -123,16 +120,16 @@ class SafeHouse
 
         // Insérer la nouvelle SafeHouse dans la base de données et dans la classe
         $query = "INSERT INTO SafeHouses (code, address, country, type) VALUES (:code, :address, :country, :type)";
-        $stmt = $this->pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':code', $code);
         $stmt->bindValue(':address', $address);
         $stmt->bindValue(':country', $country);
         $stmt->bindValue(':type', $type);
         $stmt->execute();
 
-        $newSafeHouseId = $this->pdo->lastInsertId();
+        $newSafeHouseId = self::$pdo->lastInsertId();
 
-        $newSafeHouse = new SafeHouse($this->pdo, $newSafeHouseId, $code, $address, $country, $type);
+        $newSafeHouse = new SafeHouse(self::$pdo, $newSafeHouseId, $code, $address, $country, $type);
 
         self::$safeHouses[$newSafeHouseId] = $newSafeHouse;
 
@@ -146,30 +143,38 @@ class SafeHouse
      * @param array $propertiesToUpdate Les propriétés à mettre à jour avec leurs nouvelles valeurs.
      * @return bool Indique si la mise à jour a été effectuée avec succès.
      */
-    public function updateSafeHouseProperties(int $id, array $propertiesToUpdate): bool
+    public static function updateSafeHouseProperties(int $id, array $propertiesToUpdate): bool
     {
-        // Mettre à jour les propriétés dans la classe
-        foreach ($propertiesToUpdate as $property => $value) {
-            if ($this->$property !== $value) {
-                $this->$property = $value;
+        // Récupérer l'instance de la safe house correspondant à l'ID
+        $safeHouse = self::getSafeHouseById($id);
+    
+        if ($safeHouse) {
+            // Mettre à jour les propriétés dans la classe
+            foreach ($propertiesToUpdate as $property => $value) {
+                if ($safeHouse->$property !== $value) {
+                    $safeHouse->$property = $value;
+                }
             }
+    
+            // Mettre à jour les propriétés dans la base de données
+            $query = "UPDATE SafeHouses SET code = :code, address = :address, country = :country, type = :type WHERE id = :id";
+            $stmt = self::$pdo->prepare($query);
+            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':code', $safeHouse->code);
+            $stmt->bindValue(':address', $safeHouse->address);
+            $stmt->bindValue(':country', $safeHouse->country);
+            $stmt->bindValue(':type', $safeHouse->type);
+            $stmt->execute();
+    
+            // Mettre à jour le tableau $safeHouses
+            self::$safeHouses[$id] = $safeHouse;
+    
+            return true;
         }
-
-        // Mettre à jour les propriétés dans la base de données
-        $query = "UPDATE SafeHouses SET code = :code, address = :address, country = :country, type = :type WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->bindValue(':id', $id);
-        $stmt->bindValue(':code', $this->code);
-        $stmt->bindValue(':address', $this->address);
-        $stmt->bindValue(':country', $this->country);
-        $stmt->bindValue(':type', $this->type);
-        $stmt->execute();
-
-        // Mettre à jour le tableau $safeHouses
-        self::$safeHouses[$id] = $this;
-
-        return true;
+    
+        return false;
     }
+    
 
     /**
      * Supprime une SafeHouse de la base de données et de la classe en fonction de son ID.
@@ -177,12 +182,13 @@ class SafeHouse
      * @param int $id L'identifiant de la SafeHouse à supprimer.
      * @return bool Indique si la suppression a été effectuée avec succès.
      */
-    public function deleteSafeHouseById($id): bool
+    public static function deleteSafeHouseById($id): bool
     {
         // Supprimer la SafeHouse de la base de données
         $query = "DELETE FROM SafeHouses WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute(['id' => $id]);
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
 
         // Supprimer la SafeHouse de la classe
         if (isset(self::$safeHouses[$id])) {

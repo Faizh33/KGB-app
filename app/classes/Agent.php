@@ -23,13 +23,13 @@ class Agent extends Person
      *
      * @return Agent|null L'instance de l'agent correspondant à l'ID donné, ou null si non trouvé.
      */
-    public static function getAgentById($pdo, $id): ?Agent
+    public static function getAgentById(string $id): ?Agent
     {
-        $person = parent::getPersonById($pdo, $id);
+        $person = parent::getPersonById($id);
 
         if ($person instanceof Person) {
             $query = "SELECT * FROM Agents WHERE id = :id";
-            $stmt = $pdo->prepare($query);
+            $stmt = self::$pdo->prepare($query);
             $stmt->bindValue(":id", $id);
             $stmt->execute();
 
@@ -38,7 +38,7 @@ class Agent extends Person
 
             if ($agentDatas) {
                 // Les données correspondent à un agent, création d'une nouvelle instance de Agent
-                return new Agent($pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $idCode
+                return new Agent(self::$pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $idCode
                 );
             }
         }
@@ -53,14 +53,14 @@ class Agent extends Person
      *
      * @return array Le tableau contenant toutes les instances d'agents récupérées de la base de données.
      */
-    public static function getAllAgents($pdo): array
+    public static function getAllAgents(): array
     {
-        $persons = parent::getAllPersons($pdo);
+        $persons = parent::getAllPersons();
         $agents = [];
 
         foreach ($persons as $person) {
             $query = "SELECT * FROM Agents WHERE id = :id";
-            $stmt = $pdo->prepare($query);
+            $stmt = self::$pdo->prepare($query);
             $stmt->bindValue(":id", $person->getId());
             $stmt->execute();
 
@@ -68,7 +68,7 @@ class Agent extends Person
             
             if ($agentDatas !== false) {
                 $idCode = $agentDatas['identification_code'];
-                $agents[] = new Agent($pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $idCode);
+                $agents[] = new Agent(self::$pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $idCode);
             }
         }
 
@@ -87,18 +87,18 @@ class Agent extends Person
      *
      * @return Agent|null L'instance de l'agent ajouté ou null si l'ajout a échoué.
      */
-    public function addAgentProperties(\PDO $pdo, string $lastName, string $firstName, string $birthDate, string $nationality, string $identificationCode): ?Agent
+    public static function addAgentProperties(string $lastName, string $firstName, string $birthDate, string $nationality, string $identificationCode): ?Agent
     {
-        $person = parent::addPerson($pdo, $lastName, $firstName, $birthDate, $nationality);
+        $person = parent::addPerson($lastName, $firstName, $birthDate, $nationality);
 
         if ($person instanceof Person) {
             $query = "INSERT INTO Agents (id, identification_code) VALUES (:id, :identificationCode)";
-            $stmt = $pdo->prepare($query);
+            $stmt = self::$pdo->prepare($query);
             $stmt->bindValue(':id', $person->getId());
             $stmt->bindValue(':identificationCode', $identificationCode);
             $stmt->execute();
 
-            return new Agent($pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $identificationCode);
+            return new Agent(self::$pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $identificationCode);
         }
 
         return null;
@@ -111,15 +111,15 @@ class Agent extends Person
      *
      * @return bool Retourne true si les propriétés ont été mises à jour avec succès, sinon false.
      */
-    public function updateAgentProperties(string $id, array $propertiesToUpdate): bool
+    public static function updateAgentProperties(string $id, array $propertiesToUpdate): bool
     {
-        $personUpdated = parent::updateProperties($id, $propertiesToUpdate);
+        $personUpdated = parent::updatePersonProperties($id, $propertiesToUpdate);
 
         if ($personUpdated) {
             $query = "UPDATE Agents SET identification_code = :identificationCode WHERE id = :id";
-            $stmt = $this->pdo->prepare($query);
+            $stmt = self::$pdo->prepare($query);
             $stmt->bindValue(':id', $id);
-            $stmt->bindValue(':identificationCode', $this->identificationCode);
+            $stmt->bindValue(':identificationCode', Agent::$identificationCode);
             $stmt->execute();
 
             return true;
@@ -133,16 +133,16 @@ class Agent extends Person
      *
      * @return bool Retourne true si l'agent a été supprimé avec succès, sinon false.
      */
-    public function deleteAgentById(string $id, $specialityId): bool
+    public static function deleteAgentById(string $id, $specialityId): bool
     {
         // Vérifier l'existence de l'agent
-        $agent = self::getAgentById($this->pdo, $id);
+        $agent = self::getAgentById($id);
         if (!$agent) {
             return false; // L'agent n'existe pas, retourner false
         }
 
         // Supprimer les associations AgentSpeciality pour cet agent
-        $agentSpeciality = new AgentSpeciality($this->pdo, $id, $specialityId);
+        $agentSpeciality = new AgentSpeciality(self::$pdo, $id, $specialityId);
         $agentSpeciality->deleteSpecialitiesByAgentId($id);
 
         // Supprimer l'agent lui-même
@@ -150,7 +150,7 @@ class Agent extends Person
 
         if ($personDeleted) {
             $query = "DELETE FROM Agents WHERE id = :id";
-            $stmt = $this->pdo->prepare($query);
+            $stmt = self::$pdo->prepare($query);
             $stmt->bindValue(':id', $id);
             $stmt->execute();
 
