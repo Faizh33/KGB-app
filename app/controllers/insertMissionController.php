@@ -43,16 +43,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Ajoute une nouvelle mission à la base de données
         $newMission = $mission->addMission($title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType, $agents, $contacts, $targets, $safeHouses);
 
-        // Affiche un message de succès
-        echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Nouvelle mission ajoutée en base de données</div>";
-
-        //Pause de 5 secondes
-        sleep(5);
-
-        // Redirection vers la page dashboardCreate.php
-        header('Location: ../views/dashboardCreate.php');
-        exit();
-
+        if(isset($newMission)) {
+            echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Nouvelle mission ajoutée en base de données</div>";
+            header('Refresh: 5; Location: ../views/dashboardCreate.php');
+            exit;
+        }
     } else {
         echo "Tous les champs sont requis.";
     }

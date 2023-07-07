@@ -22,8 +22,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         //Si l'ajout en base de données à réussi : redirection vers la page de création
         if(isset($agent)) {
-            echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Nouvel agent ajouté en base de données</div>";
-            header('refresh:5;Location: ../views/dashboardCreate.php');
+            echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Nouveau contact ajouté en base de données</div>";
+            header('Refresh: 5; Location: ../views/dashboardCreate.php');
+            exit;
         }
+        
     }
 }
