@@ -17,8 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $idCode = valid_datas($_POST["agentIdCode"]);
 
         //Création d'un nouvel objet Agent et insertion des données
-        $agent = new Agent($pdo);
-        $agent->addAgentProperties($lastName, $firstName, $birthDate, $nationality, $idCode);
+        $agentObj = new Agent($pdo);
+        $agent = $agentObj::addAgentProperties($lastName, $firstName, $birthDate, $nationality, $idCode);
         
         //Si l'ajout en base de données à réussi : redirection vers la page de création
         if(isset($agent)) {

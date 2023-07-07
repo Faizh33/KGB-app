@@ -14,9 +14,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $country = valid_datas($_POST["country"]);
         $type = valid_datas($_POST["type"]);
 
-        // Récupérer l'ID auto-incrémenté généré par la base de données
-        $safeHouseId = $pdo->lastInsertId();
-
         //Création d'un nouvel objet Agent et insertion des données
         $safeHouseObj = new SafeHouse($pdo);
         $safeHouse = $safeHouseObj::addSafeHouse($codeName, $address, $country, $type);
