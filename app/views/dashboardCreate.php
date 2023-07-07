@@ -75,28 +75,28 @@
             </tr>
         </table>
     </div>
-    <div class="formContainer" id="missionForm" style="display:none;">
+    <div class="tableContainer" id="missionForm" style="display:none;">
         <?php include_once "../snippets/create-form/newMissionForm.php"; ?>
     </div>
-    <div class="formContainer" id="agentForm" style="display:none;">
+    <div class="tableContainer" id="agentForm" style="display:none;">
         <?php include_once "../snippets/create-form/newAgentForm.php"; ?>
     </div>    
-    <div class="formContainer" id="contactForm" style="display:none;">
+    <div class="tableContainer" id="contactForm" style="display:none;">
         <?php include_once "../snippets/create-form/newContactForm.php"; ?>
     </div>    
-    <div class="formContainer" id="targetForm" style="display:none;">
+    <div class="tableContainer" id="targetForm" style="display:none;">
         <?php include_once "../snippets/create-form/newTargetForm.php"; ?>
     </div>
-    <div class="formContainer" id="specialityForm" style="display:none;">
+    <div class="tableContainer" id="specialityForm" style="display:none;">
         <?php include_once "../snippets/create-form/newSpecialityForm.php"; ?>
     </div>
-    <div class="formContainer" id="safehouseForm" style="display:none;">
+    <div class="tableContainer" id="safehouseForm" style="display:none;">
         <?php include_once "../snippets/create-form/newSafeHouseForm.php"; ?>
     </div>    
-    <div class="formContainer" id="statusForm" style="display:none;">
+    <div class="tableContainer" id="statusForm" style="display:none;">
         <?php include_once "../snippets/create-form/newStatusForm.php"; ?>
     </div>    
-    <div class="formContainer" id="typeForm" style="display:none;">
+    <div class="tableContainer" id="typeForm" style="display:none;">
         <?php include_once "../snippets/create-form/newTypeForm.php"; ?>
     </div>
     <!-- Bouton de retour arrière -->

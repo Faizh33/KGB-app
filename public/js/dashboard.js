@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var button = buttons[i];
         button.addEventListener("click", function(event) {
             var formId = event.target.getAttribute("data-form");
-            var forms = document.getElementsByClassName("formContainer");
+            var forms = document.getElementsByClassName("tableContainer");
 
             // Masque tous les formulaires en définissant leur style d'affichage sur "none"
             for (var j = 0; j < forms.length; j++) {
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Sélectionne les formulaires et les masque
     backButton.addEventListener("click", function() {
-        var forms = document.getElementsByClassName("formContainer");
+        var forms = document.getElementsByClassName("tableContainer");
         for (var j = 0; j < forms.length; j++) {
             forms[j].style.display = "none";
         }
