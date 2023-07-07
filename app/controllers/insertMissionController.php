@@ -12,6 +12,10 @@ include_once "../classes/Speciality.php";
 include_once "../classes/MissionStatus.php";
 include_once "../classes/MissionType.php";
 
+$specialityObj = new Speciality($pdo);
+$missionStatusObj = new MissionStatus($pdo);
+$missionTypeObj = new MissionType($pdo);
+
 
 // Vérifie si la méthode de requête est POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -33,15 +37,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $safeHouses = ($_POST["safeHouses"]);     
 
         // Récupère les objets de spécialité, statut de mission et type de mission à partir de leurs identifiants
-        $speciality = Speciality::getSpecialityById($specialityId);
-        $missionStatus = MissionStatus::getMissionStatusById($missionStatusId);
-        $missionType = MissionType::getMissionTypeById($missionStatusId);
+        $speciality = $specialityObj::getSpecialityById($specialityId);
+        $missionStatus = $missionStatusObj::getMissionStatusById($missionStatusId);
+        $missionType = $missionTypeObj::getMissionTypeById($missionStatusId);
 
         // Crée une nouvelle instance de la classe Mission
         $mission = new Mission($pdo);
 
         // Ajoute une nouvelle mission à la base de données
-        $newMission = $mission->addMission($title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType, $agents, $contacts, $targets, $safeHouses);
+        $newMission = $mission::addMission($title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType, $agents, $contacts, $targets, $safeHouses);
 
         if(isset($newMission)) {
             echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Nouvelle mission ajoutée en base de données</div>";
