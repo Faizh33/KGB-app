@@ -15,6 +15,15 @@
         use app\classes\MissionType;
         use app\classes\Speciality;
         use app\classes\MissionStatus;
+
+        $agentObj = new Agent($pdo);
+        $contactObj = new Contact($pdo);
+        $targetObj = new Target($pdo);
+        $safehouseObj = new SafeHouse($pdo);
+        $missionTypeObj = new MissionType($pdo);
+        $specialityObj = new Speciality($pdo);
+        $missionStatusObj = new MissionStatus($pdo);
+
     ?>
     <h2>Créer une nouvelle mission</h2>
 
@@ -76,7 +85,7 @@
                 <td>
                     <div class="formChkBox">
                     <?php
-                        $agents = Agent::getAllAgents($pdo);
+                        $agents = $agentObj::getAllAgents();
                         foreach($agents as $agent) {
                             $agentId = $agent->getId(); ?>
                             <input type="checkbox" name="agents[]" class="agent-checkbox" value="<?php echo $agentId ?>" id="editAgent <?php echo $agentId ?>">
@@ -92,7 +101,7 @@
                 <td>
                     <div class="formChkBox">
                         <?php
-                        $contacts = Contact::getAllContacts($pdo);
+                        $contacts = $contactObj::getAllContacts();
                         foreach($contacts as $contact) {
                             $contactId = $contact->getId(); ?>
                             <input type="checkbox" name="contacts[]" class="contact-checkbox" value="<?php echo $contactId ?>" id="editContact <?php echo $contactId ?>">
@@ -108,7 +117,7 @@
                 <td>
                     <div class="formChkBox">
                         <?php
-                        $targets = Target::getAllTargets($pdo);
+                        $targets = $targetObj::getAllTargets();
                         foreach($targets as $target) {
                             $targetId = $target->getId(); ?>
                             <input type="checkbox" name="targets[]" class="target-checkbox" value="<?php echo $targetId ?>" id="editTarget <?php echo $targetId ?>">
@@ -124,7 +133,7 @@
                 <td>
                     <div class="formChkBox">
                         <?php
-                            $safeHouses = SafeHouse::getAllSafeHouses($pdo);
+                            $safeHouses = $safehouseObj::getAllSafeHouses();
                             foreach($safeHouses as $safeHouse) {
                                 $safeHouseId = $safeHouse->getId(); ?>
                                 <input type="checkbox" name="safeHouses[]" class="editChk" value="<?php echo $safeHouseId ?>" id="editSafeHouse <?php echo $safeHouseId ?>">
@@ -141,7 +150,7 @@
                     <select name="missionType" id="missionType">
                         <option value="">--Choisir un type--</option>
                             <?php
-                                $missionTypes = MissionType::getAllMissionTypes($pdo);
+                                $missionTypes = $missionTypeObj::getAllMissionTypes();
                                 foreach($missionTypes as $missionType) {
                                     $id = $missionType->getId();
                                     $type = $missionType->getType();
@@ -159,7 +168,7 @@
                     <select name="missionSpeciality" id="missionSpeciality">
                         <option value="">--Choisir une spécialité--</option>
                         <?php 
-                            $missionSpecialitys = Speciality::getAllSpecialities($pdo);
+                            $missionSpecialitys = $specialityObj::getAllSpecialities();
                             foreach($missionSpecialitys as $missionSpeciality) {
                                 $id = $missionSpeciality->getId();
                                 $speciality = $missionSpeciality->getSpeciality();
@@ -177,7 +186,7 @@
                     <select name="missionStatus" id="missionStatus">
                         <option value="">--Choisir un statut--</option>
                         <?php
-                            $missionStatuses = MissionStatus::getAllMissionStatuses($pdo);
+                            $missionStatuses = $missionStatusObj::getAllMissionStatuses();
                             foreach($missionStatuses as $missionStatus) {
                                 $id = $missionStatus->getId();
                                 $status = $missionStatus->getStatus();
