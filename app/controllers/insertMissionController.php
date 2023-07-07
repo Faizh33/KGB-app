@@ -33,9 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $safeHouses = ($_POST["safeHouses"]);     
 
         // Récupère les objets de spécialité, statut de mission et type de mission à partir de leurs identifiants
-        $speciality = Speciality::getSpecialityById($pdo, $specialityId);
-        $missionStatus = MissionStatus::getMissionStatusById($pdo, $missionStatusId);
-        $missionType = MissionType::getMissionTypeById($pdo, $missionStatusId);
+        $speciality = Speciality::getSpecialityById($specialityId);
+        $missionStatus = MissionStatus::getMissionStatusById($missionStatusId);
+        $missionType = MissionType::getMissionTypeById($missionStatusId);
 
         // Crée une nouvelle instance de la classe Mission
         $mission = new Mission($pdo);

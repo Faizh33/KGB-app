@@ -3,6 +3,20 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+use app\classes\Mission;
+use app\classes\MissionType;
+use app\classes\MissionAgent;
+use app\classes\Agent;
+use app\classes\MissionContact;
+use app\classes\Contact;
+use app\classes\MissionTarget;
+use app\classes\Target;
+use app\classes\MissionSafeHouse;
+use app\classes\SafeHouse;
+use app\classes\Speciality;
+use app\classes\MissionStatus;
+
+
 $missions = []; 
 include_once "../../config/database.php";
 include_once "../classes/Mission.php";
@@ -13,31 +27,31 @@ include_once "../classes/MissionContact.php";
 include_once "../classes/Contact.php";
 include_once "../classes/MissionTarget.php";
 include_once "../classes/Target.php";
-include_once "../classes/SafeHouse.php";
+include_once "../classes/MissionSafeHouse.php";
 include_once "../classes/Speciality.php";
 include_once "../classes/MissionStatus.php";
-
-use app\classes\Mission;
-use app\classes\MissionType;
-use app\classes\MissionAgent;
-use app\classes\Agent;
-use app\classes\MissionContact;
-use app\classes\Contact;
-use app\classes\MissionTarget;
-use app\classes\Target;
-use app\classes\SafeHouse;
-use app\classes\Speciality;
-use app\classes\MissionStatus;
+include_once "../classes/SafeHouse.php";
 
 // Vérifier si l'ID de la mission est passé en paramètre
 if (isset($_GET['mission'])) {
     $missionId = $_GET['mission'];
 
-    // Créer une instance de la classe Mission
+    // Créer une instance des classes nécessaires
     $mission = new Mission($pdo);
+    $missionTypeObj = new MissionType($pdo);
+    $missionAgentObj = new MissionAgent($pdo);
+    $agentObj = new Agent($pdo);
+    $missionContactObj = new MissionContact($pdo);
+    $contactObj = new Contact($pdo);
+    $missionTargetObj = new MissionTarget($pdo);
+    $targetObj = new Target($pdo);
+    $missionSafeHouseObj = new MissionSafeHouse($pdo);
+    $specialityObj = new Speciality($pdo);
+    $missionStatusObj = new MissionStatus($pdo);
+    $safeHouseObj = new SafeHouse($pdo);
 
     // Récupérer la mission spécifique en utilisant son ID
-    $mission = $mission->getMissionById($missionId);
+    $mission = $mission::getMissionById($missionId);
 
     // Ajout de la mission au cache
     $missions[$mission->getId()] = $mission;
@@ -58,7 +72,7 @@ if (isset($_GET['mission'])) {
     <h1>Détail de la mission</h1>
     <table>
         <tbody>
-            <?php if ($mission->getId() != '') : ?>
+            <?php if (!empty($mission) && $mission->getId() != '') : ?>
                 <tr>
                     <!-- Titre de la mission  -->
                     <th scope="row">Titre</th>
@@ -175,7 +189,7 @@ if (isset($_GET['mission'])) {
                     <td>
                         <span id="missionType">
                             <?php
-                                $missionType = MissionType::getMissionTypeById($pdo, $mission->getMissionType()->getId());
+                                $missionType = $missionTypeObj->getMissionTypeById($mission->getMissionType()->getId());
                                 echo $missionType->getType();
                             ?>
                         </span>
@@ -183,7 +197,7 @@ if (isset($_GET['mission'])) {
                             <select class="editSelect" id="editMissionType" style="display:none;">
                             <option value="">--Choisir un type--</option>
                                 <?php
-                                    $missionTypes = MissionType::getAllMissionTypes($pdo);
+                                    $missionTypes = $missionTypeObj::getAllMissionTypes();
                                     foreach($missionTypes as $missionType) {
                                         $id = $missionType->getId();
                                         $type = $missionType->getType();
@@ -205,17 +219,17 @@ if (isset($_GET['mission'])) {
                     <th scope="row">Agent(s)</th>
                     <td>
                         <span id="missionAgent">
-                            <?php 
-                                $missionAgents = MissionAgent::getAgentsByMissionId($pdo, $mission->getId());
+                            <?php
+                                $missionAgents = $missionAgentObj::getAgentsByMissionId($mission->getId());
                                 foreach($missionAgents as $missionAgent) {
                                     $agentId = $missionAgent->getAgentId();
-                                    $agent = Agent::getAgentById($pdo, $agentId);
+                                    $agent = $agentObj::getAgentById($agentId);
                                     echo "<br>Nom : " . $agent->getLastName() . " " . $agent->getFirstName() . "<br>" . "Date de naissance: " . $agent->getBirthDate() . "<br>" . "Nationalité :  " . $agent->getNationality() . "<br>" . "Code d'identification : " . $agent->getIdentificationCode() . "<br><br>";
                                 }
                             ?>
                         </span>
                         <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : 
-                            $agents = Agent::getAllAgents($pdo);
+                            $agents = $agentObj::getAllAgents();
                             foreach($agents as $agent) {
                                 $agentId = $agent->getId(); ?>
                                 <div class=chk style="display:none;">
@@ -238,16 +252,16 @@ if (isset($_GET['mission'])) {
                     <td>
                         <span id="missionContact">
                             <?php 
-                                $missionContacts = MissionContact::getContactsByMissionId($pdo, $mission->getId());
+                                $missionContacts = $missionContactObj::getContactsByMissionId($mission->getId());
                                 foreach($missionContacts as $missionContact) {
                                     $contactId = $missionContact->getContactId();
-                                    $contact = Contact::getContactById($pdo, $contactId);
+                                    $contact = $contactObj::getContactById($contactId);
                                     echo "<br>Nom : " . $contact->getLastName() . " " . $contact->getFirstName() . "<br>" . "Date de naissance: " . $contact->getBirthDate() . "<br>" . "Nationalité :  " . $contact->getNationality() . "<br>" . "Code d'identification : " . $contact->getCodeName() . "<br><br>";
                                 }
                             ?>
                         </span>
                         <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : 
-                            $contacts = Contact::getAllContacts($pdo);
+                            $contacts = $contactObj::getAllContacts();
                             foreach($contacts as $contact) {
                                 $contactId = $contact->getId(); ?>
                                 <div class=chk style="display:none;">
@@ -270,16 +284,16 @@ if (isset($_GET['mission'])) {
                     <td>
                         <span id="missionTarget">
                             <?php 
-                                $missionTargets = MissionTarget::getTargetsByMissionId($pdo, $mission->getId());
+                                $missionTargets = $missionTargetObj::getTargetsByMissionId($mission->getId());
                                 foreach($missionTargets as $missionTarget) {
                                     $targetId = $missionTarget->getTargetId();
-                                    $target = Target::getTargetById($pdo, $targetId);
+                                    $target = $targetObj::getTargetById($targetId);
                                     echo "<br>Nom : " . $target->getLastName() . " " . $target->getFirstName() . "<br>" . "Date de naissance: " . $target->getBirthDate() . "<br>" . "Nationalité :  " . $target->getNationality() . "<br>" . "Code d'identification : " . $target->getCodeName() . "<br><br>";
                                 }
                             ?>
                         </span>
                         <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : 
-                            $targets = Target::getAllTargets($pdo);
+                            $targets = $targetObj::getAllTargets();
                             foreach($targets as $target) {
                                 $targetId = $target->getId(); ?>
                                 <div class=chk style="display:none;">
@@ -301,17 +315,18 @@ if (isset($_GET['mission'])) {
                     <th scope="row">Planque(s)</th>
                     <td>
                         <span id="missionSafeHouse">
-                            <?php 
-                                $safeHouses = SafeHouse::getAllSafeHouses($pdo);
-                                foreach($safeHouses as $safeHouse) {
-                                    if($safeHouse->getMission()->getId() == $missionId) {
-                                        echo "<span class='missionSafeHouse'><br>Code : " . $safeHouse->getCode() . "<br>" . "Adresse: " . $safeHouse->getAddress() . "<br>" . "Pays :  " . $safeHouse->getCountry() . "<br>" . "Type : " . $safeHouse->getType() . "<br><br></span>";
-                                    }
+                        <?php
+                            $missionSafeHouses = $missionSafeHouseObj::getSafeHousesByMissionId($missionId);
+                            foreach ($missionSafeHouses as $missionSafeHouse) {
+                                $safeHouse = $safeHouseObj::getSafeHouseById($missionSafeHouse->getSafeHouseId());
+                                if ($safeHouse) {
+                                    echo "<span><br>Code : " . $safeHouse->getCode() . "<br>" . "Adresse: " . $safeHouse->getAddress() . "<br>" . "Pays :  " . $safeHouse->getCountry() . "<br>" . "Type : " . $safeHouse->getType() . "<br><br></span>";
                                 }
+                            }
                             ?>
                         </span>
                         <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : 
-                            $safeHouses = SafeHouse::getAllSafeHouses($pdo);
+                            $safeHouses = $safeHouseObj::getAllSafeHouses();
                             foreach($safeHouses as $safeHouse) {
                                 $safeHouseId = $safeHouse->getId(); ?>
                                 <div class=chk style="display:none;">
@@ -331,27 +346,28 @@ if (isset($_GET['mission'])) {
                 <tr>
                     <!-- Spécialité nécessaire à la mission -->
                     <th scope="row">Spécialité</th>
-                    <td>
-                        <span id="missionSpeciality">
+                        <td>
+                            <span id="missionSpeciality">
                             <?php
-                                $missionSpeciality = Speciality::getSpecialityById($pdo, $mission->getSpeciality()->getId());
+                                $missionSpeciality = $specialityObj->getSpecialityById($mission->getSpeciality()->getId());
                                 echo $missionSpeciality->getSpeciality();
                             ?>
-                        </span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                            <select class="editSelect" id="editMissionSpeciality" style="display:none;">
-                            <option value="">--Choisir une spécialité--</option>
+
+                            </span>
+                            <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
                                 <?php
-                                    $missionSpecialitys = Speciality::getAllSpecialities($pdo);
-                                    foreach($missionSpecialitys as $missionSpeciality) {
-                                        $id = $missionSpeciality->getId();
-                                        $speciality = $missionSpeciality->getSpeciality();
-                                        echo "<option value=\"$id\">$speciality</option>";
-                                    }
+                                    $missionSpecialities = $specialityObj->getAllSpecialities();
                                 ?>
-                            </select>
-                        <?php endif; ?>
-                    </td>
+                                <select class="editSelect" id="editMissionSpeciality" style="display:none;">
+                                    <option value="">--Choisir une spécialité--</option>
+                                    <?php foreach($missionSpecialities as $speciality) {
+                                        $id = $speciality->getId();
+                                        $name = $speciality->getSpeciality();
+                                        echo "<option value=\"$id\">$name</option>";
+                                    } ?>
+                                </select>
+                            <?php endif; ?>
+                        </td>
                     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
                         <td>
                             <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
@@ -367,7 +383,7 @@ if (isset($_GET['mission'])) {
                     <td>
                         <span id="missionStatus">
                             <?php
-                                $missionStatus = MissionStatus::getMissionStatusById($pdo, $mission->getMissionStatus()->getId());
+                                $missionStatus = $missionStatusObj::getMissionStatusById($mission->getMissionStatus()->getId());
                                 echo $missionStatus->getStatus();
                             ?>
                         </span>
@@ -375,7 +391,7 @@ if (isset($_GET['mission'])) {
                             <select class="editSelect" id="editMissionStatus" style="display:none;">
                             <option value="">--Choisir une spécialité--</option>
                                 <?php
-                                    $missionStatuses = MissionStatus::getAllMissionStatuses($pdo);
+                                    $missionStatuses = $missionStatusObj::getAllMissionStatuses();
                                     foreach($missionStatuses as $missionStatus) {
                                         $id = $missionStatus->getId();
                                         $status = $missionStatus->getStatus();

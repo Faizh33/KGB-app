@@ -11,14 +11,17 @@ use app\classes\Speciality;
 use app\classes\MissionStatus;
 use app\classes\MissionType;
 
-// Création de l'objet Mission
+// Création des objets
 $missionObj = new Mission($pdo);
+$specialityObj = new Speciality($pdo);
+$missionStatusObj = new MissionStatus($pdo);
+$missionTypeObj = new MissionType($pdo);
 
 // Récupération de toutes les missions
-$specialities = Speciality::getAllSpecialities($pdo);
-$missionStatuses = MissionStatus::getAllMissionStatuses($pdo);
-$missionTypes = MissionType::getAllMissionTypes($pdo);
-$missions = $missionObj->getAllMissions($pdo);
+$missions = $missionObj::getAllMissions();
+$specialities = $specialityObj::getAllSpecialities();
+$missionStatuses = $missionStatusObj::getAllMissionStatuses();
+$missionTypes = $missionTypeObj::getAllMissionTypes();
 
 ?>
 
@@ -38,7 +41,7 @@ $missions = $missionObj->getAllMissions($pdo);
                 if (isset($_SESSION['admin'])) {
                     echo "<a href='../controllers/logoutController.php' class='link'>Déconnexion</a>";
                 } else {
-                    echo "<a href='loginForm.php' id='logLink'>Se connecter</a>";
+                    echo "<a href='loginForm.php' class='link'>Se connecter</a>";
                 }
                 ?>
             </div>
@@ -67,7 +70,7 @@ $missions = $missionObj->getAllMissions($pdo);
                 <td><?php echo $mission->getCodeName(); ?></td>
                 <td>
                 <?php
-                    $missionStatus = MissionStatus::getMissionStatusById($pdo, $mission->getMissionStatus()->getId());
+                    $missionStatus = MissionStatus::getMissionStatusById($mission->getMissionStatus()->getId());
                     echo $missionStatus->getStatus();
                 ?>
                 </td>
