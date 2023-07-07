@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nationality = valid_datas($_POST["contactNationality"]);
         $idCode = valid_datas($_POST["contactIdCode"]);
 
-        //Création d'un nouvel objet Agent et insertion des données
+        //Création d'un nouvel objet Contact et insertion des données
         $contactObj = new Contact($pdo);
         $contact = $contactObj::addContact($lastName, $firstName, $birthDate, $nationality, $idCode);
 
