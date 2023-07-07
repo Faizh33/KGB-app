@@ -23,12 +23,12 @@ class Mission
     private ?Speciality $speciality;
     private ?MissionStatus $missionStatus;
     private ?MissionType $missionType;
-    private \PDO $pdo;
+    private static \PDO $pdo;
 
     private static array $missions = [];
 
     public function __construct($pdo, string $id = '', string $title = '', string $description = '', string $codeName = '', string $country = '', string $startDate = '', string $endDate = '', Speciality $speciality = null, MissionStatus $missionStatus = null, MissionType $missionType = null)    {
-        $this->pdo = $pdo;
+        self::$pdo = $pdo;
         $this->id = $id;
         $this->title = $title;
         $this->description = $description;

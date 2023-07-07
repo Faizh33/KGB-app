@@ -4,12 +4,12 @@ namespace app\classes;
 
 class Admin
 {
-    private $pdo;
+    private static \PDO $pdo;
     private static array $admins = [];
 
     public function __construct($pdo)
     {
-        $this->pdo = $pdo;
+        self::$pdo = $pdo;
         $this->getAllAdmins($pdo);
     }
 

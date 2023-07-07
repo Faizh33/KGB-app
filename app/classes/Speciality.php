@@ -8,13 +8,13 @@ class Speciality
 {
     private int $id;
     private string $speciality;
-    private $pdo;
+    private static \PDO $pdo;
 
     private static array $specialities = [];
 
     public function __construct($pdo, int $id = NULL, string $speciality = '')
     {
-        $this->pdo = $pdo;
+        self::$pdo = $pdo;
         $this->id = $id ?? 0;
         $this->speciality = $speciality;
 
@@ -94,11 +94,11 @@ class Speciality
      * @param string $speciality La spécialité à ajouter.
      * @return Speciality|null La nouvelle instance de Speciality si l'ajout est réussi, sinon null.
      */
-    public static function addSpeciality($pdo, string $speciality): ?Speciality
+    public static function addSpeciality(string $speciality): ?Speciality
     {
         // Vérifier si la spécialité existe déjà dans la base de données
         $query = "SELECT * FROM Specialities WHERE speciality = :speciality";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':speciality', $speciality);
         $stmt->execute();
 
@@ -111,15 +111,15 @@ class Speciality
 
         // Insérer la nouvelle spécialité dans la base de données et dans la classe
         $query = "INSERT INTO Specialities (speciality) VALUES (:speciality)";
-        $stmt = $pdo->prepare($query);
+        $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':speciality', $speciality);
         $stmt->execute();
 
         // Récupérer l'id de la nouvelle spécialité insérée
-        $newSpecialityId = $pdo->lastInsertId();
+        $newSpecialityId = self::$pdo->lastInsertId();
 
         // Créer une nouvelle instance de Speciality avec les données fournies
-        $newSpeciality = new Speciality($pdo, $newSpecialityId, $speciality);
+        $newSpeciality = new Speciality(self::$pdo, $newSpecialityId, $speciality);
 
         // Ajouter la nouvelle spécialité au tableau $specialities
         self::$specialities[$newSpecialityId] = $newSpeciality;

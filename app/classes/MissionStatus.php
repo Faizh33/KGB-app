@@ -6,13 +6,13 @@ class MissionStatus
 {
     private int $id;
     private string $status;
-    private $pdo;
+    private static \PDO $pdo;
 
     private static array $missionStatuses = [];
 
     public function __construct($pdo, int $id = NULL, string $status = '')
     {
-        $this->pdo = $pdo;
+        self::$pdo = $pdo;
         $this->id = $id ?? 0;
         $this->status = $status;
 

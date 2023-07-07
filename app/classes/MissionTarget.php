@@ -6,13 +6,13 @@ class MissionTarget
 {
     private string $missionId;
     private string $targetId;
-    private \PDO $pdo;
+    private static \PDO $pdo;
 
     private static array $missionTargets = [];
 
     public function __construct(\PDO $pdo, string $missionId = '', string $targetId = '')
     {
-        $this->pdo = $pdo;
+        self::$pdo = $pdo;
         $this->missionId = $missionId;
         $this->targetId = $targetId;
 

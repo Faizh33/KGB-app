@@ -9,13 +9,13 @@ class SafeHouse
     private string $address;
     private string $country;
     private string $type;
-    private $pdo;
+    private static \PDO $pdo;
 
     private static array $safeHouses = [];
 
     public function __construct($pdo, int $id = null, string $code = '', string $address = '', string $country = '', string $type = '')
     {
-        $this->pdo = $pdo;
+        self::$pdo = $pdo;
         $this->id = $id ?? 0;
         $this->code = $code;
         $this->address = $address;

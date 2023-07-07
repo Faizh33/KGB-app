@@ -6,13 +6,13 @@ class MissionSafeHouse
 {
     private string $missionId;
     private string $safeHouseId;
-    private \PDO $pdo;
+    private static \PDO $pdo;
 
     private static array $missionSafeHouses = [];
 
     public function __construct(\PDO $pdo, string $missionId = '', string $safeHouseId = '')
     {
-        $this->pdo = $pdo;
+        self::$pdo = $pdo;
         $this->missionId = $missionId;
         $this->safeHouseId = $safeHouseId;
 

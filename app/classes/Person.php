@@ -11,13 +11,13 @@ class Person
     protected string $firstName;
     protected string $birthDate;
     protected string $nationality;
-    protected $pdo;
+    protected static \PDO $pdo;
 
     protected static array $persons = [];
 
     public function __construct($pdo, string $id = '', string $lastName = '', string $firstName = '', string $birthDate = '', string $nationality = '')
     {
-        $this->pdo = $pdo;
+        self::$pdo = $pdo;
         $this->id = $id;
         $this->lastName = $lastName;
         $this->firstName = $firstName;

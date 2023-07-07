@@ -6,13 +6,13 @@ class MissionType
 {
     private int $id;
     private string $type;
-    private $pdo;
+    private static \PDO $pdo;
 
     private static array $missionTypes = [];
 
     public function __construct($pdo, int $id = NULL, string $type = '')
     {
-        $this->pdo = $pdo;
+        self::$pdo = $pdo;
         $this->id = $id ?? 0;
         $this->type = $type;
 
@@ -119,7 +119,7 @@ class MissionType
         // Insérer le nouveau type de mission dans la base de données et dans la classe
         $query = "INSERT INTO MissionTypes (type) VALUES (:type)";
         $stmt = self::$pdo->prepare($query);
-        $stmt->self::bindValue(':type', $type);
+        $stmt->bindValue(':type', $type);
         $stmt->execute();
 
         // Récupérer l'identifiant du nouveau type de mission inséré

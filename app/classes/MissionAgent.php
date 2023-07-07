@@ -6,13 +6,13 @@ class MissionAgent
 {
     private string $missionId;
     private string $agentId;
-    private \PDO $pdo;
+    private static \PDO $pdo;
 
     private static array $missionAgents = [];
 
     public function __construct(\PDO $pdo, string $missionId = '', string $agentId = '')
     {
-        $this->pdo = $pdo;
+        self::$pdo = $pdo;
         $this->missionId = $missionId;
         $this->agentId = $agentId;
 

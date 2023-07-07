@@ -6,13 +6,13 @@ class MissionContact
 {
     private string $missionId;
     private string $contactId;
-    private \PDO $pdo;
+    private static \PDO $pdo;
 
     private static array $missionContacts = [];
 
-    public function __construct(\PDO $pdo, string $missionId = '', string $contactId = '')
+    public function __construct($pdo, string $missionId = '', string $contactId = '')
     {
-        $this->pdo = $pdo;
+        self::$pdo = $pdo;
         $this->missionId = $missionId;
         $this->contactId = $contactId;
 

@@ -6,7 +6,7 @@ class AgentSpeciality
 {
     private string $agentId;
     private int $specialityId;
-    private \PDO $pdo;
+    private static \PDO $pdo;
 
     private static array $agentSpecialities = [];
 
