@@ -45,9 +45,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if(isset($newMission)) {
             echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Nouvelle mission ajoutée en base de données</div>";
-            header('Refresh: 5; Location: ../views/dashboardCreate.php');
+            echo "<script>
+                setTimeout(function() {
+                    window.location.href = '../views/dashboardCreate.php';
+                }, 3000);
+            </script>";
             exit;
-        }
+        }  
     } else {
         echo "Tous les champs sont requis.";
     }
