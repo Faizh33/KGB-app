@@ -1,11 +1,11 @@
 <h2>Créer une nouvelle planque</h2>
 
 <!--formulaire de création de planque -->
-<form action="../controllers/insertTargetController.php" method="post" id="form">
+<form action="../controllers/insertSafeHouseController.php" method="post" id="form">
     <table>
         <tr>
             <td class="labelColumn">
-                <label for="code" class="labelForm">Spécialité</label>
+                <label for="code" class="labelForm">Code</label>
             </td>
             <td>
                 <input type="text" name="code" id="code" class="formInput" required />
