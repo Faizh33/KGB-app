@@ -2,8 +2,6 @@
 
 namespace app\classes;
 
-require_once '../helpers/dataHelpers.php';
-
 class Person
 {
     protected string $id;
