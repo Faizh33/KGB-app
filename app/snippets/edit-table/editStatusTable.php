@@ -21,8 +21,9 @@ $missionStatuses = $missionStatusObj::getAllMissionStatuses();
         </tr>
         <tr>
             <td class="tbTable" colspan="2">
-                <div class="editButtonContainer">
+                <div class="buttonsContainer">
                     <button class="editButton" onClick="">Modifier</button>
+                    <button class="saveButton" onClick="" style="display:none;">Sauvegarder</button>
                 </div>
             </td>
         </tr>
