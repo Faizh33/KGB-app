@@ -15,41 +15,43 @@ $targets = $targetObj::getAllTargets();
         <tr>
             <th scope="row" class="thTable">Nom</th>
             <td class="tdTable">
-                <span id="targetLastName" class="tdContent">
-                    <?php echo $target->getLastName(); ?>
-                </span>
+                <span id="targetLastName" class="tdContent"><?php echo $target->getLastName(); ?></span>
+                <input type="text" class="editInput" id="editTargetLastName" placeholder="<?php echo $target->getLastName(); ?>" style="display:none;">
             </td>
         </tr>
         <tr>
             <th scope="row" class="thTable">Prénom</th>
             <td class="tdTable">
-                <span id="targetFirstName" class="tdContent">
-                    <?php echo $target->getFirstName(); ?>
-                </span>
+                <span id="targetFirstName" class="tdContent"><?php echo $target->getFirstName(); ?></span>
+                <input type="text" class="editInput" id="editTargetLastName" placeholder="<?php echo $target->getFirstName(); ?>" style="display:none;">
             </td>
         </tr>
         <tr>
             <th scope="row" class="thTable">Date de naissance</th>
             <td class="tdTable">
                 <span id="targetBirthDate" class="tdContent">
-                    <?php echo $target->getBirthDate(); ?>
+                <?php 
+                    $birthDate = $target->getBirthDate(); 
+                    $birthDateObj = DateTime::createFromFormat('Y-m-d', $birthDate);
+                    $formattedBirthDate = $birthDateObj->format('d/m/Y');
+                    echo $formattedBirthDate;
+                ?>
                 </span>
+                <input type="text" class="editInput" id="editTargetLastName" placeholder="<?php echo $formattedBirthDate; ?>" style="display:none;">
             </td>
         </tr>
         <tr>
             <th scope="row" class="thTable">Nationalité</th>
             <td class="tdTable">
-                <span id="targetNationality" class="tdContent">
-                    <?php echo $target->getNationality(); ?>
-                </span>
+                <span id="targetNationality" class="tdContent"><?php echo $target->getNationality(); ?></span>
+                <input type="text" class="editInput" id="editTargetLastName" placeholder="<?php echo $target->getNationality(); ?>" style="display:none;">
             </td>
         </tr>
         <tr>
             <th scope="row" class="thTable">Nom de code</th>
             <td class="tdTable">
-                <span id="targetCodeName" class="tdContent">
-                    <?php echo $target->getCodeName(); ?>
-                </span>
+                <span id="targetCodeName" class="tdContent"><?php echo $target->getCodeName(); ?></span>
+                <input type="text" class="editInput" id="editTargetLastName" placeholder="<?php echo $target->getCodeName(); ?>" style="display:none;">
             </td>
         </tr>
     </table>

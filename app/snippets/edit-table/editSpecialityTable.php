@@ -15,9 +15,8 @@ $specialities = $specialityObj::getAllSpecialities();
         <tr>
             <th scope="row" class="thTable">Spécialité</th>
             <td class="tdTable">
-                <span id="specialityCode"  class="tdContent">
-                    <?php echo $speciality->getSpeciality(); ?>
-                </span>
+                <span id="speciality"  class="tdContent"><?php echo $speciality->getSpeciality(); ?></span>
+                <input type="text" class="editInput" id="editSpeciality" placeholder="<?php echo $speciality->getSpeciality() ?>" style="display:none;" >
             </td>
         </tr>
     </table>

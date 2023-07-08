@@ -15,9 +15,8 @@ $missionStatuses = $missionStatusObj::getAllMissionStatuses();
         <tr>
             <th scope="row" class="thTable">Statut</th>
             <td class="tdTable">
-                <span id="missionStatusStatus"  class="tdContent">
-                    <?php echo $missionStatus->getStatus(); ?>
-                </span>
+                <span id="missionStatus"  class="tdContent"><?php echo $missionStatus->getStatus(); ?></span>
+                <input type="text" class="editInput" id="editStatus" placeholder="<?php echo $missionStatus->getStatus() ?>" style="display:none;" >
             </td>
         </tr>
     </table>
