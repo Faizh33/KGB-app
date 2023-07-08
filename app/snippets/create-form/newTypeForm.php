@@ -2,12 +2,12 @@
 
 <!--formulaire de création de type de mission -->
 <form action="../controllers/insertTypeController.php" method="post" id="form">
-    <table>
+    <table class="formTable">
         <tr>
             <td class="labelColumn">
                 <label for="type" class="labelForm">Type</label>
             </td>
-            <td>
+            <td class="inputColumn">
                 <input type="text" name="type" id="type" class="formInput" required />
             </td>
         </tr>

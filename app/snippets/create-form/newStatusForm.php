@@ -2,12 +2,12 @@
 
 <!--formulaire de création de statut -->
 <form action="../controllers/insertStatusController.php" method="post" id="form">
-    <table>
+    <table class="formTable">
         <tr>
             <td class="labelColumn">
                 <label for="status" class="labelForm">Statut</label>
             </td>
-            <td>
+            <td class="inputColumn">
                 <input type="text" name="status" id="status" class="formInput" required />
             </td>
         </tr>

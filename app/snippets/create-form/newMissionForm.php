@@ -29,12 +29,12 @@
 
     <!--formulaire de création d'une mission -->
     <form action="../controllers/insertMissionController.php" method="post" id="newMissionForm">
-        <table>
+        <table class="formTable">
             <tr>
                 <td class="labelColumn">
                     <label for="title" class="labelForm">Titre</label>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <input type="text" id="title" class="formInput" name="title" required/>
                 </td>
             </tr>
@@ -42,7 +42,7 @@
                 <td class="labelColumn">
                     <label for="description" class="labelForm">Description</label>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <textarea id="description" name="description" required></textarea>
                 </td>
             </tr>
@@ -50,7 +50,7 @@
                 <td class="labelColumn">
                     <label for="codeName" class="labelForm">Nom de code</label>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <input type="text" id="codeName" class="formInput" name="codeName" required />
                 </td>
             </tr>
@@ -58,7 +58,7 @@
                 <td class="labelColumn">
                     <label for="country" class="labelForm">Pays</label>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <input type="text" id="country" class="formInput" name="country" required/>
                 </td>
             </tr>
@@ -66,7 +66,7 @@
                 <td class="labelColumn">
                     <label for="startDate" class="labelForm">Date de début</label>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <input type="date" id="startDate" class="inputFormDate" name= "startDate" required/>
                 </td>
             </tr>
@@ -74,7 +74,7 @@
                 <td class="labelColumn">
                     <label for="endDate" class="labelForm">Date de fin</label>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <input type="date" id="endDate" class="inputFormDate" name= "endDate" required />
                 </td>
             </tr>
@@ -82,7 +82,7 @@
                 <td class="labelColumn">
                     <div class="labelForm">Agent(s)</div>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <div class="formChkBox">
                     <?php
                         $agents = $agentObj::getAllAgents();
@@ -98,7 +98,7 @@
                 <td class="labelColumn">
                     <div class="labelForm">Contact(s)</div>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <div class="formChkBox">
                         <?php
                         $contacts = $contactObj::getAllContacts();
@@ -114,7 +114,7 @@
                 <td class="labelColumn">
                     <div class="labelForm">Cible(s)</div>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <div class="formChkBox">
                         <?php
                         $targets = $targetObj::getAllTargets();
@@ -130,7 +130,7 @@
                 <td class="labelColumn">
                     <div class="labelForm">Planque(s)</div>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <div class="formChkBox">
                         <?php
                             $safeHouses = $safehouseObj::getAllSafeHouses();
@@ -146,7 +146,7 @@
                 <td class="labelColumn">
                     <label for="missionType" class="labelForm">Type de mission</label>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <select name="missionType" id="missionType">
                         <option value="">--Choisir un type--</option>
                             <?php
@@ -164,7 +164,7 @@
                 <td class="labelColumn">
                     <label for="missionSpeciality" class="labelForm">Spécialité</label>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <select name="missionSpeciality" id="missionSpeciality">
                         <option value="">--Choisir une spécialité--</option>
                         <?php 
@@ -182,7 +182,7 @@
                 <td class="labelColumn">
                     <label for="missionStatus" class="labelForm">Statut de mission</label>
                 </td>
-                <td>
+                <td class="inputColumn">
                     <select name="missionStatus" id="missionStatus">
                         <option value="">--Choisir un statut--</option>
                         <?php

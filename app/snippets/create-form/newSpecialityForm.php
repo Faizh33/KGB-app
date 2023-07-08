@@ -2,12 +2,12 @@
 
 <!--formulaire de création de spécialité -->
 <form action="../controllers/insertSpecialityController.php" method="post" id="form">
-    <table>
+    <table class="formTable">
         <tr>
             <td class="labelColumn">
                 <label for="speciality" class="labelForm">Spécialité</label>
             </td>
-            <td>
+            <td class="inputColumn">
                 <input type="text" name="speciality" id="speciality" class="formInput" required />
             </td>
         </tr>
