@@ -40,5 +40,12 @@ $safeHouses = $safeHouseObj::getAllSafeHouses();
                 <input type="text" class="editInput" id="editSafeHouseType" placeholder="<?php echo $safeHouse->getType() ?>" style="display:none;" >
             </td>
         </tr>
+        <tr>
+            <td class="tbTable" colspan="2">
+                <div class="editButtonContainer">
+                    <button class="editButton" onClick="">Modifier</button>
+                </div>
+            </td>
+        </tr>
     </table>
 <?php } ?>

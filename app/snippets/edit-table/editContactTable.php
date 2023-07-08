@@ -54,5 +54,12 @@ $contacts = $contactObj::getAllContacts();
                 <input type="text" class="editInput" id="editContactCodeName" placeholder="<?php echo $contact->getCodeName() ?>" style="display:none;" >
             </td>
         </tr>
+        <tr>
+            <td class="tbTable" colspan="2">
+                <div class="editButtonContainer">
+                    <button class="editButton" onClick="">Modifier</button>
+                </div>
+            </td>
+        </tr>
     </table>
 <?php } ?>

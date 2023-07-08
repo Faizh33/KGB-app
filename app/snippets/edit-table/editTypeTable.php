@@ -19,5 +19,12 @@ $missionTypes = $missionTypeObj::getAllMissionTypes();
                 <input type="text" class="editInput" id="editType" placeholder="<?php echo $missionType->getType() ?>" style="display:none;" >
             </td>
         </tr>
+        <tr>
+            <td class="tbTable" colspan="2">
+                <div class="editButtonContainer">
+                    <button class="editButton" onClick="">Modifier</button>
+                </div>
+            </td>
+        </tr>
     </table>
 <?php } ?>

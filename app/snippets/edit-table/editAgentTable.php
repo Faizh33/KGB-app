@@ -52,7 +52,13 @@ $agents = $agentObj::getAllAgents();
             <td class="tdTable">
                 <span id="agentIdCode"><?php echo $agent->getIdentificationCode(); ?></span>
                 <input type="text" class="editInput" id="editAgentIdCode" placeholder="<?php echo $agent->getIdentificationCode() ?>" style="display:none;">
-
+            </td>
+        </tr>
+        <tr>
+            <td class="tbTable" colspan="2">
+                <div class="editButtonContainer">
+                    <button class="editButton" onClick="">Modifier</button>
+                </div>
             </td>
         </tr>
     </table>

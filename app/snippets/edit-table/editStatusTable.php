@@ -19,5 +19,12 @@ $missionStatuses = $missionStatusObj::getAllMissionStatuses();
                 <input type="text" class="editInput" id="editStatus" placeholder="<?php echo $missionStatus->getStatus() ?>" style="display:none;" >
             </td>
         </tr>
+        <tr>
+            <td class="tbTable" colspan="2">
+                <div class="editButtonContainer">
+                    <button class="editButton" onClick="">Modifier</button>
+                </div>
+            </td>
+        </tr>
     </table>
 <?php } ?>
