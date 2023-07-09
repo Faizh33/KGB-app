@@ -9,7 +9,6 @@ require_once "MissionAgent.php";
 require_once "MissionContact.php";
 require_once "MissionTarget.php";
 require_once "MissionSafeHouse.php";
-require_once '../helpers/dataHelpers.php';
 
 class Mission
 {
