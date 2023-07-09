@@ -21,10 +21,10 @@
 
     <h1>Tableau de bord Administrateur</h1>
 
-    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) :?>
+    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
     <div class="dashboardContainer">
         <!-- Contenu du tableau de bord -->
-        <table>
+        <table class="dashboardTable">
             <tr>
                 <td>
                     <button class="dashboardButton" data-form="missionForm">
