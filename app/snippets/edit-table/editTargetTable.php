@@ -12,6 +12,7 @@ $targets = $targetObj->getAllTargets();
 
 <?php foreach($targets as $target) { ?>
     <form method="POST" action="votre_script.php">
+        <input type="hidden" name="targetId" value="<?php echo $target->getId(); ?>">
         <table id="form" class="editTable">
             <tr>
                 <th scope="row" class="thTable">Nom</th>

@@ -12,6 +12,7 @@ $contacts = $contactObj::getAllContacts();
 
 <?php foreach($contacts as $contact) { ?>
     <form method="POST" action="votre_script.php">
+        <input type="hidden" name="contactId" value="<?php echo $contact->getId(); ?>">
         <table id="form" class="editTable">
             <tr>
                 <th scope="row" class="thTable">Nom</th>

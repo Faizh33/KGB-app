@@ -51,6 +51,7 @@ $missions = $mission->getAllMissions();
 <h2>Missions</h2>
 <?php foreach ($missions as $mission) : ?>
     <form method="POST" action="votre_script.php">
+        <input type="hidden" name="missionId" value="<?php echo $mission->getId(); ?>">
         <table class="editMissionTable">
             <tbody>
                 <tr>

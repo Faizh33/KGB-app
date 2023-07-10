@@ -12,6 +12,7 @@ $specialities = $specialityObj::getAllSpecialities();
 
 <?php foreach($specialities as $speciality) { ?>
     <form method="POST" action="votre_script.php">
+        <input type="hidden" name="specialityId" value="<?php echo $speciality->getId(); ?>">
         <table id="form" class="editTable">
             <tr>
                 <th scope="row" class="thTable">Spécialité</th>

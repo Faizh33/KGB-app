@@ -12,6 +12,7 @@ $safeHouses = $safeHouseObj->getAllSafeHouses();
 
 <?php foreach($safeHouses as $safeHouse) { ?>
     <form method="POST" action="votre_script.php">
+        <input type="hidden" name="safeHouseId" value="<?php echo $safeHouse->getId(); ?>">
         <table id="form" class="editTable">
             <tr>
                 <th scope="row" class="thTable">Code</th>

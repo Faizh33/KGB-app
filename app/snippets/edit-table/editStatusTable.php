@@ -12,6 +12,7 @@ $missionStatuses = $missionStatusObj->getAllMissionStatuses();
 
 <?php foreach($missionStatuses as $missionStatus) { ?>
     <form method="POST" action="votre_script.php">
+        <input type="hidden" name="missionStatusId" value="<?php echo $missionStatus->getId(); ?>">
         <table id="form" class="editTable">
             <tr>
                 <th scope="row" class="thTable">Statut</th>

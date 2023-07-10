@@ -12,6 +12,7 @@ $missionTypes = $missionTypeObj->getAllMissionTypes();
 
 <?php foreach($missionTypes as $missionType) { ?>
     <form method="POST" action="votre_script.php">
+        <input type="hidden" name="missionTypeId" value="<?php echo $missionType->getId(); ?>">
         <table id="form" class="editTable">
             <tr>
                 <th scope="row" class="thTable">Type</th>
