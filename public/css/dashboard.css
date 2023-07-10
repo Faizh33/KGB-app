@@ -99,6 +99,7 @@ form, .editTable, .editMissionTable {
     padding: 1vw;
     margin: auto;
     margin-bottom: 1vw;
+    font-size: 1vw;
 }
 
 form, .editMissionTable {
@@ -130,10 +131,10 @@ td.labelColumn {
     font-size: 1vw;
 }
 
-.formInput, textarea, .inputFormDate, .formChkBox {
+.editInput, .inputFormDate, .formChkBox {
     border: 2px solid rgb(23, 157, 143);
     font-family: Didot, serif;
-    font-size: 1.3vw;
+    font-size: 1vw;
 }
 
 .formInput {
@@ -145,6 +146,7 @@ textarea {
     height: 8vw;
     width: 40vw;
     resize: none;
+    font-family: Didot, serif;
 }
 
 .inputFormDate {
@@ -206,6 +208,7 @@ table#form {
 .tdMissionTable {
     padding-top: 1vw;
     padding-bottom: 1vw;
+    padding-right: 2vw;
     border-bottom: 2px solid lightgray;
     align-items: center;
 }
