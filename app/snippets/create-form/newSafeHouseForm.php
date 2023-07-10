@@ -1,7 +1,7 @@
 <h2>Créer une nouvelle planque</h2>
 
 <!--formulaire de création de planque -->
-<form action="../controllers/insertSafeHouseController.php" method="post" id="form">
+<form action="../controllers/insertSafeHouseController.php" method="post" id="form" class="newDatasForm">
     <table class="formTable">
         <tr>
             <td class="labelColumn">

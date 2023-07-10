@@ -28,7 +28,7 @@
     <h2>Créer une nouvelle mission</h2>
 
     <!--formulaire de création d'une mission -->
-    <form action="../controllers/insertMissionController.php" method="post" id="newMissionForm">
+    <form action="../controllers/insertMissionController.php" method="post" id="newMissionForm" class="newDatasForm">
         <table class="formTable">
             <tr>
                 <td class="labelColumn">

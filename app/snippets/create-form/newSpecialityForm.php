@@ -1,7 +1,7 @@
 <h2>Créer une nouvelle spécialité</h2>
 
 <!--formulaire de création de spécialité -->
-<form action="../controllers/insertSpecialityController.php" method="post" id="form">
+<form action="../controllers/insertSpecialityController.php" method="post" id="form" class="newDatasForm">
     <table class="formTable">
         <tr>
             <td class="labelColumn">

@@ -1,7 +1,7 @@
 <h2>Créer un nouveau contact</h2>
 
 <!--formulaire de création de contact -->
-<form action="../controllers/insertContactController.php" method="post" id="form">
+<form action="../controllers/insertContactController.php" method="post" id="form" class="newDatasForm">
     <table class="formTable">
         <tr>
             <td class="labelColumn">
