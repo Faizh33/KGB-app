@@ -118,16 +118,39 @@ class Contact extends Person
      */
     public static function updateContactProperties(string $id, array $propertiesToUpdate): bool
     {
+        // Vérifie si "codeName" est présent dans $propertiesToUpdate
+        $codeName = null;
+        if (isset($propertiesToUpdate['codeName'])) {
+            $codeName = $propertiesToUpdate['codeName'];
+            unset($propertiesToUpdate['codeName']);
+
+            // Vérifie si la valeur de "codeName" existe déjà dans d'autres enregistrements
+            $query = "SELECT id FROM Contacts WHERE code_name = :codeName AND id != :id";
+            $stmt = self::$pdo->prepare($query);
+            $stmt->bindValue(':codeName', $codeName);
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+
+            $existingContact = $stmt->fetch();
+
+            if ($existingContact) {
+                echo "Le nom de code existe déjà en base de données";
+                return false;
+            }
+        }
+
         // Appeler la méthode updateProperties de la classe parente pour mettre à jour les propriétés de la personne
         $personUpdated = parent::updatePersonProperties($id, $propertiesToUpdate);
 
         if ($personUpdated) {
             // Si la mise à jour des propriétés de la personne a réussi, mettre à jour le nom de code du contact dans la table "Contacts"
-            $query = "UPDATE Contacts SET code_name = :codeName WHERE id = :id";
-            $stmt = self::$pdo->prepare($query);
-            $stmt->bindValue(':id', $id);
-            $stmt->bindValue(':codeName', self::$codeName);
-            $stmt->execute();
+            if ($codeName !== null) {
+                $query = "UPDATE Contacts SET code_name = :codeName WHERE id = :id";
+                $stmt = self::$pdo->prepare($query);
+                $stmt->bindValue(':id', $id);
+                $stmt->bindValue(':codeName', $codeName);
+                $stmt->execute();
+            }
 
             return true;
         }

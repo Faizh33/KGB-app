@@ -115,23 +115,45 @@ class Target extends Person
      */
     public static function updateTargetProperties(string $id, array $propertiesToUpdate): bool
     {
+        // Vérifie si "codeName" est présent dans $propertiesToUpdate
+        $codeName = null;
+        if (isset($propertiesToUpdate['codeName'])) {
+            $codeName = $propertiesToUpdate['codeName'];
+            unset($propertiesToUpdate['codeName']);
+
+            // Vérifie si la valeur de "codeName" existe déjà dans d'autres enregistrements
+            $query = "SELECT id FROM Targets WHERE code_name = :codeName AND id != :id";
+            $stmt = self::$pdo->prepare($query);
+            $stmt->bindValue(':codeName', $codeName);
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+
+            $existingTarget = $stmt->fetch();
+
+            if ($existingTarget) {
+                echo "Le nom de code existe déjà en base de données";
+                return false;
+            }
+        }
+
         // Appeler la méthode statique updateProperties de la classe parente pour mettre à jour les propriétés de la personne
         $personUpdated = parent::updatePersonProperties($id, $propertiesToUpdate);
 
         if ($personUpdated) {
             // Si la mise à jour de la personne a réussi, mettre à jour le code de nom dans la table Targets
-            $query = "UPDATE Targets SET code_name = :codeName WHERE id = :id";
-            $stmt = self::$pdo->prepare($query);
-            $stmt->bindValue(':id', $id);
-            $stmt->bindValue(':codeName', $propertiesToUpdate['codeName']);
-            $stmt->execute();
+            if ($codeName !== null) {
+                $query = "UPDATE Targets SET code_name = :codeName WHERE id = :id";
+                $stmt = self::$pdo->prepare($query);
+                $stmt->bindValue(':id', $id);
+                $stmt->bindValue(':codeName', $codeName);
+                $stmt->execute();
+            }
 
             return true;
         }
 
         return false;
     }
-
 
     /**
      * Supprime une cible de la base de données et de la classe en fonction de son ID.

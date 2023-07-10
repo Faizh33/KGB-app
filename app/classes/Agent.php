@@ -105,22 +105,48 @@ class Agent extends Person
     }
 
     /**
-     * Modifie les propriétés d'un agent en fonction de l'id.
+     * Met à jour les propriétés d'un agent en fonction de son identifiant.
      *
-     * @Value array $propertiesToUpdate Les propriétés à mettre à jour.
+     * @param string $id L'identifiant de l'agent.
+     * @param array $propertiesToUpdate Les propriétés à mettre à jour.
      *
      * @return bool Retourne true si les propriétés ont été mises à jour avec succès, sinon false.
      */
     public static function updateAgentProperties(string $id, array $propertiesToUpdate): bool
     {
+        // Vérifie si "identificationCode" est présent dans $propertiesToUpdate
+        $identificationCode = null;
+        if (isset($propertiesToUpdate['identificationCode'])) {
+            $identificationCode = $propertiesToUpdate['identificationCode'];
+            unset($propertiesToUpdate['identificationCode']);
+
+            // Vérifie si la valeur de "identificationCode" existe déjà dans d'autres enregistrements
+            $query = "SELECT id FROM Agents WHERE identification_code = :identificationCode AND id != :id";
+            $stmt = self::$pdo->prepare($query);
+            $stmt->bindValue(':identificationCode', $identificationCode);
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+
+            $existingAgent = $stmt->fetch();
+
+            if ($existingAgent) {
+                echo "Le code d'identification existe déjà en base de données";
+                return false;
+            }
+        }
+
+        // Met à jour les propriétés du parent
         $personUpdated = parent::updatePersonProperties($id, $propertiesToUpdate);
 
         if ($personUpdated) {
-            $query = "UPDATE Agents SET identification_code = :identificationCode WHERE id = :id";
-            $stmt = self::$pdo->prepare($query);
-            $stmt->bindValue(':id', $id);
-            $stmt->bindValue(':identificationCode', Agent::$identificationCode);
-            $stmt->execute();
+            // Met à jour la propriété "identification_code" dans la table "Agents"
+            if ($identificationCode !== null) {
+                $query = "UPDATE Agents SET identification_code = :identificationCode WHERE id = :id";
+                $stmt = self::$pdo->prepare($query);
+                $stmt->bindValue(':id', $id);
+                $stmt->bindValue(':identificationCode', $identificationCode);
+                $stmt->execute();
+            }
 
             return true;
         }
