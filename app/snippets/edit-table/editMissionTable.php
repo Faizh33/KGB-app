@@ -288,7 +288,7 @@ $missions = $mission->getAllMissions();
                 <tr>
                     <td class="tbTable" colspan="2">
                         <div class="buttonsContainer">
-                            <button class="editButton" onClick="">Modifier</button>
+                            <button class="editButton" onClick="toggleEdit(this)">Modifier</button>
                             <button class="saveButton" onClick="" style="display:none;">Sauvegarder</button>
                         </div>
                     </td>
