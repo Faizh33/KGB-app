@@ -17,8 +17,20 @@ $specialityObj = new Speciality($pdo);
 $missionStatusObj = new MissionStatus($pdo);
 $missionTypeObj = new MissionType($pdo);
 
+// Obtenez la page actuelle à partir des paramètres GET
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+
+// Nombre d'éléments par page
+$perPage = 2;
+
+// Obtenez le nombre total d'éléments
+$totalItems = $missionObj::countMissions();
+
+// Calculez le nombre total de pages nécessaires
+$totalPages = ceil($totalItems / $perPage);
+
 // Récupération de toutes les missions
-$missions = $missionObj::getAllMissions();
+$missions = $missionObj::getAllMissionsPagination($page, $perPage);
 $specialities = $specialityObj::getAllSpecialities();
 $missionStatuses = $missionStatusObj::getAllMissionStatuses();
 $missionTypes = $missionTypeObj::getAllMissionTypes();
@@ -92,16 +104,21 @@ $missionTypes = $missionTypeObj::getAllMissionTypes();
         <!-- Fermer la connexion -->
         <?php $pdo = null; ?>
     </table>
-        <?php if (isset($_SESSION['admin'])) { ?>
-            <div class="adminButtonContainer">
-                <div id="createButton" class="button adminButton" >
-                    <a href='../views/dashboardCreate.php' id='createLink' class="link">Créer</a>
-                </div>
-                <div id="editButton" class="button adminButton">
-                    <a href='../views/dashboardEdit.php' id='editLink' class="link">Modifier</a>
-                </div>
-            </div>
+    <div class="pagination">
+        <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
+            <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
         <?php } ?>
+    </div>
+    <?php if (isset($_SESSION['admin'])) { ?>
+        <div class="adminButtonContainer">
+            <div id="createButton" class="button adminButton" >
+                <a href='../views/dashboardCreate.php' id='createLink' class="link">Créer</a>
+            </div>
+            <div id="editButton" class="button adminButton">
+                <a href='../views/dashboardEdit.php' id='editLink' class="link">Modifier</a>
+            </div>
+        </div>
+    <?php } ?>
     
     <script src="../../public/js/confirmDelete.js"></script>
 </body>
