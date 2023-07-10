@@ -78,64 +78,28 @@ if (isset($_GET['mission'])) {
                     <th scope="row">Titre</th>
                     <td>
                         <span id="missionTitle"><?php echo $mission->getTitle(); ?></span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                            <input type="text" class="editInput" id="editMissionTitle" style="display:none;">
-                        <?php endif; ?>
                     </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td>
-                            <button class="missionDetailsButtons" id="editTitleButton" onclick="editTitle()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveTitleButton" onclick="saveTitle()" style="visibility:hidden;;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
                 </tr>
                 <tr>
                     <!-- Description de la mission  -->
                     <th scope="row">Description</th>
                     <td>
                         <span id="missionDescription"><?php echo $mission->getDescription(); ?></span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                            <input type="text" class="editInput" id="editMissionDescription" style="display:none;">
-                        <?php endif; ?>
                     </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td>
-                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
                 </tr>
                 <tr>
                     <!--  Nom de code de la mission -->
                     <th scope="row">Nom de Code</th>
                     <td>
                         <span id="missionCodeName"><?php echo $mission->getCodeName(); ?></span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                            <input type="text" class="editInput" id="editMissionCodeName" style="display:none;">
-                        <?php endif; ?>
                     </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td>
-                            <button class="missionDetailsButtons" id="editCodeNameButton" onclick="editCodeName()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveCodeNameButton" onclick="saveCodeName()" style="visibility:hidden;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
                 </tr>
                 <tr>
                     <!-- Pays de la mission -->
                     <th scope="row">Pays</th>
                     <td>
                         <span id="missionCountry"><?php echo $mission->getCountry(); ?></span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                            <input type="text" class="editInput" id="editMissionCountry" style="display:none;">
-                        <?php endif; ?>
                     </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td>
-                            <button class="missionDetailsButtons" id="editCountryButton" onclick="editCountry()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveCountryButton" onclick="saveCountry()" style="visibility:hidden;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
                 </tr>
                 <tr>
                     <!-- Date de début de la mission -->
@@ -149,16 +113,7 @@ if (isset($_GET['mission'])) {
                                 echo $formattedStartDate; 
                             ?>
                         </span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                            <input type="date" class="editInput" id="editMissionStartDate" style="display:none;">
-                        <?php endif; ?>
                     </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td>
-                            <button class="missionDetailsButtons" id="editStartDateButton" onclick="editStartDate()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveStartDateButton" onclick="saveStartDate()" style="visibility:hidden;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
                 </tr>
                 <tr>
                     <!-- Date de fin de la mission -->
@@ -172,16 +127,7 @@ if (isset($_GET['mission'])) {
                                 echo $formattedEndDate; 
                             ?>
                         </span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                            <input type="date" class="editInput" id="editMissionEndDate" style="display:none;">
-                        <?php endif; ?>
                     </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td> 
-                            <button class="missionDetailsButtons" id="editEndDateButton" onclick="editEndDate()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveEndDateButton" onclick="saveEndDate()" style="visibility:hidden;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
                 </tr>
                 <tr>
                     <!-- Type de mission -->
@@ -193,26 +139,7 @@ if (isset($_GET['mission'])) {
                                 echo $missionType->getType();
                             ?>
                         </span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                            <select class="editSelect" id="editMissionType" style="display:none;">
-                            <option value="">--Choisir un type--</option>
-                                <?php
-                                    $missionTypes = $missionTypeObj::getAllMissionTypes();
-                                    foreach($missionTypes as $missionType) {
-                                        $id = $missionType->getId();
-                                        $type = $missionType->getType();
-                                        echo "<option value=\"$id\">$type</option>";
-                                    }
-                                ?>
-                            </select>
-                        <?php endif; ?>
                     </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td>
-                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
                 </tr>
                 <tr>
                     <!-- Agents participant à la mission -->
@@ -228,23 +155,7 @@ if (isset($_GET['mission'])) {
                                 }
                             ?>
                         </span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : 
-                            $agents = $agentObj::getAllAgents();
-                            foreach($agents as $agent) {
-                                $agentId = $agent->getId(); ?>
-                                <div class=chk style="display:none;">
-                                    <input type="checkbox" name="agents[]" class="editChk" value='"<?php $agentId ?>"' id="editAgent <?php $agentId ?>">
-                                    <label for="editAgent <?php echo $agentId ?>" class="labelChk"> <?php echo $agent->getLastName() . ' ' . $agent->getFirstName() ?> </label><br>
-                                </div>
-                            <?php } 
-                        endif; ?>
                     </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td>
-                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
                 </tr>
                 <tr>
                     <!-- Contacts participant à la mission -->
@@ -260,23 +171,7 @@ if (isset($_GET['mission'])) {
                                 }
                             ?>
                         </span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : 
-                            $contacts = $contactObj::getAllContacts();
-                            foreach($contacts as $contact) {
-                                $contactId = $contact->getId(); ?>
-                                <div class=chk style="display:none;">
-                                    <input type="checkbox" name="contacts[]" class="editChk" value='"<?php $contactId ?>"' id="editContact <?php $contactId ?>">
-                                    <label for="editContact <?php echo $contactId ?>" class="labelChk"> <?php echo $contact->getLastName() . ' ' . $contact->getFirstName() ?> </label><br>
-                                </div>
-                            <?php } 
-                        endif; ?>
                     </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td>
-                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
                 </tr>
                 <tr>
                     <!-- Cibles concernées par la mission -->
@@ -292,23 +187,7 @@ if (isset($_GET['mission'])) {
                                 }
                             ?>
                         </span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : 
-                            $targets = $targetObj::getAllTargets();
-                            foreach($targets as $target) {
-                                $targetId = $target->getId(); ?>
-                                <div class=chk style="display:none;">
-                                    <input type="checkbox" name="targets[]" class="editChk" value='"<?php $targetId ?>"' id="editTarget <?php $targetId ?>">
-                                    <label for="editTarget <?php echo $targetId ?>" class="labelChk"> <?php echo $target->getLastName() . ' ' . $target->getFirstName() ?> </label><br>
-                                </div>
-                            <?php } 
-                        endif; ?>
                     </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td>
-                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
                 </tr>
                 <tr>
                     <!-- Planques allouées à la mission -->
@@ -325,55 +204,19 @@ if (isset($_GET['mission'])) {
                             }
                             ?>
                         </span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : 
-                            $safeHouses = $safeHouseObj::getAllSafeHouses();
-                            foreach($safeHouses as $safeHouse) {
-                                $safeHouseId = $safeHouse->getId(); ?>
-                                <div class=chk style="display:none;">
-                                    <input type="checkbox" name="safeHouses[]" class="editChk" value='"<?php $safeHouseId ?>"' id="editSafeHouse <?php $safeHouseId ?>">
-                                    <label for="editSafeHouse <?php echo $safeHouseId ?>" class="labelChk"> <?php echo $safeHouse->getAddress() . ', ' . $safeHouse->getCountry() ?> </label><br>
-                                </div>
-                            <?php } 
-                        endif; ?>
                     </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td>
-                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
                 </tr>
                 <tr>
                     <!-- Spécialité nécessaire à la mission -->
                     <th scope="row">Spécialité</th>
-                        <td>
-                            <span id="missionSpeciality">
-                            <?php
-                                $missionSpeciality = $specialityObj->getSpecialityById($mission->getSpeciality()->getId());
-                                echo $missionSpeciality->getSpeciality();
-                            ?>
-
-                            </span>
-                            <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                                <?php
-                                    $missionSpecialities = $specialityObj->getAllSpecialities();
-                                ?>
-                                <select class="editSelect" id="editMissionSpeciality" style="display:none;">
-                                    <option value="">--Choisir une spécialité--</option>
-                                    <?php foreach($missionSpecialities as $speciality) {
-                                        $id = $speciality->getId();
-                                        $name = $speciality->getSpeciality();
-                                        echo "<option value=\"$id\">$name</option>";
-                                    } ?>
-                                </select>
-                            <?php endif; ?>
-                        </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td>
-                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
+                    <td>
+                        <span id="missionSpeciality">
+                        <?php
+                            $missionSpeciality = $specialityObj->getSpecialityById($mission->getSpeciality()->getId());
+                            echo $missionSpeciality->getSpeciality();
+                        ?>
+                        </span>
+                    </td>
                 </tr>
 
 
@@ -387,26 +230,7 @@ if (isset($_GET['mission'])) {
                                 echo $missionStatus->getStatus();
                             ?>
                         </span>
-                        <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                            <select class="editSelect" id="editMissionStatus" style="display:none;">
-                            <option value="">--Choisir une spécialité--</option>
-                                <?php
-                                    $missionStatuses = $missionStatusObj::getAllMissionStatuses();
-                                    foreach($missionStatuses as $missionStatus) {
-                                        $id = $missionStatus->getId();
-                                        $status = $missionStatus->getStatus();
-                                        echo "<option value=\"$id\">$status</option>";
-                                    }
-                                ?>
-                            </select>
-                        <?php endif; ?>
                     </td>
-                    <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
-                        <td>
-                            <button class="missionDetailsButtons" id="editDescriptionButton" onclick="editDescription()">Modifier</button>
-                            <button class="missionDetailsButtons" id="saveDescriptionButton" onclick="saveDescription()" style="visibility:hidden;">Enregistrer</button>
-                        </td>
-                    <?php endif; ?>
                 </tr>
             <?php else: ?>
                 <tr>
