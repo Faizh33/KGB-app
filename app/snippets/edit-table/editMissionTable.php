@@ -57,7 +57,7 @@ $missions = $mission->getAllMissions();
                 <th scope="row" class="thMissionTable">Titre</th>
                 <td class="tdMissionTable">
                     <span id="missionTitle"><?php echo $mission->getTitle(); ?></span>
-                    <input type="text" class="editInput" id="editMissionTitle" style="display:none;">
+                    <input type="text" class="editInput" id="editMissionTitle" placeholder="<?php echo $mission->getTitle(); ?>" style="display:none;">
                 </td>
             </tr>
             <tr>
@@ -65,7 +65,7 @@ $missions = $mission->getAllMissions();
                 <th scope="row" class="thMissionTable">Description</th>
                 <td class="tdMissionTable">
                     <span id="missionDescription"><?php echo $mission->getDescription(); ?></span>
-                    <textarea class="editInput" id="editMissionDescription" style="display:none;"></textarea>
+                    <textarea class="editInput" id="editMissionDescription" placeholder="<?php echo $mission->getDescription(); ?>" style="display:none;"></textarea>
                 </td>
             </tr>
             <tr>
@@ -73,7 +73,7 @@ $missions = $mission->getAllMissions();
                 <th scope="row" class="thMissionTable">Nom de Code</th>
                 <td class="tdMissionTable">
                     <span id="missionCodeName"><?php echo $mission->getCodeName(); ?></span>
-                    <input type="text" class="editInput" id="editMissionCodeName" style="display:none;">
+                    <input type="text" class="editInput" id="editMissionCodeName" placeholder="<?php echo $mission->getCodeName(); ?>" style="display:none;">
                 </td>
             </tr>
             <tr>
@@ -81,7 +81,7 @@ $missions = $mission->getAllMissions();
                 <th scope="row" class="thMissionTable">Pays</th>
                 <td class="tdMissionTable">
                     <span id="missionCountry"><?php echo $mission->getCountry(); ?></span>
-                    <input type="text" class="editInput" id="editMissionCountry" style="display:none;">
+                    <input type="text" class="editInput" id="editMissionCountry" placeholder="<?php echo $mission->getCountry(); ?>" style="display:none;">
                 </td>
             </tr>
             <tr>
@@ -96,7 +96,7 @@ $missions = $mission->getAllMissions();
                             echo $formattedStartDate; 
                         ?>
                     </span>
-                    <input type="date" class="editInput" id="editMissionStartDate" style="display:none;">
+                    <input type="date" class="editInput" id="editMissionStartDate" value="<?php echo $mission->getStartDate(); ?>" style="display:none;">
                 </td>
             </tr>
             <tr>
@@ -111,7 +111,7 @@ $missions = $mission->getAllMissions();
                             echo $formattedEndDate; 
                         ?>
                     </span>
-                    <input type="date" class="editInput" id="editMissionEndDate" style="display:none;">
+                    <input type="date" class="editInput" id="editMissionEndDate" value="<?php echo $mission->getEndDate(); ?>" style="display:none;">
                 </td>
             </tr>
             <tr>
@@ -125,7 +125,7 @@ $missions = $mission->getAllMissions();
                         ?>
                     </span>
                     <select class="editSelect" id="editMissionType" style="display:none;">
-                        <option value="">--Choisir un type--</option>
+                        <option value="">--<?php echo $missionType->getType() ?>--</option>
                         <?php
                             $missionTypes = $missionTypeObj->getAllMissionTypes();
                             foreach($missionTypes as $missionType) {
@@ -153,9 +153,17 @@ $missions = $mission->getAllMissions();
                     </span>
                     <?php $agents = $agentObj->getAllAgents();
                     foreach($agents as $agent) {
-                        $agentId = $agent->getId();?>
+                        $agentId = $agent->getId();
+                        $isChecked = false;
+                        foreach($missionAgents as $missionAgent) {
+                            if ($missionAgent->getAgentId() == $agentId) {
+                                $isChecked = true;
+                                break;
+                            }
+                        }
+                    ?>
                         <div class="chk" style="display:none;">
-                            <input type="checkbox" name="agents[]" class="editChk" value="<?php echo $agentId ?>" id="editAgent<?php echo $agentId ?>">
+                            <input type="checkbox" name="agents[]" class="editChk" value="<?php echo $agentId ?>" id="editAgent<?php echo $agentId ?>" <?php if ($isChecked) echo "checked"; ?>>
                             <label for="editAgent<?php echo $agentId ?>" class="labelChk"><?php echo $agent->getLastName() . ' ' . $agent->getFirstName() ?></label><br>
                         </div>
                     <?php } ?>
@@ -177,15 +185,22 @@ $missions = $mission->getAllMissions();
                     </span> 
                     <?php $contacts = $contactObj->getAllContacts();
                     foreach($contacts as $contact) {
-                        $contactId = $contact->getId(); ?>
+                        $contactId = $contact->getId(); 
+                        $isChecked = false;
+                        foreach($missionContacts as $missionContact) {
+                            if ($missionContact->getContactId() == $contactId) {
+                                $isChecked = true;
+                                break;
+                            }
+                        }
+                        ?>
                         <div class="chk" style="display:none;">
-                            <input type="checkbox" name="contacts[]" class="editChk" value="<?php echo $contactId ?>" id="editContact<?php echo $contactId ?>">
+                            <input type="checkbox" name="contacts[]" class="editChk" value="<?php echo $contactId ?>" id="editContact<?php echo $contactId ?>" <?php if ($isChecked) echo "checked"; ?>>
                             <label for="editContact<?php echo $contactId ?>" class="labelChk"><?php echo $contact->getLastName() . ' ' . $contact->getFirstName() ?></label><br>
                         </div>
                     <?php } ?>
                 </td>
             </tr>
-            <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
                 <tr>
                     <!-- Cibles concernées par la mission -->
                     <th scope="row" class="thMissionTable">Cible(s)</th>
@@ -202,98 +217,113 @@ $missions = $mission->getAllMissions();
                         </span> 
                         <?php $targets = $targetObj->getAllTargets();
                         foreach($targets as $target) {
-                            $targetId = $target->getId(); ?>
+                            $targetId = $target->getId(); 
+                            $isChecked = false;
+                            foreach($missionTargets as $missionTarget) {
+                                if ($missionTarget->getTargetId() == $targetId) {
+                                    $isChecked = true;
+                                    break;
+                                }
+                            }
+                        ?>
                             <div class="chk" style="display:none;">
-                                <input type="checkbox" name="targets[]" class="editChk" value="<?php echo $targetId ?>" id="editTarget<?php echo $targetId ?>">
+                                <input type="checkbox" name="targets[]" class="editChk" value="<?php echo $targetId ?>" id="editTarget<?php echo $targetId ?>" <?php if ($isChecked) echo "checked"; ?>>
                                 <label for="editTarget<?php echo $targetId ?>" class="labelChk"><?php echo $target->getLastName() . ' ' . $target->getFirstName() ?></label><br>
                             </div>
                         <?php } ?>
                     </td>
                 </tr>
                 <tr>
-                     <!-- Planques allouées à la mission -->
-                     <th scope="row" class="thMissionTable">Planque(s)</th>
-                    <td class="tdMissionTable">
-                        <span id="missionSafeHouse">
-                            <?php
-                                $missionSafeHouses = $missionSafeHouseObj->getSafeHousesByMissionId($mission->getId());
-                                if (empty($missionSafeHouses)) {
-                                    echo "Aucune";
-                                } else {
-                                    foreach ($missionSafeHouses as $missionSafeHouse) {
-                                        $safeHouse = $safeHouseObj->getSafeHouseById($missionSafeHouse->getSafeHouseId());
-                                        if ($safeHouse) {
-                                            echo "<span><br>Code : " . $safeHouse->getCode() . "<br>" . "Adresse: " . $safeHouse->getAddress() . "<br>" . "Pays :  " . $safeHouse->getCountry() . "<br>" . "Type : " . $safeHouse->getType() . "<br><br></span>";
-                                        }
+                <!-- Planques allouées à la mission -->
+                <th scope="row" class="thMissionTable">Planque(s)</th>
+                <td class="tdMissionTable">
+                    <span id="missionSafeHouse">
+                        <?php
+                            $missionSafeHouses = $missionSafeHouseObj->getSafeHousesByMissionId($mission->getId());
+                            if (empty($missionSafeHouses)) {
+                                echo "Aucune";
+                            } else {
+                                foreach ($missionSafeHouses as $missionSafeHouse) {
+                                    $safeHouse = $safeHouseObj->getSafeHouseById($missionSafeHouse->getSafeHouseId());
+                                    if ($safeHouse) {
+                                        echo "<span><br>Code : " . $safeHouse->getCode() . "<br>" . "Adresse: " . $safeHouse->getAddress() . "<br>" . "Pays :  " . $safeHouse->getCountry() . "<br>" . "Type : " . $safeHouse->getType() . "<br><br></span>";
                                     }
                                 }
-                            ?>
-                        </span>
-                        <?php $safeHouses = $safeHouseObj->getAllSafeHouses();
-                        foreach($safeHouses as $safeHouse) {
-                            $safeHouseId = $safeHouse->getId(); ?>
-                            <div class="chk" style="display:none;">
-                                <input type="checkbox" name="safeHouses[]" class="editChk" value="<?php echo $safeHouseId ?>" id="editSafeHouse<?php echo $safeHouseId ?>">
-                                <label for="editSafeHouse<?php echo $safeHouseId ?>" class="labelChk"><?php echo $safeHouse->getAddress() . ', ' . $safeHouse->getCountry() ?></label><br>
-                            </div>
-                        <?php } ?>
-                    </td>
-                </tr>
-                <tr>
-                    <!-- Spécialité nécessaire à la mission -->
-                    <th scope="row" class="thMissionTable">Spécialité</th>
-                    <td class="tdMissionTable">
-                        <span id="missionSpeciality">
-                            <?php
-                                $missionSpeciality = $specialityObj->getSpecialityById($mission->getSpeciality()->getId());
-                                echo $missionSpeciality->getSpeciality();
-                            ?>
-                        </span>
-                        <?php
-                            $missionSpecialities = $specialityObj->getAllSpecialities();
+                            }
                         ?>
-                        <select class="editSelect" id="editMissionSpeciality" style="display:none;">
-                            <option value="">--Choisir une spécialité--</option>
-                            <?php foreach($missionSpecialities as $speciality) {
-                                $id = $speciality->getId();
-                                $name = $speciality->getSpeciality();
-                                echo "<option value=\"$id\">$name</option>";
-                            } ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <!-- Statut de la mission -->
-                    <th scope="row" class="thMissionTable">Statut</th>
-                    <td class="tdMissionTable tdEnd">
-                        <span id="missionStatus">
-                            <?php
-                                $missionStatus = $missionStatusObj->getMissionStatusById($mission->getMissionStatus()->getId());
-                                echo $missionStatus->getStatus();
-                            ?>
-                        </span>
-                        <select class="editSelect" id="editMissionStatus" style="display:none;">
-                            <option value="">--Choisir un statut--</option>
-                            <?php
-                                $missionStatuses = $missionStatusObj->getAllMissionStatuses();
-                                foreach($missionStatuses as $missionStatus) {
-                                    $id = $missionStatus->getId();
-                                    $status = $missionStatus->getStatus();
-                                    echo "<option value=\"$id\">$status</option>";
-                                }
-                            ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="tbTable" colspan="2">
-                        <div class="buttonsContainer">
-                            <button class="editButton" onClick="toggleEdit(this)">Modifier</button>
-                            <button class="saveButton" onClick="" style="display:none;">Sauvegarder</button>
+                    </span>
+                    <?php $safeHouses = $safeHouseObj->getAllSafeHouses();
+                    foreach($safeHouses as $safeHouse) {
+                        $safeHouseId = $safeHouse->getId(); 
+                        $isChecked = false;
+                        foreach($missionSafeHouses as $missionSafeHouse) {
+                            if ($missionSafeHouse->getSafeHouseId() == $safeHouseId) {
+                                $isChecked = true;
+                                break;
+                            }
+                        }
+                    ?>
+                        <div class="chk" style="display:none;">
+                            <input type="checkbox" name="safeHouses[]" class="editChk" value="<?php echo $safeHouseId ?>" id="editSafeHouse<?php echo $safeHouseId ?>" <?php if ($isChecked) echo "checked"; ?>>
+                            <label for="editSafeHouse<?php echo $safeHouseId ?>" class="labelChk"><?php echo $safeHouse->getAddress() . ', ' . $safeHouse->getCountry() ?></label><br>
                         </div>
-                    </td>
-                </tr>
-            <?php endif; ?>
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr>
+                <!-- Spécialité nécessaire à la mission -->
+                <th scope="row" class="thMissionTable">Spécialité</th>
+                <td class="tdMissionTable">
+                    <span id="missionSpeciality">
+                        <?php
+                            $missionSpeciality = $specialityObj->getSpecialityById($mission->getSpeciality()->getId());
+                            echo $missionSpeciality->getSpeciality();
+                        ?>
+                    </span>
+                    <?php
+                        $missionSpecialities = $specialityObj->getAllSpecialities();
+                    ?>
+                    <select class="editSelect" id="editMissionSpeciality" style="display:none;">
+                        <option value="">--<?php echo $missionSpeciality->getSpeciality(); ?>--</option>
+                        <?php foreach($missionSpecialities as $speciality) {
+                            $id = $speciality->getId();
+                            $name = $speciality->getSpeciality();
+                            echo "<option value=\"$id\">$name</option>";
+                        } ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <!-- Statut de la mission -->
+                <th scope="row" class="thMissionTable">Statut</th>
+                <td class="tdMissionTable tdEnd">
+                    <span id="missionStatus">
+                        <?php
+                            $missionStatus = $missionStatusObj->getMissionStatusById($mission->getMissionStatus()->getId());
+                            echo $missionStatus->getStatus();
+                        ?>
+                    </span>
+                    <select class="editSelect" id="editMissionStatus" style="display:none;">
+                        <option value="">--<?php echo $missionStatus->getStatus() ?>--</option>
+                        <?php
+                            $missionStatuses = $missionStatusObj->getAllMissionStatuses();
+                            foreach($missionStatuses as $missionStatus) {
+                                $id = $missionStatus->getId();
+                                $status = $missionStatus->getStatus();
+                                echo "<option value=\"$id\">$status</option>";
+                            }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="tbTable" colspan="2">
+                    <div class="buttonsContainer">
+                        <button class="editButton" onClick="toggleEdit(this)">Modifier</button>
+                        <button class="saveButton" onClick="" style="display:none;">Sauvegarder</button>
+                    </div>
+                </td>
+            </tr>
         </tbody>
     </table>
 <?php endforeach; ?>
