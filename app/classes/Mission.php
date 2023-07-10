@@ -95,6 +95,69 @@ class Mission
         return $missions;
     }
 
+     /**
+     * Récupère toutes les missions et créer une pagination.
+     *
+     * @return array   Un tableau contenant toutes les missions.
+     */
+    public static function getAllMissionsPagination(int $page, int $perPage): array
+    {
+        $offset = ($page - 1) * $perPage;
+
+        // Requête SQL pour récupérer toutes les missions
+        $query = "SELECT * FROM Missions LIMIT :offset, :perPage";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->bindValue(':perPage', $perPage, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Récupérer les données des missions
+        $missionsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $missions = [];
+        foreach ($missionsData as $missionData) {
+            $id = $missionData['id'];
+            $title = $missionData['title'];
+            $description = $missionData['description'];
+            $codeName = $missionData['codeName'];
+            $country = $missionData['country'];
+            $startDate = $missionData['startDate'];
+            $endDate = $missionData['endDate'];
+            $specialityId = $missionData['speciality_id'];
+            $missionStatusId = $missionData['missionstatuses_id'];
+            $missionTypeId = $missionData['missiontype_id'];
+
+            // Vérifier si la mission existe déjà dans la liste des missions
+            if (!isset(self::$missions[$id])) {
+                // Récupérer les objets Speciality, MissionStatus et MissionType correspondants à partir de leurs identifiants
+                $speciality = Speciality::getSpecialityById($specialityId);
+                $missionStatus = MissionStatus::getMissionStatusById($missionStatusId);
+                $missionType = MissionType::getMissionTypeById($missionTypeId);
+
+                // Créer la mission en passant les objets récupérés
+                $mission = new Mission(self::$pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
+                self::$missions[$id] = $mission;
+            }
+
+            // Ajouter la mission à la liste des missions à retourner
+            $missions[] = self::$missions[$id];
+        }
+
+        // Retourner toutes les missions
+        return $missions;
+    }
+
+    public static function countMissions(): int
+    {
+        $query = "SELECT COUNT(*) AS total FROM Missions";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return (int) $result['total'];
+    }
+
     /**
      * Récupère une mission à partir de son ID.
      *
