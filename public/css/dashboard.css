@@ -93,7 +93,7 @@ h2 {
     -webkit-text-fill-color: transparent;
 }
 
-form, .editTable, .editMissionTable {
+.newDatasForm, .editTable, .editMissionTable {
     border: 0.5vw solid rgb(23, 157, 143);
     background-color: rgb(215, 236, 235);
     padding: 1vw;
@@ -102,7 +102,7 @@ form, .editTable, .editMissionTable {
     font-size: 1vw;
 }
 
-form, .editMissionTable {
+.newDatasForm, .editMissionTable {
     width: 60%;
 }
 
@@ -131,7 +131,7 @@ td.labelColumn {
     font-size: 1vw;
 }
 
-.editInput, .inputFormDate, .formChkBox {
+.editInput, .inputFormDate, .formChkBox, .formInput, textarea {
     border: 2px solid rgb(23, 157, 143);
     font-family: Didot, serif;
     font-size: 1vw;
