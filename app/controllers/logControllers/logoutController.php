@@ -10,6 +10,6 @@ if (isset($_COOKIE['PHPSESSID'])) {
 }
 
 // Redirection vers la page d'accueil
-header('Location: ../views/home.php');
+header('Location: ../../views/home.php');
 exit();
 ?>

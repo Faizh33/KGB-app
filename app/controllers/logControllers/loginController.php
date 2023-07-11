@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-require_once "../../config/database.php";
-require_once "../classes/Admin.php";
+require_once "../../../config/database.php";
+require_once "../../classes/Admin.php";
 use app\classes\Admin;
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     } else {
         $_SESSION['admin'] = true;
-        header("Location: ../views/home.php");
+        header("Location: ../../views/home.php");
         exit();
         }
     };
