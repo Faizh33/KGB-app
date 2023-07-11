@@ -106,7 +106,7 @@ $missionTypes = $missionTypeObj::getAllMissionTypes();
     </table>
     <div class="pagination">
         <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
-            <a href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+            <a href="?page=<?php echo $i; ?>" class="paginationLink"><?php echo $i; ?></a>
         <?php } ?>
     </div>
     <?php if (isset($_SESSION['admin'])) { ?>
