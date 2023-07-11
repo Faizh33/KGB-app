@@ -1,7 +1,7 @@
 <h2>Créer une nouvelle cible</h2>
 
 <!--formulaire de création de cible -->
-<form action="../controllers/insertTargetController.php" method="post" id="form" class="newDatasForm">
+<form action="../controllers/insertControllers/insertTargetController.php" method="post" id="form" class="newDatasForm">
     <table class="formTable">
         <tr>
             <td class="labelColumn">

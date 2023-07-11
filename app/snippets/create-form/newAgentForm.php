@@ -1,7 +1,7 @@
 <h2>Créer un nouvel agent</h2>
 
 <!--formulaire de création d'agent -->
-<form action="../controllers/insertAgentController.php" method="post" id="form" class="newDatasForm">
+<form action="../controllers/insertControllers/insertAgentController.php" method="post" id="form" class="newDatasForm">
     <table class="formTable">
         <tr>
             <td class="labelColumn">
