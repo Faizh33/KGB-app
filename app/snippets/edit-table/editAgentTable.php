@@ -11,7 +11,7 @@ $agents = $agentObj::getAllAgents();
 <h2>Agents</h2>
 
 <?php foreach($agents as $agent) { ?>
-    <form method="POST" action="../controllers/updateAgentController.php">
+    <form method="POST" action="../controllers/updateControllers/updateAgentController.php">
         <input type="hidden" name="agentId" value="<?php echo $agent->getId(); ?>">
         <table id="form" class="editTable">
             <tr>

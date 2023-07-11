@@ -11,7 +11,7 @@ $targets = $targetObj->getAllTargets();
 <h2>Cibles</h2>
 
 <?php foreach($targets as $target) { ?>
-    <form method="POST" action="votre_script.php">
+    <form method="POST" action="../controllers/updateControllers/updateTargetController.php">
         <input type="hidden" name="targetId" value="<?php echo $target->getId(); ?>">
         <table id="form" class="editTable">
             <tr>
@@ -59,7 +59,7 @@ $targets = $targetObj->getAllTargets();
             <tr>
                 <td class="tbTable" colspan="2">
                     <div class="buttonsContainer">
-                        <button class="editButton" onClick="toggleEdit(this)">Modifier</button>
+                        <button class="editButton" type="button" onClick="toggleEdit(this)">Modifier</button>
                         <button class="saveButton" type="submit" style="display:none;">Sauvegarder</button>
                     </div>
                 </td>

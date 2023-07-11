@@ -50,7 +50,7 @@ $missions = $mission->getAllMissions();
 
 <h2>Missions</h2>
 <?php foreach ($missions as $mission) : ?>
-    <form method="POST" action="votre_script.php">
+    <form method="POST" action="../controllers/updateControllers/updateMissionController.php">
         <input type="hidden" name="missionId" value="<?php echo $mission->getId(); ?>">
         <table class="editMissionTable">
             <tbody>
@@ -59,7 +59,7 @@ $missions = $mission->getAllMissions();
                     <th scope="row" class="thMissionTable">Titre</th>
                     <td class="tdMissionTable">
                         <span id="missionTitle"><?php echo $mission->getTitle(); ?></span>
-                        <input type="text" class="editInput" id="editMissionTitle" placeholder="<?php echo $mission->getTitle(); ?>" style="display:none;">
+                        <input type="text" name="title" class="editInput" id="editMissionTitle" placeholder="<?php echo $mission->getTitle(); ?>" style="display:none;">
                     </td>
                 </tr>
                 <tr>
@@ -67,7 +67,7 @@ $missions = $mission->getAllMissions();
                     <th scope="row" class="thMissionTable">Description</th>
                     <td class="tdMissionTable">
                         <span id="missionDescription"><?php echo $mission->getDescription(); ?></span>
-                        <textarea class="editInput" id="editMissionDescription" placeholder="<?php echo $mission->getDescription(); ?>" style="display:none;"></textarea>
+                        <textarea class="editInput" name="description" id="editMissionDescription" placeholder="<?php echo $mission->getDescription(); ?>" style="display:none;"></textarea>
                     </td>
                 </tr>
                 <tr>
@@ -75,7 +75,7 @@ $missions = $mission->getAllMissions();
                     <th scope="row" class="thMissionTable">Nom de Code</th>
                     <td class="tdMissionTable">
                         <span id="missionCodeName"><?php echo $mission->getCodeName(); ?></span>
-                        <input type="text" class="editInput" id="editMissionCodeName" placeholder="<?php echo $mission->getCodeName(); ?>" style="display:none;">
+                        <input type="text" name="codeName" class="editInput" id="editMissionCodeName" placeholder="<?php echo $mission->getCodeName(); ?>" style="display:none;">
                     </td>
                 </tr>
                 <tr>
@@ -83,7 +83,7 @@ $missions = $mission->getAllMissions();
                     <th scope="row" class="thMissionTable">Pays</th>
                     <td class="tdMissionTable">
                         <span id="missionCountry"><?php echo $mission->getCountry(); ?></span>
-                        <input type="text" class="editInput" id="editMissionCountry" placeholder="<?php echo $mission->getCountry(); ?>" style="display:none;">
+                        <input type="text" name="country" class="editInput" id="editMissionCountry" placeholder="<?php echo $mission->getCountry(); ?>" style="display:none;">
                     </td>
                 </tr>
                 <tr>
@@ -98,7 +98,7 @@ $missions = $mission->getAllMissions();
                                 echo $formattedStartDate; 
                             ?>
                         </span>
-                        <input type="date" class="editInput" id="editMissionStartDate" value="<?php echo $mission->getStartDate(); ?>" style="display:none;">
+                        <input type="date" name="startDate" class="editInput" id="editMissionStartDate" value="<?php echo $mission->getStartDate(); ?>" style="display:none;">
                     </td>
                 </tr>
                 <tr>
@@ -113,7 +113,7 @@ $missions = $mission->getAllMissions();
                                 echo $formattedEndDate; 
                             ?>
                         </span>
-                        <input type="date" class="editInput" id="editMissionEndDate" value="<?php echo $mission->getEndDate(); ?>" style="display:none;">
+                        <input type="date" name="endDate" class="editInput" id="editMissionEndDate" value="<?php echo $mission->getEndDate(); ?>" style="display:none;">
                     </td>
                 </tr>
                 <tr>
@@ -126,7 +126,7 @@ $missions = $mission->getAllMissions();
                                 echo $missionType->getType();
                             ?>
                         </span>
-                        <select class="editSelect" id="editMissionType" style="display:none;">
+                        <select name="type" class="editSelect" id="editMissionType" style="display:none;">
                             <option value="">--<?php echo $missionType->getType() ?>--</option>
                             <?php
                                 $missionTypes = $missionTypeObj->getAllMissionTypes();
@@ -285,7 +285,7 @@ $missions = $mission->getAllMissions();
                         <?php
                             $missionSpecialities = $specialityObj->getAllSpecialities();
                         ?>
-                        <select class="editSelect" id="editMissionSpeciality" style="display:none;">
+                        <select name="speciality" class="editSelect" id="editMissionSpeciality" style="display:none;">
                             <option value="">--<?php echo $missionSpeciality->getSpeciality(); ?>--</option>
                             <?php foreach($missionSpecialities as $speciality) {
                                 $id = $speciality->getId();
@@ -305,7 +305,7 @@ $missions = $mission->getAllMissions();
                                 echo $missionStatus->getStatus();
                             ?>
                         </span>
-                        <select class="editSelect" id="editMissionStatus" style="display:none;">
+                        <select name="status" class="editSelect" id="editMissionStatus" style="display:none;">
                             <option value="">--<?php echo $missionStatus->getStatus() ?>--</option>
                             <?php
                                 $missionStatuses = $missionStatusObj->getAllMissionStatuses();

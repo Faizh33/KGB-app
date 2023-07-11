@@ -11,7 +11,7 @@ $contacts = $contactObj::getAllContacts();
 <h2>Contacts</h2>
 
 <?php foreach($contacts as $contact) { ?>
-    <form method="POST" action="votre_script.php">
+    <form method="POST" action="../controllers/updateControllers/updateContactController.php">
         <input type="hidden" name="contactId" value="<?php echo $contact->getId(); ?>">
         <table id="form" class="editTable">
             <tr>

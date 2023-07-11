@@ -11,7 +11,7 @@ $safeHouses = $safeHouseObj->getAllSafeHouses();
 <h2>Planques</h2>
 
 <?php foreach($safeHouses as $safeHouse) { ?>
-    <form method="POST" action="votre_script.php">
+    <form method="POST" action="../controllers/updateControllers/updateSafeHouseController.php">
         <input type="hidden" name="safeHouseId" value="<?php echo $safeHouse->getId(); ?>">
         <table id="form" class="editTable">
             <tr>
@@ -45,7 +45,7 @@ $safeHouses = $safeHouseObj->getAllSafeHouses();
             <tr>
                 <td class="tbTable" colspan="2">
                     <div class="buttonsContainer">
-                        <button class="editButton" onClick="toggleEdit(this)">Modifier</button>
+                        <button class="editButton" type="button" onClick="toggleEdit(this)">Modifier</button>
                         <button class="saveButton" type="submit" style="display:none;">Sauvegarder</button>
                     </div>
                 </td>

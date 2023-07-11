@@ -11,7 +11,7 @@ $specialities = $specialityObj::getAllSpecialities();
 <h2>Spécialités</h2>
 
 <?php foreach($specialities as $speciality) { ?>
-    <form method="POST" action="votre_script.php">
+    <form method="POST" action="../controllers/updateControllers/updateSpecialityController.php">
         <input type="hidden" name="specialityId" value="<?php echo $speciality->getId(); ?>">
         <table id="form" class="editTable">
             <tr>

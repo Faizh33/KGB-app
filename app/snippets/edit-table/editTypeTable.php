@@ -11,8 +11,8 @@ $missionTypes = $missionTypeObj->getAllMissionTypes();
 <h2>Types</h2>
 
 <?php foreach($missionTypes as $missionType) { ?>
-    <form method="POST" action="votre_script.php">
-        <input type="hidden" name="missionTypeId" value="<?php echo $missionType->getId(); ?>">
+    <form method="POST" action="../controllers/updateControllers/updateTypeController.php">
+        <input type="hidden" name="typeId" value="<?php echo $missionType->getId(); ?>">
         <table id="form" class="editTable">
             <tr>
                 <th scope="row" class="thTable">Type</th>
@@ -24,7 +24,7 @@ $missionTypes = $missionTypeObj->getAllMissionTypes();
             <tr>
                 <td class="tbTable" colspan="2">
                     <div class="buttonsContainer">
-                        <button class="editButton" onClick="toggleEdit(this)">Modifier</button>
+                        <button class="editButton" type="button" onClick="toggleEdit(this)">Modifier</button>
                         <button class="saveButton" type="submit" style="display:none;">Sauvegarder</button>
                     </div>
                 </td>
