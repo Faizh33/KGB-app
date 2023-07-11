@@ -1,6 +1,6 @@
 <?php
-require_once '../classes/Mission.php';
-require '../../config/database.php';
+require_once '../../classes/Mission.php';
+require '../../../config/database.php';
 
 use app\classes\Mission;
 
