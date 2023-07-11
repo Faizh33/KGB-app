@@ -193,9 +193,12 @@ class Mission
             $missionTypeId = $missionData['missiontype_id'];
 
             // Récupérer les objets Speciality, MissionStatus et MissionType correspondants à partir de leurs identifiants
-            $speciality = Speciality::getSpecialityById($specialityId);
-            $missionStatus = MissionStatus::getMissionStatusById($missionStatusId);
-            $missionType = MissionType::getMissionTypeById($missionTypeId);
+            $specialityObj = new Speciality(self::$pdo);
+            $speciality = $specialityObj::getSpecialityById($specialityId);
+            $missionStatusObj = new MissionStatus(self::$pdo);
+            $missionStatus = $missionStatusObj::getMissionStatusById($missionStatusId);
+            $missionTypeObj = new MissionType(self::$pdo);
+            $missionType = $missionTypeObj::getMissionTypeById($missionTypeId);
 
             // Création d'une nouvelle instance de Mission
             $mission = new Mission(self::$pdo, $id, $title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType);
@@ -370,16 +373,20 @@ class Mission
         $stmt->execute();
 
         // Supprimer les associations agent/mission correspondantes en utilisant une instance de la classe MissionAgent
-        MissionAgent::deleteAgentsByMissionId($id);
+        $missionAgentObj = new MissionAgent(self::$pdo);
+        $missionAgentObj::deleteAgentsByMissionId($id);
 
         // Supprimer les associations contact/mission correspondantes en utilisant une instance de la classe MissionContact
-        MissionContact::deleteContactsByMissionId($id);
+        $missionContactObj = new MissionContact(self::$pdo);
+        $missionContactObj::deleteContactsByMissionId($id);
 
         // Supprimer les associations contact/mission correspondantes en utilisant une instance de la classe MissionContact
-        MissionTarget::deleteTargetsByMissionId($id);
+        $missionTargetObj = new MissionTarget(self::$pdo);
+        $missionTargetObj::deleteTargetsByMissionId($id);
 
         // Supprimer les associations contact/mission correspondantes en utilisant une instance de la classe MissionContact
-        MissionSafeHouse::deleteSafeHousesByMissionId($id);
+        $missionSafeHouseObj = new MissionSafeHouse(self::$pdo);
+        $missionSafeHouseObj::deleteSafeHousesByMissionId($id);
 
         // Supprimer la mission de la classe
         if (isset(self::$missions[$id])) {
