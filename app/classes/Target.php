@@ -161,7 +161,7 @@ class Target extends Person
      * @param string $id  L'ID de la cible à supprimer.
      * @return bool       True si la suppression a réussi, false sinon.
      */
-    public static function deleteTarget(string $id): bool
+    public static function deleteTargetById(string $id): bool
     {
         // Appeler la méthode deletePersonById de la classe parente pour supprimer la personne correspondante
         $personDeleted = parent::deletePersonById($id);

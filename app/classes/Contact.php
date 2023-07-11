@@ -163,7 +163,7 @@ class Contact extends Person
      *
      * @return bool Indique si la suppression a été effectuée avec succès (true) ou non (false).
      */
-    public static function deleteContact(string $id): bool
+    public static function deleteContactById(string $id): bool
     {
         // Appeler la méthode deletePersonById de la classe parente pour supprimer la personne correspondante dans la base de données
         $personDeleted = parent::deletePersonById($id);
