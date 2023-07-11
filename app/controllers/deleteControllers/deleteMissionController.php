@@ -15,7 +15,7 @@ if (isset($_GET['mission'])) {
     $mission->deleteMissionById($missionId);
 }
 
-// Redirigez l'utilisateur vers la page d'accueil ou une autre page appropriée
-header("Location: ../views/home.php");
+// Redirection vers la page d'accueil
+header("Location: ../../views/home.php");
 exit();
 ?>
