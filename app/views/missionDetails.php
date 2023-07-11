@@ -218,8 +218,6 @@ if (isset($_GET['mission'])) {
                         </span>
                     </td>
                 </tr>
-
-
                 <tr>
                     <!-- Statut de la mission -->
                     <th scope="row">Statut</th>
