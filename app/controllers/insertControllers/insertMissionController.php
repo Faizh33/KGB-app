@@ -5,12 +5,12 @@ use app\classes\Speciality;
 use app\classes\MissionStatus;
 use app\classes\MissionType;
 
-include_once "../../config/database.php";
-include_once "../helpers/dataHelpers.php";
-include_once "../classes/Mission.php";
-include_once "../classes/Speciality.php";
-include_once "../classes/MissionStatus.php";
-include_once "../classes/MissionType.php";
+include_once "../../../config/database.php";
+include_once "../../helpers/dataHelpers.php";
+include_once "../../classes/Mission.php";
+include_once "../../classes/Speciality.php";
+include_once "../../classes/MissionStatus.php";
+include_once "../../classes/MissionType.php";
 
 $specialityObj = new Speciality($pdo);
 $missionStatusObj = new MissionStatus($pdo);
@@ -49,9 +49,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if(isset($newMission)) {
             echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Nouvelle mission ajoutée en base de données</div>";
+            echo "<div style='color:rgb(3, 114, 103);font-style:italic'>Redirection dans 3 secondes</div>";
             echo "<script>
                 setTimeout(function() {
-                    window.location.href = '../views/dashboardCreate.php';
+                    window.location.href = '../../views/dashboardCreate.php';
                 }, 3000);
             </script>";
             exit;

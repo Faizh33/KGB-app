@@ -2,9 +2,9 @@
 
 use app\classes\Contact;
 
-include_once "../../config/database.php";
-include_once "../helpers/dataHelpers.php";
-include_once "../classes/Contact.php";
+include_once "../../../config/database.php";
+include_once "../../helpers/dataHelpers.php";
+include_once "../../classes/Contact.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Vérifier si les informations sont passées dans le POST
@@ -22,9 +22,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //Si l'ajout en base de données à réussi : redirection vers la page de création
         if(isset($contact)) {
             echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Nouveau contact ajouté en base de données</div>";
+            echo "<div style='color:rgb(3, 114, 103);font-style:italic'>Redirection dans 3 secondes</div>";
             echo "<script>
                 setTimeout(function() {
-                    window.location.href = '../views/dashboardCreate.php';
+                    window.location.href = '../../views/dashboardCreate.php';
                 }, 3000);
             </script>";
             exit;
