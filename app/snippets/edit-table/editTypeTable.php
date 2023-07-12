@@ -22,13 +22,18 @@ $missionTypes = $missionTypeObj->getAllMissionTypes();
                 </td>
             </tr>
             <tr>
+                <div id="messageDiv"></div>
+            </tr>
+            <tr>
                 <td class="tbTable" colspan="2">
                     <div class="buttonsContainer">
-                        <button class="editButton" type="button" onClick="toggleEdit(this)">Modifier</button>
-                        <button class="saveButton" type="submit" style="display:none;">Sauvegarder</button>
+                        <button class="button editButton" type="button" onClick="toggleEdit(this)">Modifier</button>
+                        <button class="button saveButton" type="submit" style="display:none;">Sauvegarder</button>
+                        <button class="button deleteButton" type="button" data-url="../controllers/deleteControllers/deleteTypeController.php">Supprimer</button>
                     </div>
                 </td>
             </tr>
         </table>
     </form>
+
 <?php } ?>
