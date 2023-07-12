@@ -7,10 +7,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="../../public/css/dashboard.css">
     <title>Tableau de bord</title>
-        <script src="../../public/js/dashboard.js"></script>
 </head>
 <body>
     <header id="dashboardHeader">
@@ -111,6 +110,7 @@
     </div>
     <?php endif; ?>
 
-
+    <script src="../../public/js/dashboard.js"></script>
+    <script src="../../public/js/confirmDelete.js"></script>
 </body>
 </html>
