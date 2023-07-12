@@ -5,6 +5,7 @@ body {
     background-color: rgb(2, 59, 53);
 }
 
+/* CSS du bouton pour aller à la page d'accueil */
 #dashboardHeader {
     height: 5vw;
     margin: 0;
@@ -43,10 +44,11 @@ body {
     text-decoration: none;
 }
 
+/* CSS des titres */
 h1, h2 {
     display: flex;
     justify-content: center;
-    margin-bottom: 5%;
+    margin-bottom: 3vw;
     margin-top: 3%;
     font-family: 'Roboto Slab', serif;
     color: white;
@@ -56,7 +58,15 @@ h1 {
     font-size: 4vw;
 }
 
-/*CSS des boutons du dashboard*/
+h2 {
+    font-size: 3vw;
+    background: linear-gradient(120deg,rgb(54, 199, 185) 0%,white 80%);
+    background-clip: border-box;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/*CSS des boutons des dashboards*/
 .dashboardTable {
     width: 50%;
     margin: auto;
@@ -85,20 +95,12 @@ h1 {
 }
 
 /*CSS des formulaires et tableaux*/
-h2 {
-    font-size: 3vw;
-    background: linear-gradient(120deg,rgb(54, 199, 185) 0%,white 80%);
-    background-clip: border-box;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
 .newDatasForm, .editTable, .editMissionTable {
     border: 0.5vw solid rgb(23, 157, 143);
     background-color: rgb(215, 236, 235);
     padding: 1vw;
     margin: auto;
-    margin-bottom: 1vw;
+    margin-top: 2vw;
     font-size: 1vw;
 }
 
@@ -161,37 +163,6 @@ textarea {
     background-color: white;
 }
 
-.formButtonContainer {
-    display:flex;
-    justify-content: center;
-}
-
-.formButton, .editButton, .saveButton {
-    width: 10vw;
-    height: 2vw;
-    font-size: 1vw;
-    background-color: rgb(23, 157, 143);
-    color: white;
-    border: 1px solid rgb(23, 157, 143);
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.formButton {
-    display: flex;
-    justify-content: center;
-    text-align: center;
-}
-
-.buttonsContainer {
-    display: flex;
-    justify-content: center;
-}
-
-.editButton, .saveButton {
-    margin-top: 1.5vw;
-}
-
 table#form {
     margin-bottom: 2vw;
 }
@@ -223,6 +194,57 @@ table#form {
 
 .tdTable {
     padding-left: 1.5vw;
+}
+
+/* CSS des boutons enregistrer, modifier, sauvegarder, supprimer*/
+.formButtonContainer {
+    display:flex;
+    justify-content: center;
+}
+
+.button {
+    width: 10vw;
+    height: 2vw;
+    font-size: 1vw;
+    background-color: rgb(23, 157, 143);
+    color: white;
+    border: 1px solid rgb(23, 157, 143);
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1.5vw;
+}
+
+.formButton {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.buttonsContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.editButton {
+    margin-right: 0.5vw;
+}
+margin-bottom
+.deleteButton {
+    margin-left: 0.5vw;
+}
+
+/* Style du message après suppression */
+.messageDivContainer {
+    width: 100%;
+}
+
+.messageDiv {
+    color: rgb(2, 59, 53);
+    background: rgb(189, 247, 241);
+    margin: auto;
+    margin-top: 0.3vw;
+    width: 20%;
+    text-align: center;
 }
 
 /* Style du bouton de retour en arrière */
