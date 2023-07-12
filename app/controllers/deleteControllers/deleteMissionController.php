@@ -4,8 +4,8 @@ require '../../../config/database.php';
 
 use app\classes\Mission;
 
-if (isset($_GET['mission'])) {
-    $missionId = $_GET['mission'];
+if (isset($_GET['missionId'])) {
+    $missionId = $_GET['missionId'];
 
     // Créez une instance de la classe Mission en utilisant le $pdo
     $mission = new Mission($pdo);
