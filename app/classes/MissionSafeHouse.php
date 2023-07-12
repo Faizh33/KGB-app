@@ -24,32 +24,8 @@ class MissionSafeHouse
             self::$missionSafeHouses[$safeHouseId] = [];
         }
 
-        $existingMissionSafeHouse = $this->findExistingMissionSafeHouse($missionId, $safeHouseId);
-        if ($existingMissionSafeHouse) {
-            return $existingMissionSafeHouse;
-        }
-
         self::$missionSafeHouses[$missionId][] = $this;
         self::$missionSafeHouses[$safeHouseId][] = $this;
-    }
-
-    /**
-     * Recherche une instance existante de MissionSafeHouse correspondant à une association mission_id et safeHouse_id donnée.
-     *
-     * @param string $missionId L'ID de la mission.
-     * @param string $safeHouseId L'ID de la planque.
-     * @return MissionSafeHouse|null L'instance MissionSafeHouse correspondante, ou null si aucune instance n'est trouvée.
-     */
-    private static function findExistingMissionSafeHouse(string $missionId, string $safeHouseId): ?MissionSafeHouse
-    {
-        if (isset(self::$missionSafeHouses[$missionId])) {
-            foreach (self::$missionSafeHouses[$missionId] as $missionSafeHouse) {
-                if ($missionSafeHouse->getMissionId() === $missionId && $missionSafeHouse->getSafeHouseId() === $safeHouseId) {
-                    return $missionSafeHouse;
-                }
-            }
-        }
-        return null;
     }
 
     /**
@@ -71,13 +47,8 @@ class MissionSafeHouse
             $missionId = $missionSafeHouseData['mission_id'];
             $safeHouseId = $missionSafeHouseData['safehouse_id'];
 
-            $existingMissionSafeHouse = MissionSafeHouse::findExistingMissionSafeHouse($missionId, $safeHouseId);
-            if ($existingMissionSafeHouse) {
-                $missionSafeHouses[] = $existingMissionSafeHouse;
-            } else {
-                $missionSafeHouse = new MissionSafeHouse(self::$pdo, $missionId, $safeHouseId);
-                $missionSafeHouses[] = $missionSafeHouse;
-            }
+            $missionSafeHouse = new MissionSafeHouse(self::$pdo, $missionId, $safeHouseId);
+            $missionSafeHouses[] = $missionSafeHouse;
         }
 
         return $missionSafeHouses;
@@ -85,7 +56,7 @@ class MissionSafeHouse
 
     /**
      * Récupère toutes les planques associées à une mission spécifique.
- *
+     *
      * @param string $missionId L'ID de la mission.
      * @return array Un tableau d'instances MissionSafeHouse représentant les planques associées à la mission.
      */
@@ -152,11 +123,6 @@ class MissionSafeHouse
      */
     public static function addSafeHouseToMission(string $missionId, string $safeHouseId): ?MissionSafeHouse
     {
-        $existingMissionSafeHouse = self::findExistingMissionSafeHouse($missionId, $safeHouseId);
-        if ($existingMissionSafeHouse) {
-            return $existingMissionSafeHouse;
-        }
-
         $query = "INSERT INTO Missions_safehouses (mission_id, safehouse_id) VALUES (:missionId, :safeHouseId)";
         $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
@@ -173,6 +139,7 @@ class MissionSafeHouse
     /**
      * Met à jour les propriétés d'une planque dans toutes les missions associées.
      *
+     * @param string $missionId L'ID de la mission.
      * @param array $propertiesToUpdate Les propriétés à mettre à jour sous la forme [nomPropriete => nouvelleValeur].
      * @return bool Indique si la mise à jour a réussi ou non.
      */
@@ -227,7 +194,7 @@ class MissionSafeHouse
      * @param string $safeHouseId L'ID de la planque.
      * @return bool Indique si la suppression a réussi ou non.
      */
-    public  static function deleteMissionsBySafeHouseId(string $safeHouseId): bool
+    public static function deleteMissionsBySafeHouseId(string $safeHouseId): bool
     {
         $query = "DELETE FROM Missions_safehouses WHERE safehouse_id = :safeHouseId";
         $stmt = self::$pdo->prepare($query);

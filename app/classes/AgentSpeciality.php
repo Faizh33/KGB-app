@@ -12,42 +12,16 @@ class AgentSpeciality
 
     public function __construct(\PDO $pdo, string $agentId = '', int $specialityId = null)
     {
-        $this->pdo = $pdo;
-        $this->agentId = $agentId;
-        $this->specialityId = $specialityId;
+        self::$pdo = $pdo;
+        $this->agentId = $agentId ?? '';
+        $this->specialityId = $specialityId ?? 0;
 
         if (!isset(self::$agentSpecialities[$agentId])) {
             self::$agentSpecialities[$agentId] = [];
         }
 
-        $existingAgentSpeciality = $this->findExistingAgentSpeciality($agentId, $specialityId);
-        if ($existingAgentSpeciality) {
-            return $existingAgentSpeciality;
-        }
-
         self::$agentSpecialities[$agentId][] = $this;
     }
-
-    /**
-     * Recherche une AgentSpeciality existante dans la classe en fonction de l'ID de l'agent et de l'ID de la spécialité.
-     *
-     * @param string $agentId L'ID de l'agent.
-     * @param int $specialityId L'ID de la spécialité.
-     *
-     * @return AgentSpeciality|null Retourne l'AgentSpeciality correspondante si elle existe, sinon retourne null.
-     */
-    private static function findExistingAgentSpeciality(string $agentId, int $specialityId): ?AgentSpeciality
-    {
-        if (isset(self::$agentSpecialities[$agentId])) {
-            foreach (self::$agentSpecialities[$agentId] as $agentSpeciality) {
-                if ($agentSpeciality->getSpecialityId() === $specialityId) {
-                    return $agentSpeciality;
-                }
-            }
-        }
-        return null;
-    }
-
 
     /**
      * Récupère les spécialités d'un agent en fonction de son ID.
@@ -75,17 +49,9 @@ class AgentSpeciality
         foreach ($rows as $row) {
             $specialityId = $row['speciality_id'];
 
-            // Chercher une spécialité existante pour cet agent et cette spécialité
-            $existingAgentSpeciality = self::findExistingAgentSpeciality($agentId, $specialityId);
-
-            // Si une spécialité existante est trouvée, l'ajouter au tableau des spécialités de l'agent
-            if ($existingAgentSpeciality) {
-                $agentSpecialities[] = $existingAgentSpeciality;
-            } else {
-                // Si aucune spécialité existante n'est trouvée, créer une nouvelle spécialité pour l'agent
-                $agentSpeciality = new AgentSpeciality(self::$pdo, $agentId, $specialityId);
-                $agentSpecialities[] = $agentSpeciality;
-            }
+            // Créer une nouvelle spécialité pour l'agent
+            $agentSpeciality = new AgentSpeciality(self::$pdo, $agentId, $specialityId);
+            $agentSpecialities[] = $agentSpeciality;
         }
 
         // Mettre en cache les spécialités de l'agent
@@ -115,17 +81,9 @@ class AgentSpeciality
         foreach ($rows as $row) {
             $agentId = $row['agent_id'];
 
-            // Chercher une spécialité existante pour cet agent et cette spécialité
-            $existingAgentSpeciality = AgentSpeciality::findExistingAgentSpeciality($agentId, $specialityId);
-
-            // Si une spécialité existante est trouvée, l'ajouter au tableau des agents
-            if ($existingAgentSpeciality) {
-                $agents[] = $existingAgentSpeciality;
-            } else {
-                // Si aucune spécialité existante n'est trouvée, créer une nouvelle spécialité pour l'agent
-                $agentSpeciality = new AgentSpeciality(self::$pdo, $agentId, $specialityId);
-                $agents[] = $agentSpeciality;
-            }
+            // Créer une nouvelle spécialité pour l'agent
+            $agentSpeciality = new AgentSpeciality(self::$pdo, $agentId, $specialityId);
+            $agents[] = $agentSpeciality;
         }
 
         return $agents;
@@ -140,29 +98,11 @@ class AgentSpeciality
      */
     public static function addSpecialityToAgent(string $agentId, int $specialityId): ?AgentSpeciality
     {
-        // Chercher une spécialité existante pour cet agent et cette spécialité
-        $existingAgentSpeciality = self::findExistingAgentSpeciality($agentId, $specialityId);
-        
-        // Si une spécialité existante est trouvée, la retourner
-        if ($existingAgentSpeciality) {
-            return $existingAgentSpeciality;
-        }
-
-        // Sinon, insérer la nouvelle spécialité dans la table Agents_Specialities
-        $query = "INSERT INTO Agents_Specialities (agent_id, speciality_id) VALUES (:agentId, :specialityId)";
-        $stmt = self::$pdo->prepare($query);
-        $stmt->bindValue(':agentId', $agentId);
-        $stmt->bindValue(':specialityId', $specialityId);
-        $stmt->execute();
-
-        // Créer un nouvel objet AgentSpeciality pour représenter la nouvelle spécialité
-        $newAgentSpeciality = new AgentSpeciality(self::$pdo, $agentId, $specialityId);
-        
-        // Ajouter la nouvelle spécialité à la liste des spécialités de l'agent
-        self::$agentSpecialities[$agentId][] = $newAgentSpeciality;
+        // Créer une nouvelle spécialité pour l'agent
+        $agentSpeciality = new AgentSpeciality(self::$pdo, $agentId, $specialityId);
 
         // Retourner la nouvelle spécialité ajoutée
-        return $newAgentSpeciality;
+        return $agentSpeciality;
     }
 
     /**
@@ -175,10 +115,7 @@ class AgentSpeciality
     public static function updateSpecialityProperties(string $agentId, array $propertiesToUpdate): bool
     {
         // Obtenir l'ID de la spécialité actuelle
-        $specialityId = self::getSpecialityId();
-
-        // Tableau pour stocker les spécialités mises à jour
-        $updatedAgentSpecialities = [];
+        $specialityId = self::$agentSpecialities[$agentId][0]->getSpecialityId();
 
         // Parcourir les spécialités de l'agent et les propriétés à mettre à jour
         foreach (self::$agentSpecialities[$agentId] as $agentSpeciality) {
@@ -188,7 +125,6 @@ class AgentSpeciality
                     $agentSpeciality->$property = $value;
                 }
             }
-            $updatedagentSpecialities[] = $agentSpeciality;
         }
 
         // Mettre à jour la spécialité dans la table Agents_Specialities
@@ -198,9 +134,6 @@ class AgentSpeciality
         $stmt->bindValue(':agentId', $agentId);
         $stmt->bindValue(':specialityId', $specialityId);
         $stmt->execute();
-
-        // Mettre à jour la liste des spécialités de l'agent
-        self::$agentSpecialities[$agentId] = $updatedAgentSpecialities;
 
         // Retourner true pour indiquer que la mise à jour des propriétés a réussi
         return true;
@@ -241,14 +174,11 @@ class AgentSpeciality
         $stmt->bindValue(':specialityId', $specialityId);
         $stmt->execute();
 
-        // Parcourir la liste des spécialités des agents
+        // Supprimer les agents ayant la spécialité spécifiée de la liste des spécialités
         foreach (self::$agentSpecialities as $agentId => $agentSpecialities) {
-            foreach ($agentSpecialities as $key => $agentSpeciality) {
-                // Si la spécialité de l'agent correspond à l'ID de la spécialité spécifiée, la supprimer
-                if ($agentSpeciality->getSpecialityId() === $specialityId) {
-                    unset(self::$agentSpecialities[$agentId][$key]);
-                }
-            }
+            self::$agentSpecialities[$agentId] = array_filter($agentSpecialities, function ($agentSpeciality) use ($specialityId) {
+                return $agentSpeciality->getSpecialityId() !== $specialityId;
+            });
         }
 
         // Retourner true pour indiquer que la suppression des agents a réussi

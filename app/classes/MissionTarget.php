@@ -24,32 +24,8 @@ class MissionTarget
             self::$missionTargets[$targetId] = [];
         }
 
-        $existingMissionTarget = $this->findExistingMissionTarget($missionId, $targetId);
-        if ($existingMissionTarget) {
-            return $existingMissionTarget;
-        }
-
         self::$missionTargets[$missionId][] = $this;
         self::$missionTargets[$targetId][] = $this;
-    }
-
-    /**
-     * Recherche une mission cible existante pour une mission et une cible spécifiées.
-     *
-     * @param string $missionId L'ID de la mission.
-     * @param string $targetId L'ID de la cible.
-     * @return MissionTarget|null La mission cible existante ou null si elle n'existe pas.
-     */
-    private static function findExistingMissionTarget(string $missionId, string $targetId): ?MissionTarget
-    {
-        if (isset(self::$missionTargets[$missionId])) {
-            foreach (self::$missionTargets[$missionId] as $missionTarget) {
-                if ($missionTarget->getMissionId() === $missionId && $missionTarget->getTargetId() === $targetId) {
-                    return $missionTarget;
-                }
-            }
-        }
-        return null;
     }
 
     /**
@@ -71,13 +47,8 @@ class MissionTarget
             $missionId = $missionTargetData['mission_id'];
             $targetId = $missionTargetData['target_id'];
 
-            $existingMissionTarget = MissionTarget::findExistingMissionTarget($missionId, $targetId);
-            if ($existingMissionTarget) {
-                $missionTargets[] = $existingMissionTarget;
-            } else {
-                $missionTarget = new MissionTarget(self::$pdo, $missionId, $targetId);
-                $missionTargets[] = $missionTarget;
-            }
+            $missionTarget = new MissionTarget(self::$pdo, $missionId, $targetId);
+            $missionTargets[] = $missionTarget;
         }
 
         return $missionTargets;
@@ -155,11 +126,6 @@ class MissionTarget
      */
     public static function addTargetToMission(string $missionId, string $targetId): ?MissionTarget
     {
-        $existingMissionTarget = MissionTarget::findExistingMissionTarget($missionId, $targetId);
-        if ($existingMissionTarget) {
-            return $existingMissionTarget;
-        }
-
         $query = "INSERT INTO Missions_targets (mission_id, target_id) VALUES (:missionId, :targetId)";
         $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
@@ -243,7 +209,7 @@ class MissionTarget
         return true;
     }
 
-    //Getters
+    // Getters
     public function getMissionId(): string
     {
         return $this->missionId;

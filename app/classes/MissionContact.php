@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace app\classes;
 
@@ -10,7 +10,7 @@ class MissionContact
 
     private static array $missionContacts = [];
 
-    public function __construct($pdo, string $missionId = '', string $contactId = '')
+    public function __construct(\PDO $pdo, string $missionId = '', string $contactId = '')
     {
         self::$pdo = $pdo;
         $this->missionId = $missionId;
@@ -24,32 +24,8 @@ class MissionContact
             self::$missionContacts[$contactId] = [];
         }
 
-        $existingMissionContact = $this->findExistingMissionContact($missionId, $contactId);
-        if ($existingMissionContact) {
-            return $existingMissionContact;
-        }
-
         self::$missionContacts[$missionId][] = $this;
         self::$missionContacts[$contactId][] = $this;
-    }
-
-    /**
-     * Recherche une instance existante de MissionContact correspondant à une association mission_id et contact_id donnée.
-     *
-     * @param string $missionId L'ID de la mission.
-     * @param string $contactId L'ID du contact.
-     * @return MissionContact|null L'instance MissionContact correspondante, ou null si aucune instance n'est trouvée.
-     */
-    private static function findExistingMissionContact(string $missionId, string $contactId): ?MissionContact
-    {
-        if (isset(self::$missionContacts[$missionId])) {
-            foreach (self::$missionContacts[$missionId] as $missionContact) {
-                if ($missionContact->getMissionId() === $missionId && $missionContact->getContactId() === $contactId) {
-                    return $missionContact;
-                }
-            }
-        }
-        return null;
     }
 
     /**
@@ -71,13 +47,8 @@ class MissionContact
             $missionId = $missionContactData['mission_id'];
             $contactId = $missionContactData['contact_id'];
 
-            $existingMissionContact = MissionContact::findExistingMissionContact($missionId, $contactId);
-            if ($existingMissionContact) {
-                $missionContacts[] = $existingMissionContact;
-            } else {
-                $missionContact = new MissionContact(self::$pdo, $missionId, $contactId);
-                $missionContacts[] = $missionContact;
-            }
+            $missionContact = new MissionContact(self::$pdo, $missionId, $contactId);
+            $missionContacts[] = $missionContact;
         }
 
         return $missionContacts;
@@ -152,11 +123,6 @@ class MissionContact
      */
     public static function addContactToMission(string $missionId, string $contactId): ?MissionContact
     {
-        $existingMissionContact = MissionContact::findExistingMissionContact($missionId, $contactId);
-        if ($existingMissionContact) {
-            return $existingMissionContact;
-        }
-
         $query = "INSERT INTO Missions_contacts (mission_id, contact_id) VALUES (:missionId, :contactId)";
         $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
@@ -173,6 +139,7 @@ class MissionContact
     /**
      * Met à jour les propriétés d'un contact dans toutes les missions associées.
      *
+     * @param string $missionId L'ID de la mission.
      * @param array $propertiesToUpdate Les propriétés à mettre à jour sous la forme [nomPropriete => nouvelleValeur].
      * @return bool Indique si la mise à jour a réussi ou non.
      */
@@ -239,7 +206,7 @@ class MissionContact
         return true;
     }
 
-    //Getters
+    // Getters
     public function getMissionId(): string
     {
         return $this->missionId;

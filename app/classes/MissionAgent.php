@@ -24,33 +24,8 @@ class MissionAgent
             self::$missionAgents[$agentId] = [];
         }
 
-        $existingMissionAgent = $this->findExistingMissionAgent($missionId, $agentId);
-        if ($existingMissionAgent) {
-            return $existingMissionAgent;
-        }
-
         self::$missionAgents[$missionId][] = $this;
         self::$missionAgents[$agentId][] = $this;
-    }
-
-    /**
-     * Recherche un MissionAgent existant dans la classe en fonction de l'ID de la mission et de l'ID de l'agent.
-     *
-     * @param string $missionId L'ID de la mission.
-     * @param string $agentId L'ID de l'agent.
-     *
-     * @return MissionAgent|null Retourne le MissionAgent correspondant s'il existe, sinon retourne null.
-     */
-    private static function findExistingMissionAgent(string $missionId, string $agentId): ?MissionAgent
-    {
-        if (isset(self::$missionAgents[$missionId])) {
-            foreach (self::$missionAgents[$missionId] as $missionAgent) {
-                if ($missionAgent->getMissionId() === $missionId && $missionAgent->getAgentId() === $agentId) {
-                    return $missionAgent;
-                }
-            }
-        }
-        return null;
     }
 
     /**
@@ -72,13 +47,8 @@ class MissionAgent
             $missionId = $missionAgentData['mission_id'];
             $agentId = $missionAgentData['agent_id'];
 
-            $existingMissionAgent = MissionAgent::findExistingMissionAgent($missionId, $agentId);
-            if ($existingMissionAgent) {
-                $missionAgents[] = $existingMissionAgent;
-            } else {
-                $missionAgent = new MissionAgent(self::$pdo, $missionId, $agentId);
-                $missionAgents[] = $missionAgent;
-            }
+            $missionAgent = new MissionAgent(self::$pdo, $missionId, $agentId);
+            $missionAgents[] = $missionAgent;
         }
 
         return $missionAgents;
@@ -159,11 +129,6 @@ class MissionAgent
      */
     public static function addAgentToMission(string $missionId, string $agentId): ?MissionAgent
     {
-        $existingMissionAgent = MissionAgent::findExistingMissionAgent($missionId, $agentId);
-        if ($existingMissionAgent) {
-            return $existingMissionAgent;
-        }
-
         $query = "INSERT INTO Missions_agents (mission_id, agent_id) VALUES (:missionId, :agentId)";
         $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
