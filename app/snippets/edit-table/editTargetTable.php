@@ -11,9 +11,9 @@ $targets = $targetObj->getAllTargets();
 <h2>Cibles</h2>
 
 <?php foreach($targets as $target) { ?>
-    <form method="POST" action="../controllers/updateControllers/updateTargetController.php">
+    <form method="POST" action="../controllers/updateControllers/updateTargetController.php" class="editForm">
         <input type="hidden" name="targetId" value="<?php echo $target->getId(); ?>">
-        <table id="form" class="editTable">
+        <table class="editTable">
             <tr>
                 <th scope="row" class="thTable">Nom</th>
                 <td class="tdTable">
@@ -61,9 +61,13 @@ $targets = $targetObj->getAllTargets();
                     <div class="buttonsContainer">
                         <button class="editButton" type="button" onClick="toggleEdit(this)">Modifier</button>
                         <button class="saveButton" type="submit" style="display:none;">Sauvegarder</button>
+                        <button class="button deleteButton" type="button" data-url="../controllers/deleteControllers/deleteTargetController.php">Supprimer</button>
                     </div>
                 </td>
             </tr>
         </table>
+        <div class="messageDivContainer">
+            <div class="messageDiv"></div>
+        </div>
     </form>
 <?php } ?>

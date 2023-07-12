@@ -50,7 +50,7 @@ $missions = $mission->getAllMissions();
 
 <h2>Missions</h2>
 <?php foreach ($missions as $mission) : ?>
-    <form method="POST" action="../controllers/updateControllers/updateMissionController.php">
+    <form method="POST" action="../controllers/updateControllers/updateMissionController.php" class="editForm">
         <input type="hidden" name="missionId" value="<?php echo $mission->getId(); ?>">
         <table class="editMissionTable">
             <tbody>
@@ -323,10 +323,14 @@ $missions = $mission->getAllMissions();
                         <div class="buttonsContainer">
                             <button type="button" class="editButton" onClick="toggleEdit(this)">Modifier</button>
                             <button type="submit" class="saveButton" style="display:none;">Sauvegarder</button>
+                            <button class="button deleteButton" type="button" data-url="../controllers/deleteControllers/deleteMissionController.php">Supprimer</button>
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <div class="messageDivContainer">
+            <div class="messageDiv"></div>
+        </div>
     </form>
 <?php endforeach; ?>

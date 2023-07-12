@@ -11,9 +11,9 @@ $safeHouses = $safeHouseObj->getAllSafeHouses();
 <h2>Planques</h2>
 
 <?php foreach($safeHouses as $safeHouse) { ?>
-    <form method="POST" action="../controllers/updateControllers/updateSafeHouseController.php">
+    <form method="POST" action="../controllers/updateControllers/updateSafeHouseController.php" class="editForm">
         <input type="hidden" name="safeHouseId" value="<?php echo $safeHouse->getId(); ?>">
-        <table id="form" class="editTable">
+        <table class="editTable">
             <tr>
                 <th scope="row" class="thTable">Code</th>
                 <td class="tdTable">
@@ -47,9 +47,13 @@ $safeHouses = $safeHouseObj->getAllSafeHouses();
                     <div class="buttonsContainer">
                         <button class="editButton" type="button" onClick="toggleEdit(this)">Modifier</button>
                         <button class="saveButton" type="submit" style="display:none;">Sauvegarder</button>
+                        <button class="button deleteButton" type="button" data-url="../controllers/deleteControllers/deleteSafeHouseController.php">Supprimer</button>
                     </div>
                 </td>
             </tr>
         </table>
+        <div class="messageDivContainer">
+            <div class="messageDiv"></div>
+        </div>
     </form>
 <?php } ?>

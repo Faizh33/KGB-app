@@ -11,9 +11,9 @@ $contacts = $contactObj::getAllContacts();
 <h2>Contacts</h2>
 
 <?php foreach($contacts as $contact) { ?>
-    <form method="POST" action="../controllers/updateControllers/updateContactController.php">
+    <form method="POST" action="../controllers/updateControllers/updateContactController.php" class="editForm">
         <input type="hidden" name="contactId" value="<?php echo $contact->getId(); ?>">
-        <table id="form" class="editTable">
+        <table class="editTable">
             <tr>
                 <th scope="row" class="thTable">Nom</th>
                 <td class="tdTable">
@@ -60,8 +60,12 @@ $contacts = $contactObj::getAllContacts();
                 <div class="buttonsContainer">
                     <button type="button" class="editButton" onClick="toggleEdit(this)">Modifier</button>
                     <button type="submit" class="saveButton" style="display:none;">Sauvegarder</button>
+                    <button class="button deleteButton" type="button" data-url="../controllers/deleteControllers/deleteContactController.php">Supprimer</button>
                 </div>
             </td>
         </table>
+        <div class="messageDivContainer">
+            <div class="messageDiv"></div>
+        </div>
     </form>
 <?php } ?>

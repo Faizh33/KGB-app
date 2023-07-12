@@ -11,18 +11,15 @@ $missionTypes = $missionTypeObj->getAllMissionTypes();
 <h2>Types</h2>
 
 <?php foreach($missionTypes as $missionType) { ?>
-    <form method="POST" action="../controllers/updateControllers/updateTypeController.php">
+    <form method="POST" action="../controllers/updateControllers/updateTypeController.php" class="editForm">
         <input type="hidden" name="typeId" value="<?php echo $missionType->getId(); ?>">
-        <table id="form" class="editTable">
+        <table class="editTable">
             <tr>
                 <th scope="row" class="thTable">Type</th>
                 <td class="tdTable">
                     <span id="missionTypeType" class="tdContent"><?php echo $missionType->getType(); ?></span>
                     <input type="text" class="editInput" id="editType" name="type" placeholder="<?php echo $missionType->getType(); ?>" style="display:none;">
                 </td>
-            </tr>
-            <tr>
-                <div id="messageDiv"></div>
             </tr>
             <tr>
                 <td class="tbTable" colspan="2">
@@ -34,6 +31,9 @@ $missionTypes = $missionTypeObj->getAllMissionTypes();
                 </td>
             </tr>
         </table>
+        <div class="messageDivContainer">
+            <div class="messageDiv"></div>
+        </div>
     </form>
 
 <?php } ?>

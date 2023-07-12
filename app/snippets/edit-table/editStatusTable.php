@@ -11,9 +11,9 @@ $missionStatuses = $missionStatusObj->getAllMissionStatuses();
 <h2>Statuts</h2>
 
 <?php foreach($missionStatuses as $missionStatus) { ?>
-    <form method="POST" action="../controllers/updateControllers/updateStatusController.php">
+    <form method="POST" action="../controllers/updateControllers/updateStatusController.php" class="editForm">
         <input type="hidden" name="statusId" value="<?php echo $missionStatus->getId(); ?>">
-        <table id="form" class="editTable">
+        <table class="editTable">
             <tr>
                 <th scope="row" class="thTable">Statut</th>
                 <td class="tdTable">
@@ -26,9 +26,13 @@ $missionStatuses = $missionStatusObj->getAllMissionStatuses();
                     <div class="buttonsContainer">
                         <button class="editButton" type="button" onClick="toggleEdit(this)">Modifier</button>
                         <button class="saveButton" type="submit" style="display:none;">Sauvegarder</button>
+                        <button class="button deleteButton" type="button" data-url="../controllers/deleteControllers/deleteStatusController.php">Supprimer</button>
                     </div>
                 </td>
             </tr>
         </table>
+        <div class="messageDivContainer">
+            <div class="messageDiv"></div>
+        </div>
     </form>
 <?php } ?>

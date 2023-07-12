@@ -11,9 +11,9 @@ $specialities = $specialityObj::getAllSpecialities();
 <h2>Spécialités</h2>
 
 <?php foreach($specialities as $speciality) { ?>
-    <form method="POST" action="../controllers/updateControllers/updateSpecialityController.php">
+    <form method="POST" action="../controllers/updateControllers/updateSpecialityController.php" class="editForm">
         <input type="hidden" name="specialityId" value="<?php echo $speciality->getId(); ?>">
-        <table id="form" class="editTable">
+        <table class="editTable">
             <tr>
                 <th scope="row" class="thTable">Spécialité</th>
                 <td class="tdTable">
@@ -26,9 +26,13 @@ $specialities = $specialityObj::getAllSpecialities();
                     <div class="buttonsContainer">
                         <button type="button" class="editButton" onClick="toggleEdit(this)">Modifier</button>
                         <button type="submit" class="saveButton" style="display:none;">Sauvegarder</button>
+                        <button class="button deleteButton" type="button" data-url="../controllers/deleteControllers/deleteSpecialityController.php">Supprimer</button>
                     </div>
                 </td>
             </tr>
         </table>
+        <div class="messageDivContainer">
+            <div class="messageDiv"></div>
+        </div>
     </form>
 <?php } ?>
