@@ -86,5 +86,8 @@ function toggleEdit(button) {
 
     // Masquer le bouton "Modifier" et afficher le bouton "Sauvegarder"
     button.style.display = 'none';
-    button.parentNode.getElementsByClassName('saveButton')[0].style.display = 'block';
+    button.parentNode.querySelector('.saveButton').style.display = 'block';
+
+    // Masquer le bouton "Supprimer"
+    button.parentNode.querySelector('.deleteButton').style.display = 'none';
 }
