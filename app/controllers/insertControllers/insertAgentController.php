@@ -9,16 +9,17 @@ use app\classes\Agent;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Vérifier si les informations sont passées dans le POST
-    if(isset($_POST["agentLastName"]) && isset($_POST["agentFirstName"]) && isset($_POST["agentBirthDate"]) && isset($_POST["agentNationality"]) && isset($_POST["agentIdCode"])) {
+    if(isset($_POST["agentLastName"]) && isset($_POST["agentFirstName"]) && isset($_POST["agentBirthDate"]) && isset($_POST["agentNationality"]) && isset($_POST["agentIdCode"]) && isset($_POST["specialities"])) {
         $lastName = valid_datas($_POST["agentLastName"]);
         $firstName = valid_datas($_POST["agentFirstName"]);
         $birthDate = valid_datas($_POST["agentBirthDate"]);
         $nationality = valid_datas($_POST["agentNationality"]);
         $idCode = valid_datas($_POST["agentIdCode"]);
+        $specialities = $_POST["specialities"];
 
         //Création d'un nouvel objet Agent et insertion des données
         $agentObj = new Agent($pdo);
-        $agent = $agentObj::addAgentProperties($lastName, $firstName, $birthDate, $nationality, $idCode);
+        $agent = $agentObj::addAgentProperties($lastName, $firstName, $birthDate, $nationality, $idCode, $specialities);
         
         //Si l'ajout en base de données à réussi : redirection vers la page de création
         if(isset($agent)) {

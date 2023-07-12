@@ -1,11 +1,18 @@
 <?php
 include_once "../../config/database.php";
 include_once "../classes/Agent.php";
+include_once "../classes/AgentSpeciality.php";
+include_once "../classes/Speciality.php";
 
 use app\classes\Agent;
+use app\classes\AgentSpeciality;
+use app\classes\Speciality;
 
 $agentObj = new Agent($pdo);
 $agents = $agentObj::getAllAgents();
+
+$agentSpecialityObj = new AgentSpeciality($pdo);
+$specialityObj = new Speciality($pdo);
 ?>
 
 <h2>Agents</h2>
@@ -57,11 +64,33 @@ $agents = $agentObj::getAllAgents();
                 </td>
             </tr>
             <tr>
+                <th scope="row" class="thTable">Spécialité(s)</th>
+                <td class="tdTable">
+                    <?php 
+                    $specialities = $agentSpecialityObj::getSpecialitiesByAgentId($agent->getId());
+                    foreach($specialities as $speciality) {
+                        $specialityId = $speciality->getSpecialityId();
+                        $specialityName = $specialityObj::getSpecialityById($specialityId)->getSpeciality();
+                     ?>
+                    <span id="agentSpeciality"><?php echo $specialityName; ?><br></span>
+                    <?php 
+                    }
+                    $specialities = $specialityObj::getAllSpecialities();
+                    foreach($specialities as $speciality) {
+                        $specialityId = $speciality->getId(); ?>
+                        <div class="chk" style="display:none;">
+                            <input type="checkbox" name="specialities[]" class="editChk" value="<?php echo $specialityId ?>" id="editSpeciality <?php echo $specialityId ?>">
+                            <label for="editSpeciality <?php echo $specialityId ?>" class="labelChk"> <?php echo $speciality->getSpeciality() ?> </label><br>
+                        </div>
+                    <?php } ?>
+                </td>
+            </tr>
+            <tr>
                 <td class="tbTable" colspan="2">
                     <div class="buttonsContainer">
                         <button type="button" class="button editButton" onClick="toggleEdit(this)">Modifier</button>
                         <button type="submit" class="button saveButton" style="display:none;">Sauvegarder</button>
-                        <button type="button" class="button deleteButton" data-url="../controllers/deleteControllers/deleteAgentController.php">Supprimer</button>
+                        <button type="button" class="button deleteButton">Supprimer</button>
                     </div>
                 </td>
             </tr>
