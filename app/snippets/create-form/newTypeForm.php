@@ -13,6 +13,6 @@
         </tr>
     </table>
     <div class="formButtonContainer">
-        <input type="submit" value="Enregistrer" class="formButton" />
+        <input type="submit" value="Enregistrer" class="formButton button" />
     </div> 
 </form>

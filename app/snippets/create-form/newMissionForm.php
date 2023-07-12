@@ -198,8 +198,8 @@
             </tr>
         </table> 
         <div class="formButtonContainer">
-            <input type="submit" value="Enregistrer" class="formButton" />
-        </div>       
+            <input type="submit" value="Enregistrer" class="formButton button" />
+        </div>
     </form>
     
     <script src="../../../public/js/form-validation.js"></script>
