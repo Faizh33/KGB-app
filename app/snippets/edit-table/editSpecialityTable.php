@@ -24,9 +24,9 @@ $specialities = $specialityObj::getAllSpecialities();
             <tr>
                 <td class="tbTable" colspan="2">
                     <div class="buttonsContainer">
-                        <button type="button" class="editButton" onClick="toggleEdit(this)">Modifier</button>
-                        <button type="submit" class="saveButton" style="display:none;">Sauvegarder</button>
-                        <button class="button deleteButton" type="button" data-url="../controllers/deleteControllers/deleteSpecialityController.php">Supprimer</button>
+                        <button type="button" class="button editButton" onClick="toggleEdit(this)">Modifier</button>
+                        <button type="submit" class="button saveButton" style="display:none;">Sauvegarder</button>
+                        <button type="button" class="button deleteButton" data-url="../controllers/deleteControllers/deleteSpecialityController.php">Supprimer</button>
                     </div>
                 </td>
             </tr>
