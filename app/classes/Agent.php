@@ -87,7 +87,7 @@ class Agent extends Person
      *
      * @return Agent|null L'instance de l'agent ajouté ou null si l'ajout a échoué.
      */
-    public static function addAgentProperties(string $lastName, string $firstName, string $birthDate, string $nationality, string $identificationCode): ?Agent
+    public static function addAgentProperties(string $lastName, string $firstName, string $birthDate, string $nationality, string $identificationCode, array $specialities): ?Agent
     {
         $person = parent::addPerson($lastName, $firstName, $birthDate, $nationality);
 
@@ -98,7 +98,13 @@ class Agent extends Person
             $stmt->bindValue(':identificationCode', $identificationCode);
             $stmt->execute();
 
+            foreach($specialities as $speciality) {
+                $agentSpecialityObj = new AgentSpeciality(self::$pdo);
+                $agentSpecialityObj::addSpecialityToAgent($person->getId(), $speciality);
+            }
+
             return new Agent(self::$pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $identificationCode);
+            
         }
 
         return null;
@@ -157,19 +163,29 @@ class Agent extends Person
     /**
      * Supprime un agent de la base de données et de la classe en fonction de l'id.
      *
-     * @return bool Retourne true si l'agent a été supprimé avec succès, sinon false.
+     * @return json 
      */
-    public static function deleteAgentById(string $id, $specialityId): bool
+    public static function deleteAgentById(string $id, array $specialities)
     {
-        // Vérifier l'existence de l'agent
-        $agent = self::getAgentById($id);
-        if (!$agent) {
-            return false; // L'agent n'existe pas, retourner false
+        // Vérifier si l'agent est utilisé dans une ou plusieurs missions
+        $query = "SELECT COUNT(*) FROM Missions_agents WHERE agent_id = :id";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        $count = $stmt->fetchColumn();
+
+        // Si l'agent est utilisé ailleurs, ne pas le supprimer
+        if ($count > 0) {
+            echo json_encode(array('status' => 'used'));
+            exit;
         }
 
-        // Supprimer les associations AgentSpeciality pour cet agent
-        $agentSpeciality = new AgentSpeciality(self::$pdo, $id, $specialityId);
-        $agentSpeciality->deleteSpecialitiesByAgentId($id);
+        foreach($specialities as $specialityId) {
+            // Supprimer les associations AgentSpeciality pour cet agent
+            $agentSpeciality = new AgentSpeciality(self::$pdo, $id, $specialityId);
+            $agentSpeciality->deleteSpecialitiesByAgentId($id);
+        }
 
         // Supprimer l'agent lui-même
         $personDeleted = parent::deletePersonById($id);
@@ -180,10 +196,12 @@ class Agent extends Person
             $stmt->bindValue(':id', $id);
             $stmt->execute();
 
-            return true;
+            echo json_encode(array('status' => 'success'));
+            exit;
         }
 
-        return false;
+        echo json_encode(array('status' => 'error'));
+        exit;
     }
 
     //Getter et Setter

@@ -98,6 +98,13 @@ class AgentSpeciality
      */
     public static function addSpecialityToAgent(string $agentId, int $specialityId): ?AgentSpeciality
     {
+        // Insérer la nouvelle spécialité dans la base de données et dans la classe
+        $query = "INSERT INTO Agents_Specialities (agent_id, speciality_id) VALUES (:agentId, :specialityId)";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':agentId', $agentId);
+        $stmt->bindValue(':specialityId', $specialityId);
+        $stmt->execute();
+
         // Créer une nouvelle spécialité pour l'agent
         $agentSpeciality = new AgentSpeciality(self::$pdo, $agentId, $specialityId);
 
@@ -157,31 +164,6 @@ class AgentSpeciality
         unset(self::$agentSpecialities[$agentId]);
 
         // Retourner true pour indiquer que la suppression des spécialités a réussi
-        return true;
-    }
-
-    /**
-     * Supprime tous les agents ayant une spécialité spécifiée.
-     *
-     * @param int $specialityId   L'ID de la spécialité.
-     * @return bool               Indique si la suppression des agents a réussi ou non.
-     */
-    public static function deleteAgentsBySpecialityId(int $specialityId): bool
-    {
-        // Requête SQL pour supprimer les agents ayant la spécialité spécifiée
-        $query = "DELETE FROM Agents_Specialities WHERE speciality_id = :specialityId";
-        $stmt = self::$pdo->prepare($query);
-        $stmt->bindValue(':specialityId', $specialityId);
-        $stmt->execute();
-
-        // Supprimer les agents ayant la spécialité spécifiée de la liste des spécialités
-        foreach (self::$agentSpecialities as $agentId => $agentSpecialities) {
-            self::$agentSpecialities[$agentId] = array_filter($agentSpecialities, function ($agentSpeciality) use ($specialityId) {
-                return $agentSpeciality->getSpecialityId() !== $specialityId;
-            });
-        }
-
-        // Retourner true pour indiquer que la suppression des agents a réussi
         return true;
     }
 

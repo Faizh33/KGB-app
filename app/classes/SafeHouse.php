@@ -180,10 +180,24 @@ class SafeHouse
      * Supprime une SafeHouse de la base de données et de la classe en fonction de son ID.
      *
      * @param int $id L'identifiant de la SafeHouse à supprimer.
-     * @return bool Indique si la suppression a été effectuée avec succès.
+     * @return json
      */
-    public static function deleteSafeHouseById($id): bool
+    public static function deleteSafeHouseById($id)
     {
+        // Vérifier si la planque est utilisée dans une ou plusieurs missions
+        $query = "SELECT COUNT(*) FROM Missions_safeHouses WHERE safeHouse_id = :id";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        $count = $stmt->fetchColumn();
+
+        // Si la planque est utilisée ailleurs, ne pas le supprimer
+        if ($count > 0) {
+            echo json_encode(array('status' => 'used'));
+            exit;
+        }
+        
         // Supprimer la SafeHouse de la base de données
         $query = "DELETE FROM SafeHouses WHERE id = :id";
         $stmt = self::$pdo->prepare($query);
@@ -193,10 +207,13 @@ class SafeHouse
         // Supprimer la SafeHouse de la classe
         if (isset(self::$safeHouses[$id])) {
             unset(self::$safeHouses[$id]);
-            return true;
+            
+            echo json_encode(array('status' => 'success'));
+            exit;
         }
 
-        return false;
+        echo json_encode(array('status' => 'error'));
+        exit;
     }
 
     // Getters et Setters

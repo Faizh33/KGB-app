@@ -259,22 +259,26 @@ class Mission
         
         // Ajouter les données dans la table Missions_agents
         foreach ($agents as $agentId) {
-            MissionAgent::addAgentToMission($id, $agentId);
+            $missionAgentObj = new MissionAgent(self::$pdo);
+            $missionAgentObj::addAgentToMission($id, $agentId);
         }
 
         // Ajouter les données dans la table Missions_contacts
         foreach ($contacts as $contactId) {
-            MissionContact::addContactToMission($id, $contactId);
+            $missionContactObj = new MissionContact(self::$pdo);
+            $missionContactObj::addContactToMission($id, $contactId);
         }
 
         // Ajouter les données dans la table Missions_targets
         foreach ($targets as $targetId) {
-            MissionTarget::addTargetToMission($id, $targetId);
+            $missionTargetObj = new MissionTarget(self::$pdo);
+            $missionTargetObj::addTargetToMission($id, $targetId);
         }
 
         // Ajouter les données dans la table Missions_safehouses
         foreach ($safeHouses as $safeHouseId) {
-            MissionSafeHouse::addSafeHouseToMission($id, $safeHouseId);
+            $missionSafeHouseObj = new MissionSafeHouse(self::$pdo);
+            $missionSafeHouseObj::addSafeHouseToMission($id, $safeHouseId);
         }
 
         return $newMission;
@@ -362,9 +366,6 @@ class Mission
         $stmt->execute();
 
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-        if (!$row) {
-            return false;
-        }
 
         // Supprimer la mission de la base de données
         $query = "DELETE FROM Missions WHERE id = :id";
@@ -391,10 +392,12 @@ class Mission
         // Supprimer la mission de la classe
         if (isset(self::$missions[$id])) {
             unset(self::$missions[$id]);
-            return true;
+            echo json_encode(array('status' => 'success'));
+            exit;
         }
 
-        return false;
+        echo json_encode(array('status' => 'error'));
+        exit;
     }
 
     //Getters et Setters

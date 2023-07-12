@@ -171,10 +171,24 @@ class MissionType
      * Supprime un type de mission de la base de données et de la classe en fonction de son identifiant.
      *
      * @param mixed $id L'identifiant du type de mission à supprimer.
-     * @return bool Indique si la suppression a été effectuée avec succès.
+     * @return json
      */
-    public static function deleteMissionTypeById($id): bool
+    public static function deleteMissionTypeById($id)
     {
+        // Vérifier si le type de mission est utilisé dans une ou plusieurs missions
+        $query = "SELECT COUNT(*) FROM Missions WHERE missiontype_id = :id";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        $count = $stmt->fetchColumn();
+
+        // Si le type de mission est utilisé ailleurs, ne pas le supprimer
+        if ($count > 0) {
+            echo json_encode(array('status' => 'used'));
+            exit;
+        }
+
         // Supprimer le type de mission de la base de données
         $query = "DELETE FROM MissionTypes WHERE id = :id";
         $stmt = self::$pdo->prepare($query);
@@ -185,10 +199,12 @@ class MissionType
         if (isset(self::$missionTypes[$id])) {
             // Supprimer le type de mission du tableau des types de mission
             unset(self::$missionTypes[$id]);
-            return true;
+            echo json_encode(array('status' => 'success'));
+            exit;
         }
 
-        return false;
+        echo json_encode(array('status' => 'error'));
+        exit;
     }
 
     // Getters et Setters

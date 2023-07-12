@@ -163,6 +163,20 @@ class Target extends Person
      */
     public static function deleteTargetById(string $id): bool
     {
+        // Vérifier si la planque est utilisée dans une ou plusieurs missions
+        $query = "SELECT COUNT(*) FROM Missions_targets WHERE target_id = :id";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        $count = $stmt->fetchColumn();
+
+        // Si la planque est utilisée ailleurs, ne pas le supprimer
+        if ($count > 0) {
+            echo json_encode(array('status' => 'used'));
+            exit;
+        }
+
         // Appeler la méthode deletePersonById de la classe parente pour supprimer la personne correspondante
         $personDeleted = parent::deletePersonById($id);
 
@@ -173,10 +187,12 @@ class Target extends Person
             $stmt->bindValue(':id', $id);
             $stmt->execute();
 
-            return true;
+            echo json_encode(array('status' => 'success'));
+            exit;
         }
 
-        return false;
+        echo json_encode(array('status' => 'error'));
+            exit;
     }
 
     //Getters

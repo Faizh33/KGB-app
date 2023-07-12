@@ -168,20 +168,30 @@ class Speciality
      * Supprime une spécialité de la base de données et de la classe en utilisant son ID.
      *
      * @param mixed $id L'ID de la spécialité à supprimer.
-     * @return bool Retourne true si la suppression est réussie, sinon false.
+     * @return json
      */
-    public static function deleteSpecialityById($id): bool
+    public static function deleteSpecialityById($id)
     {
-        // Vérifier si l'ID existe en base de données
-        $query = "SELECT * FROM Specialities WHERE id = :id";
+        // Vérifier si la spécialité est utilisée dans une ou plusieurs missions
+        $query = "SELECT COUNT(*) FROM Missions WHERE speciality_id = :id";
         $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
         $stmt->execute();
 
-        $specialityDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
-        if (!$specialityDatas) {
-            // L'ID n'existe pas, retourner false pour indiquer une suppression non réussie
-            return false;
+        $countInMission = $stmt->fetchColumn();
+
+        // Vérifier si la spécialité est utilisée dans un ou plusieurs agents
+        $query = "SELECT COUNT(*) FROM Agents_Specialities WHERE speciality_id = :id";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        $countInAgentSpeciality = $stmt->fetchColumn();
+
+        // Si la spécialité est utilisée ailleurs, ne pas le supprimer
+        if ($countInMission > 0 || $countInAgentSpeciality > 0) {
+            echo json_encode(array('status' => 'used'));
+            exit;
         }
 
         // Supprimer la spécialité de la base de données
@@ -197,12 +207,14 @@ class Speciality
         // Supprimer la spécialité de la classe
         if (isset(self::$specialities[$id])) {
             unset(self::$specialities[$id]);
-            // Retourner true pour indiquer une suppression réussie
-            return true;
+
+            echo json_encode(array('status' => 'success'));
+            exit;
         }
 
         // Si la spécialité n'est pas trouvée dans la classe, retourner false pour indiquer une suppression non réussie
-        return false;
+        echo json_encode(array('status' => 'error'));
+        exit;
     }
     
     //Getters et Setters

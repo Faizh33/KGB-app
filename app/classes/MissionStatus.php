@@ -151,10 +151,24 @@ class MissionStatus
      * Supprime un statut de mission de la base de données et de la classe en fonction de son ID.
      *
      * @param int $id L'identifiant du statut de mission à supprimer.
-     * @return bool Indique si la suppression a été effectuée avec succès.
+     * @return json
      */
-    public static function deleteMissionStatusById($id): bool
+    public static function deleteMissionStatusById($id)
     {
+        // Vérifier si le statut de mission est utilisé dans une ou plusieurs missions
+        $query = "SELECT COUNT(*) FROM Missions WHERE missionstatuses_id = :id";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        $count = $stmt->fetchColumn();
+
+        // Si le statut de mission est utilisé ailleurs, ne pas le supprimer
+        if ($count > 0) {
+            echo json_encode(array('status' => 'used'));
+            exit;
+        }
+
         // Supprimer le statut de mission de la base de données
         $query = "DELETE FROM MissionStatuses WHERE id = :id";
         $stmt = self::$pdo->prepare($query);
@@ -164,10 +178,13 @@ class MissionStatus
         // Supprimer le statut de mission de la classe
         if (isset(self::$missionStatuses[$id])) {
             unset(self::$missionStatuses[$id]);
-            return true;
+            
+            echo json_encode(array('status' => 'success'));
+            exit;
         }
 
-        return false;
+        echo json_encode(array('status' => 'error'));
+        exit;
     }
 
     //Getters et Setters

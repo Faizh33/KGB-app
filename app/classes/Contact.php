@@ -165,6 +165,20 @@ class Contact extends Person
      */
     public static function deleteContactById(string $id): bool
     {
+        // Vérifier si le contact est utilisé dans une ou plusieurs missions
+        $query = "SELECT COUNT(*) FROM Missions_contacts WHERE contact_id = :id";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        $count = $stmt->fetchColumn();
+
+        // Si le contact est utilisé ailleurs, ne pas le supprimer
+        if ($count > 0) {
+            echo json_encode(array('status' => 'used'));
+            exit;
+        }
+
         // Appeler la méthode deletePersonById de la classe parente pour supprimer la personne correspondante dans la base de données
         $personDeleted = parent::deletePersonById($id);
 
@@ -175,10 +189,12 @@ class Contact extends Person
             $stmt->bindValue(':id', $id);
             $stmt->execute();
 
-            return true;
+            echo json_encode(array('status' => 'success'));
+            exit;
         }
 
-        return false;
+        echo json_encode(array('status' => 'error'));
+        exit;
     }
 
     //Getter et Setter

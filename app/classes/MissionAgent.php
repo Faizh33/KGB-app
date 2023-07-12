@@ -129,6 +129,7 @@ class MissionAgent
      */
     public static function addAgentToMission(string $missionId, string $agentId): ?MissionAgent
     {
+        // Insérer le nouvel agent dans la base de données et dans la classe
         $query = "INSERT INTO Missions_agents (mission_id, agent_id) VALUES (:missionId, :agentId)";
         $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':missionId', $missionId);
