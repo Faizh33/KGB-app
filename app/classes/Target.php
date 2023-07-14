@@ -2,13 +2,14 @@
 
 namespace app\classes;
 
-require_once 'person.php';
+require_once 'Person.php';
+require_once 'CountryNationality.php';
 
 class Target extends Person
 {
     protected string $codeName;
 
-    public function __construct($pdo, string $id = '', string $lastName = '', string $firstName = '', string $birthDate = '', string $nationality = '', string $codeName = '')
+    public function __construct($pdo, string $id = '', string $lastName = '', string $firstName = '', string $birthDate = '', ?CountryNationality $nationality = null, string $codeName = '')
     {
         parent::__construct($pdo, $id, $lastName, $firstName, $birthDate, $nationality);
         $this->codeName = $codeName;

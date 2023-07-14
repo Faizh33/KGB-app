@@ -2,18 +2,20 @@
 
 namespace app\classes;
 
+include_once "CountryNationality.php";
+
 class Person
 {
     protected string $id;
     protected string $lastName;
     protected string $firstName;
     protected string $birthDate;
-    protected string $nationality;
+    protected ?CountryNationality $nationality;
     protected static \PDO $pdo;
 
     protected static array $persons = [];
 
-    public function __construct($pdo, string $id = '', string $lastName = '', string $firstName = '', string $birthDate = '', string $nationality = '')
+    public function __construct($pdo, string $id = '', string $lastName = '', string $firstName = '', string $birthDate = '', ?CountryNationality $nationality = null)
     {
         self::$pdo = $pdo;
         $this->id = $id;
@@ -46,10 +48,13 @@ class Person
         $lastName = $personData['lastName'];
         $firstName = $personData['firstName'];
         $birthDate = $personData['birthDate'];
-        $nationality = $personData['nationality'];
+        $nationalityId = $personData['countrynationality_id'];
+
+        $nationality = CountryNationality::getCountryNationalityById($nationalityId);
 
         if ($personData) {
             $person = new Person(self::$pdo, $id, $lastName, $firstName, $birthDate, $nationality);
+            $person->setNationality($nationality);
             self::$persons[$id] = $person;
             return $person;
         }
@@ -76,9 +81,10 @@ class Person
             $lastName = $personData['lastName'];
             $firstName = $personData['firstName'];
             $birthDate = $personData['birthDate'];
-            $nationality = $personData['nationality'];
+            $nationalityId = $personData['nationality'];
 
             if (!isset(self::$persons[$id])) {
+                $nationality = CountryNationality::getCountryNationalityById($nationalityId);
                 $person = new Person(self::$pdo, $id, $lastName, $firstName, $birthDate, $nationality);
                 self::$persons[$id] = $person;
             }
@@ -96,11 +102,11 @@ class Person
      * @param string $lastName    Le nom de famille de la personne.
      * @param string $firstName   Le prénom de la personne.
      * @param string $birthDate   La date de naissance de la personne.
-     * @param string $nationality La nationalité de la personne.
+     * @param CountryNationality $nationality La nationalité de la personne.
      *
      * @return Person|null La nouvelle personne créée ou null si la personne existe déjà.
      */
-    public static function addPerson(string $lastName, string $firstName, string $birthDate, string $nationality): ?Person
+    public static function addPerson(string $lastName, string $firstName, string $birthDate, int $nationalityId): ?Person
     {
         // Vérifier si la personne existe déjà dans la base de données
         $query = "SELECT * FROM Persons WHERE lastName = :lastName AND firstName = :firstName AND birthDate = :birthDate AND nationality = :nationality";
@@ -108,15 +114,22 @@ class Person
         $stmt->bindValue(':lastName', $lastName);
         $stmt->bindValue(':firstName', $firstName);
         $stmt->bindValue(':birthDate', $birthDate);
-        $stmt->bindValue(':nationality', $nationality);
+        $stmt->bindValue(':nationality', $nationalityId);
         $stmt->execute();
-
-        $personDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-        if ($personDatas) {
+    
+        $personData = $stmt->fetch(\PDO::FETCH_ASSOC);
+    
+        if ($personData) {
             return null;
         }
-
+    
+        // Récupérer l'objet CountryNationality correspondant à l'identifiant de nationalité
+        $nationality = CountryNationality::getCountryNationalityById($nationalityId);
+    
+        if ($nationality === null) {
+            return null;
+        }
+    
         // Insérer la nouvelle personne dans la base de données et dans la classe
         $id = generateUUID();
         $query = "INSERT INTO Persons (id, lastName, firstName, birthDate, nationality) VALUES (:id, :lastName, :firstName, :birthDate, :nationality)";
@@ -125,15 +138,15 @@ class Person
         $stmt->bindValue(':lastName', $lastName);
         $stmt->bindValue(':firstName', $firstName);
         $stmt->bindValue(':birthDate', $birthDate);
-        $stmt->bindValue(':nationality', $nationality);
+        $stmt->bindValue(':nationality', $nationality->getId());
         $stmt->execute();
-
+    
         $newPerson = new Person(self::$pdo, $id, $lastName, $firstName, $birthDate, $nationality);
-
+    
         self::$persons[$id] = $newPerson;
-
+    
         return $newPerson;
-    }
+    }    
 
     /**
      * Met à jour les propriétés de la personne dans la base de données et dans la classe.
@@ -149,8 +162,13 @@ class Person
 
         if ($person) {
             foreach ($propertiesToUpdate as $property => $value) {
-                if ($person->$property !== $value) {
-                    $person->$property = $value;
+                if ($property === 'nationality') {
+                    $nationality = CountryNationality::getCountryNationalityById($value);
+                    $person->$property = $nationality;
+                } else {
+                    if ($person->$property !== $value) {
+                        $person->$property = $value;
+                    }
                 }
             }
 
@@ -160,7 +178,7 @@ class Person
             $stmt->bindValue(':lastName', $person->lastName);
             $stmt->bindValue(':firstName', $person->firstName);
             $stmt->bindValue(':birthDate', $person->birthDate);
-            $stmt->bindValue(':nationality', $person->nationality);
+            $stmt->bindValue(':nationality', $person->nationality->getId());
             $stmt->execute();
 
             // Mettre à jour le tableau $persons
@@ -241,12 +259,12 @@ class Person
         $this->birthDate = $birthDate;
     }
 
-    public function getNationality(): string
+    public function getNationality(): ?CountryNationality
     {
         return $this->nationality;
     }
 
-    public function setNationality(string $nationality): void
+    public function setNationality(CountryNationality $nationality): void
     {
         $this->nationality = $nationality;
     }

@@ -3,13 +3,14 @@
 namespace app\classes;
 
 require_once 'Person.php';
+require_once 'CountryNationality.php';
 require_once 'AgentSpeciality.php';
 
 class Agent extends Person
 {
     protected string $identificationCode;
 
-    public function __construct($pdo, string $id = '', string $lastName = '', string $firstName = '', string $birthDate = '', string $nationality = '', string $identificationCode = '')
+    public function __construct($pdo, string $id = '', string $lastName = '', string $firstName = '', string $birthDate = '', ?CountryNationality $nationality = null, string $identificationCode = '')
     {
         parent::__construct($pdo, $id, $lastName, $firstName, $birthDate, $nationality);
         $this->identificationCode = $identificationCode;
