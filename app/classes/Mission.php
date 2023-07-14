@@ -355,18 +355,10 @@ class Mission
      * Supprime une mission à partir de son ID.
      *
      * @param string $id L'ID de la mission à supprimer.
-     * @return bool Retourne true si la mission a été supprimée avec succès, sinon false.
+     * @return json
      */
-    public static function deleteMissionById($id): bool
+    public static function deleteMissionById($id)
     {
-        // Vérifier si l'ID existe en base de données
-        $query = "SELECT * FROM Missions WHERE id = :id";
-        $stmt = self::$pdo->prepare($query);
-        $stmt->bindValue(':id', $id);
-        $stmt->execute();
-
-        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-
         // Supprimer la mission de la base de données
         $query = "DELETE FROM Missions WHERE id = :id";
         $stmt = self::$pdo->prepare($query);

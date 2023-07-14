@@ -161,7 +161,32 @@ class AgentSpeciality
         $stmt->execute();
 
         // Supprimer les spécialités de l'agent de la liste des spécialités
-        unset(self::$agentSpecialities[$agentId]);
+        if (isset(self::$agentSpecialities[$agentId])) {
+            unset(self::$agentSpecialities[$agentId]);
+        }        
+
+        // Retourner true pour indiquer que la suppression des spécialités a réussi
+        return true;
+    }
+
+        /**
+     * Supprime tous les agents d'une spécialité spécifiée.
+     *
+     * @param string $agentId   L'ID de la spécialité.
+     * @return bool             Indique si la suppression des agents a réussi ou non.
+     */
+    public static function deleteAgentsBySpecialityId(string $specialityId): bool
+    {
+        // Requête SQL pour supprimer les agents liés à une spécialité
+        $query = "DELETE FROM Agents_Specialities WHERE speciality_id = :specialityId";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':specialityId', $specialityId);
+        $stmt->execute();
+
+        // Supprimer les agents liés à une spécialité dans le cache
+        if (isset(self::$agentSpecialities[$specialityId])) {
+            unset(self::$agentSpecialities[$specialityId]);
+        }        
 
         // Retourner true pour indiquer que la suppression des spécialités a réussi
         return true;

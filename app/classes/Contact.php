@@ -161,9 +161,9 @@ class Contact extends Person
     /**
      * Supprime un contact de la base de données et de la classe en fonction de son ID.
      *
-     * @return bool Indique si la suppression a été effectuée avec succès (true) ou non (false).
+     * @return json
      */
-    public static function deleteContactById(string $id): bool
+    public static function deleteContactById(string $id)
     {
         // Vérifier si le contact est utilisé dans une ou plusieurs missions
         $query = "SELECT COUNT(*) FROM Missions_contacts WHERE contact_id = :id";

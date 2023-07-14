@@ -59,16 +59,26 @@ class Agent extends Person
         $agents = [];
 
         foreach ($persons as $person) {
-            $query = "SELECT * FROM Agents WHERE id = :id";
+            $query = "SELECT * FROM Agents WHERE id = :person_id";
             $stmt = self::$pdo->prepare($query);
-            $stmt->bindValue(":id", $person->getId());
+            $personId = $person->getId();
+            $stmt->bindParam(':person_id', $personId);
+
             $stmt->execute();
 
-            $agentDatas = $stmt->fetch(\PDO::FETCH_ASSOC);
-            
-            if ($agentDatas !== false) {
-                $idCode = $agentDatas['identification_code'];
-                $agents[] = new Agent(self::$pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $idCode);
+            $agentData = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            if ($agentData !== false) {
+                $idCode = $agentData['identification_code'];
+                $agents[] = new Agent(
+                    self::$pdo,
+                    $person->getId(),
+                    $person->getLastName(),
+                    $person->getFirstName(),
+                    $person->getBirthDate(),
+                    $person->getNationality(),
+                    $idCode
+                );
             }
         }
 
@@ -161,11 +171,11 @@ class Agent extends Person
     }
 
     /**
-     * Supprime un agent de la base de données et de la classe en fonction de l'id.
+     * Supprime un agent de la base de données et de la classe en fonction de son ID.
      *
-     * @return json 
+     * @return json
      */
-    public static function deleteAgentById(string $id, array $specialities)
+    public static function deleteAgentById(string $id)
     {
         // Vérifier si l'agent est utilisé dans une ou plusieurs missions
         $query = "SELECT COUNT(*) FROM Missions_agents WHERE agent_id = :id";
@@ -181,16 +191,15 @@ class Agent extends Person
             exit;
         }
 
-        foreach($specialities as $specialityId) {
-            // Supprimer les associations AgentSpeciality pour cet agent
-            $agentSpeciality = new AgentSpeciality(self::$pdo, $id, $specialityId);
-            $agentSpeciality->deleteSpecialitiesByAgentId($id);
-        }
+        // Supprimez les spécialités de l'agent
+        $agentSpecialityObj = new AgentSpeciality(self::$pdo);
+         $agentSpecialityObj::deleteSpecialitiesByAgentId($id);
 
-        // Supprimer l'agent lui-même
+        // Appeler la méthode deletePersonById de la classe parente pour supprimer la personne correspondante dans la base de données
         $personDeleted = parent::deletePersonById($id);
 
         if ($personDeleted) {
+            // Si la suppression de la personne a réussi, supprimer le contact de la table "Agents"
             $query = "DELETE FROM Agents WHERE id = :id";
             $stmt = self::$pdo->prepare($query);
             $stmt->bindValue(':id', $id);
