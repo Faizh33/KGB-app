@@ -108,7 +108,7 @@ h2 {
     width: 60%;
 }
 
-.editTable {
+.editTables {
     width: 40%;
 }
 
@@ -228,7 +228,7 @@ table#form {
 .editButton {
     margin-right: 0.5vw;
 }
-margin-bottom
+
 .deleteButton {
     margin-left: 0.5vw;
 }
@@ -239,12 +239,13 @@ margin-bottom
 }
 
 .messageDiv {
-    color: rgb(2, 59, 53);
+    color: rgb(236, 99, 99);
     background: rgb(189, 247, 241);
     margin: auto;
     margin-top: 0.3vw;
     width: 20%;
     text-align: center;
+    font-weight: bold;
 }
 
 /* Style du bouton de retour en arrière */
