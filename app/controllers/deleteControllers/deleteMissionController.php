@@ -4,8 +4,8 @@ require '../../../config/database.php';
 
 use app\classes\Mission;
 
-if (isset($_GET['missionId'])) {
-    $missionId = $_GET['missionId'];
+if (isset($_POST['missionId'])) {
+    $missionId = $_POST['missionId'];
 
     // Créez une instance de la classe Mission en utilisant le $pdo
     $mission = new Mission($pdo);
@@ -14,8 +14,4 @@ if (isset($_GET['missionId'])) {
     // Supprimez la mission
     $mission->deleteMissionById($missionId);
 }
-
-// Redirection vers la page d'accueil
-header("Location: ../../views/home.php");
-exit();
 ?>
