@@ -5,13 +5,21 @@ CREATE DATABASE SecretService;
 USE SecretService;
 
 /* Création des tables */
+CREATE TABLE CountriesNationalities 
+(
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    country VARCHAR(50),
+    nationality VARCHAR(60)
+);
+
 CREATE TABLE Persons 
 (
     id CHAR(36) PRIMARY KEY NOT NULL,
     lastName VARCHAR(100) NOT NULL,
     firstName VARCHAR(100) NOT NULL,
     birthDate DATE NOT NULL,
-    nationality VARCHAR(100) NOT NULL
+    countrynationality_id INT NOT NULL,
+    FOREIGN KEY (countrynationality_id) REFERENCES CountriesNationalities(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Specialities
@@ -68,8 +76,9 @@ CREATE TABLE SafeHouses
     id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     code VARCHAR(10) NOT NULL UNIQUE,
     address VARCHAR(350) NOT NULL,
-    country VARCHAR(100) NOT NULL,
-    type VARCHAR(100) NOT NULL
+    type VARCHAR(100) NOT NULL,
+    countrynationality_id INT NOT NULL,
+    FOREIGN KEY (countrynationality_id) REFERENCES CountriesNationalities(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Missions
@@ -78,12 +87,13 @@ CREATE TABLE Missions
     title VARCHAR(250) NOT NULL,
     description TEXT(500) NOT NULL,
     codeName VARCHAR(250) NOT NULL UNIQUE,
-    country VARCHAR(100) NOT NULL,
     startDate DATE NOT NULL,
     endDate DATE NOT NULL,
+    countrynationality_id INT NOT NULL,
     speciality_id INT NOT NULL,
     missionstatuses_id INT NOT NULL,
     missiontype_id INT NOT NULL,
+    FOREIGN KEY (countrynationality_id) REFERENCES CountriesNationalities(id) ON DELETE CASCADE,
     FOREIGN KEY (speciality_id) REFERENCES Specialities(id) ON DELETE CASCADE,
     FOREIGN KEY (missionstatuses_id) REFERENCES MissionStatuses(id) ON DELETE CASCADE,
     FOREIGN KEY (missiontype_id) REFERENCES MissionTypes(id) ON DELETE CASCADE
@@ -136,26 +146,35 @@ CREATE TABLE Admins
 );
 
 /* Insertion des données */
+INSERT INTO CountriesNationalities (country, nationality)
+VALUES
+    ('France', 'Français(e)'),
+    ('Angleterre', 'Britannique'),
+    ('Espagne', 'Espagnol(e)'),
+    ('Allemagne', 'Allemand(e)'),
+    ('Pologne', 'Polonais(e)'),
+    ('Etats-Unis', 'Américain(e)');
+
 INSERT INTO Persons
 VALUES
-    ('9473ba58-10c9-11ee-8afc-0a0027000006', 'Bouchard', 'Gabriel', '1989-10-13', 'Française'),
-    ('9473c24b-10c9-11ee-8afc-0a0027000006', 'Porter', 'Ryan', '2001-07-28', 'Britannique'),
-    ('9473c3ae-10c9-11ee-8afc-0a0027000006', 'Arce', 'Adelfo', '1995-10-23', 'Espagnole'),
-    ('9473c485-10c9-11ee-8afc-0a0027000006', 'Fruehauf', 'Laura', '1985-11-15', 'Allemande'),
-    ('9473c549-10c9-11ee-8afc-0a0027000006', 'Sawicka', 'Wiktoria', '1982-03-26', 'Polonaise'),
-    ('9473c611-10c9-11ee-8afc-0a0027000006', 'Boone', 'Vivian', '1977-05-23', 'Américaine'),
-    ('9473c6d0-10c9-11ee-8afc-0a0027000006', 'Bourgeau', 'Arthur', '1993-06-02', 'Française'),
-    ('9473c78d-10c9-11ee-8afc-0a0027000006', 'Holland', 'Kyle', '1970-01-30', 'Britannique'),
-    ('9473c84a-10c9-11ee-8afc-0a0027000006', 'Osorio', 'Marino', '1978-11-06', 'Espagnole'),
-    ('9473c90b-10c9-11ee-8afc-0a0027000006', 'Weissmuller', 'Barbara', '1987-04-17', 'Allemande'),
-    ('9473c9da-10c9-11ee-8afc-0a0027000006', 'Pawlowska', 'Sylwia', '1994-10-12', 'Polonaise'),
-    ('9474843d-10c9-11ee-8afc-0a0027000006', 'Moore', 'Sarah', '1990-09-04', 'Américaine'),
-    ('947485ec-10c9-11ee-8afc-0a0027000006', 'Lachapelle', 'Anna', '1986-08-17', 'Française'),
-    ('9474866c-10c9-11ee-8afc-0a0027000006', 'Lough', 'Amelie', '1987-09-19', 'Britannique'),
-    ('947486dd-10c9-11ee-8afc-0a0027000006', 'Lujan', 'Catrin', '1976-06-05', 'Espagnole'),
-    ('94748747-10c9-11ee-8afc-0a0027000006', 'Werfel', 'Thomas', '1983-05-24', 'Allemande'),
-    ('947487b4-10c9-11ee-8afc-0a0027000006', 'Maciejewski', 'Jedrzej', '1987-02-12', 'Polonaise'),
-    ('94748821-10c9-11ee-8afc-0a0027000006', 'Bates', 'Nathan', '1968-12-06', 'Américaine');
+    ('9473ba58-10c9-11ee-8afc-0a0027000006', 'Bouchard', 'Gabriel', '1989-10-13', 1),
+    ('9473c24b-10c9-11ee-8afc-0a0027000006', 'Porter', 'Ryan', '2001-07-28', 2),
+    ('9473c3ae-10c9-11ee-8afc-0a0027000006', 'Arce', 'Adelfo', '1995-10-23', 3),
+    ('9473c485-10c9-11ee-8afc-0a0027000006', 'Fruehauf', 'Laura', '1985-11-15', 4),
+    ('9473c549-10c9-11ee-8afc-0a0027000006', 'Sawicka', 'Wiktoria', '1982-03-26', 5),
+    ('9473c611-10c9-11ee-8afc-0a0027000006', 'Boone', 'Vivian', '1977-05-23', 6),
+    ('9473c6d0-10c9-11ee-8afc-0a0027000006', 'Bourgeau', 'Arthur', '1993-06-02', 1),
+    ('9473c78d-10c9-11ee-8afc-0a0027000006', 'Holland', 'Kyle', '1970-01-30', 2),
+    ('9473c84a-10c9-11ee-8afc-0a0027000006', 'Osorio', 'Marino', '1978-11-06', 3),
+    ('9473c90b-10c9-11ee-8afc-0a0027000006', 'Weissmuller', 'Barbara', '1987-04-17', 4),
+    ('9473c9da-10c9-11ee-8afc-0a0027000006', 'Pawlowska', 'Sylwia', '1994-10-12', 5),
+    ('9474843d-10c9-11ee-8afc-0a0027000006', 'Moore', 'Sarah', '1990-09-04', 6),
+    ('947485ec-10c9-11ee-8afc-0a0027000006', 'Lachapelle', 'Anna', '1986-08-17', 1),
+    ('9474866c-10c9-11ee-8afc-0a0027000006', 'Lough', 'Amelie', '1987-09-19', 2),
+    ('947486dd-10c9-11ee-8afc-0a0027000006', 'Lujan', 'Catrin', '1976-06-05', 3),
+    ('94748747-10c9-11ee-8afc-0a0027000006', 'Werfel', 'Thomas', '1983-05-24', 4),
+    ('947487b4-10c9-11ee-8afc-0a0027000006', 'Maciejewski', 'Jedrzej', '1987-02-12', 5),
+    ('94748821-10c9-11ee-8afc-0a0027000006', 'Bates', 'Nathan', '1968-12-06', 6);
 
 INSERT INTO Specialities (speciality)
 VALUES 
@@ -225,14 +244,14 @@ VALUES
     ('Piratage'),
     ('Sécurisation');
 
-INSERT INTO SafeHouses (code, address, country, type)
+INSERT INTO SafeHouses (code, address, type, countrynationality_id)
 VALUES
-    ('21jo2rx0c9', '88 Place de la Madeleine 75009 PARIS', 'France', 'appartement'),
-    ('2ojx1rc029', '86 Victoria Road LITTLE BADDOW CM3 8PT', 'Angleterre', 'maison'),
-    ('rj0x2o129c', 'Avda. Explanada Barnuevo, 82 35430 Firgas', 'Espagne', 'villa'),
-    ('22x9cj0or1', 'Ziegelstr. 95 94143 Grainet', 'Allemagne', 'cabane'),
-    ('r9x20o1j2c', 'ul. Grzybowska 117 00-132 Warszawa', 'Pologne', 'hotel'),
-    ('1jro902cx2', '1079 Deer Haven Drive Greenville SC 29607', 'Etats-Unis', 'maison');
+    ('21jo2rx0c9', '88 Place de la Madeleine 75009 PARIS', 'appartement', 1),
+    ('2ojx1rc029', '86 Victoria Road LITTLE BADDOW CM3 8PT', 'maison', 2),
+    ('rj0x2o129c', 'Avda. Explanada Barnuevo, 82 35430 Firgas', 'villa', 3),
+    ('22x9cj0or1', 'Ziegelstr. 95 94143 Grainet', 'cabane', 4),
+    ('r9x20o1j2c', 'ul. Grzybowska 117 00-132 Warszawa', 'hotel', 5),
+    ('1jro902cx2', '1079 Deer Haven Drive Greenville SC 29607', 'maison', 6);
 
 INSERT INTO Missions
 VALUES
@@ -241,9 +260,9 @@ VALUES
         'Opération Œil de Lynx', 
         "L'agence déploie deux agents pour infiltrer un réseau criminel international basé en Allemagne. Leur mission consiste à surveiller discrètement les mouvements des chefs de cartel pendant une réunion secrète. Avec une oreillette équipée d'une technologie de pointe, les agents doivent recueillir des preuves cruciales pour démanteler le réseau et garantir la sécurité mondiale.",
         'Project Shadowwatch',
-        'Allemagne',
         '2023-07-07',
         '2023-07-22',
+        4,
         8,
         1,
         3
@@ -253,9 +272,9 @@ VALUES
         'Opération Éclipse Mortelle',
         "Un dictateur brutal menace la stabilité de la Pologne en proie à la terreur. L'agence envoie son assassin le plus redoutable pour éliminer la menace. L'agent doit se faufiler à travers un dédale de gardes et de pièges dans le palais fortifié du dictateur, pour atteindre la salle du trône où il se tient pendant un discours crucial. Le temps est compté et chaque mouvement doit être calculé avec précision pour assurer le succès de la mission.",
         'Operation Phantom Strike',
-        'Pologne',
         '2023-05-28',
         '2023-06-01',
+        5,
         6,
         3,
         2
@@ -265,9 +284,9 @@ VALUES
         'Opération CyberNexus',
         " Une organisation criminelle britannique utilise une plateforme de cryptomonnaie décentralisée pour financer ses opérations illégales. L'agence assigne son expert en piratage informatique pour infiltrer le système et neutraliser leurs opérations. L'agent doit contourner les pare-feu sophistiqués et les défenses de sécurité pour accéder aux comptes des criminels. Avec chaque seconde qui s'écoule, l'agence se rapproche de l'identité des cerveaux derrière cette organisation.",
         'Project CyberVortex',
-        'Angleterre',
         '2023-06-30',
         '2023-07-30',
+        2,
         1,
         2,
         5
