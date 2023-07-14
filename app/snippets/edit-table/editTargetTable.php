@@ -13,7 +13,7 @@ $targets = $targetObj->getAllTargets();
 <?php foreach($targets as $target) { ?>
     <form method="POST" action="../controllers/updateControllers/updateTargetController.php" class="editForm">
         <input type="hidden" name="targetId" value="<?php echo $target->getId(); ?>">
-        <table class="editTable">
+        <table class="editTable editTables">
             <tr>
                 <th scope="row" class="thTable">Nom</th>
                 <td class="tdTable">

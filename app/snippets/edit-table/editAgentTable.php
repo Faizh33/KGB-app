@@ -19,8 +19,8 @@ $specialityObj = new Speciality($pdo);
 
 <?php foreach($agents as $agent) { ?>
     <form method="POST" action="../controllers/updateControllers/updateAgentController.php" class="editForm">
-        <input type="hidden" name="agentId" value="<?php echo $agent->getId(); ?>">
-        <table class="editTable">
+        <input type="hidden" name="agentId" value="<?php echo $agent->getId(); ?>" />
+        <table class="editTable editTables">
             <tr>
                 <th scope="row" class="thTable">Nom</th>
                 <td class="tdTable">
@@ -90,7 +90,7 @@ $specialityObj = new Speciality($pdo);
                     <div class="buttonsContainer">
                         <button type="button" class="button editButton" onClick="toggleEdit(this)">Modifier</button>
                         <button type="submit" class="button saveButton" style="display:none;">Sauvegarder</button>
-                        <button type="button" class="button deleteButton">Supprimer</button>
+                        <button type="button" class="button deleteButton" data-url="../controllers/deleteControllers/deleteAgentController.php">Supprimer</button>
                     </div>
                 </td>
             </tr>

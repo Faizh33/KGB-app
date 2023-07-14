@@ -52,7 +52,7 @@ $missions = $mission->getAllMissions();
 <?php foreach ($missions as $mission) : ?>
     <form method="POST" action="../controllers/updateControllers/updateMissionController.php" class="editForm">
         <input type="hidden" name="missionId" value="<?php echo $mission->getId(); ?>">
-        <table class="editMissionTable">
+        <table class="editTable editMissionTable">
             <tbody>
                 <tr>
                     <!-- Titre de la mission -->

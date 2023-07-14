@@ -13,7 +13,7 @@ $missionStatuses = $missionStatusObj->getAllMissionStatuses();
 <?php foreach($missionStatuses as $missionStatus) { ?>
     <form method="POST" action="../controllers/updateControllers/updateStatusController.php" class="editForm">
         <input type="hidden" name="statusId" value="<?php echo $missionStatus->getId(); ?>">
-        <table class="editTable">
+        <table class="editTable editTables">
             <tr>
                 <th scope="row" class="thTable">Statut</th>
                 <td class="tdTable">

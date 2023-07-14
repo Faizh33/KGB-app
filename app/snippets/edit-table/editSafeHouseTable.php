@@ -13,7 +13,7 @@ $safeHouses = $safeHouseObj->getAllSafeHouses();
 <?php foreach($safeHouses as $safeHouse) { ?>
     <form method="POST" action="../controllers/updateControllers/updateSafeHouseController.php" class="editForm">
         <input type="hidden" name="safeHouseId" value="<?php echo $safeHouse->getId(); ?>">
-        <table class="editTable">
+        <table class="editTable editTables">
             <tr>
                 <th scope="row" class="thTable">Code</th>
                 <td class="tdTable">

@@ -13,7 +13,7 @@ $contacts = $contactObj::getAllContacts();
 <?php foreach($contacts as $contact) { ?>
     <form method="POST" action="../controllers/updateControllers/updateContactController.php" class="editForm">
         <input type="hidden" name="contactId" value="<?php echo $contact->getId(); ?>">
-        <table class="editTable">
+        <table class="editTable editTables">
             <tr>
                 <th scope="row" class="thTable">Nom</th>
                 <td class="tdTable">
