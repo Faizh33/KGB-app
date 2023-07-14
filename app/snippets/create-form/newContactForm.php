@@ -32,7 +32,15 @@
                 <label for="contactNationality" class="labelForm">Nationalité</label>
             </td>
             <td class="inputColumn">
-                <input type="text" name="contactNationality" id="contactNationality" class="formInput" required />
+                <select name="contactNationality" id="contactNationality" class="formInput" required>
+                    <?php
+                    $countriesNationalities = \app\classes\CountryNationality::getAllCountriesNationalities();
+                    foreach ($countriesNationalities as $countryNationality) {
+                        $nationality = $countryNationality->getNationality();
+                        echo "<option value=\"$nationality\">$nationality</option>";
+                    }
+                    ?>
+                </select>
             </td>
         </tr>
         <tr>

@@ -24,7 +24,15 @@
                 <label for="country" class="labelForm">Pays</label>
             </td>
             <td class="inputColumn">
-                <input type="text" name="country" id="country" class="formInput" required />
+                <select name="safeHouseCountry" id="safeHouseCountry" class="formInput" required>
+                    <?php
+                    $countriesNationalities = \app\classes\CountryNationality::getAllCountriesNationalities();
+                    foreach ($countriesNationalities as $countryNationality) {
+                        $country = $countryNationality->getCountry();
+                        echo "<option value=\"$country\">$country</option>";
+                    }
+                    ?>
+                </select>
             </td>
         </tr>
         <tr>

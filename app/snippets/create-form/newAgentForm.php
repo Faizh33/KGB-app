@@ -1,11 +1,3 @@
-<?php
-    include_once "../../config/database.php";
-    include_once "../classes/Speciality.php";
-    use app\classes\Speciality;
-
-    $specialityObj = new Speciality($pdo);
-?>
-
 <h2>Créer un nouvel agent</h2>
 
 <!--formulaire de création d'agent -->
@@ -40,7 +32,15 @@
                 <label for="agentNationality" class="labelForm">Nationalité</label>
             </td>
             <td class="inputColumn">
-                <input type="text" name="agentNationality" id="agentNationality" class="formInput" required />
+                <select name="agentNationality" id="agentNationality" class="formInput" required>
+                    <?php
+                    $countriesNationalities = \app\classes\CountryNationality::getAllCountriesNationalities();
+                    foreach ($countriesNationalities as $countryNationality) {
+                        $nationality = $countryNationality->getNationality();
+                        echo "<option value=\"$nationality\">$nationality</option>";
+                    }
+                    ?>
+                </select>
             </td>
         </tr>
         <tr>
@@ -58,7 +58,7 @@
             <td class="inputColumn">
                 <div class="formChkBox">
                     <?php
-                        $specialities = $specialityObj::getAllSpecialities();
+                        $specialities = app\classes\Speciality::getAllSpecialities();
                         foreach($specialities as $speciality) {
                             $specialityId = $speciality->getId(); ?>
                             <input type="checkbox" name="specialities[]" class="editChk" value="<?php echo $specialityId ?>" id="editSpeciality <?php echo $specialityId ?>">
