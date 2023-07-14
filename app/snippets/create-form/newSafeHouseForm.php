@@ -26,7 +26,7 @@
             <td class="inputColumn">
                 <select name="safeHouseCountry" id="safeHouseCountry" class="formInput" required>
                     <?php
-                    $countriesNationalities = \app\classes\CountryNationality::getAllCountriesNationalities();
+                    $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();
                     foreach ($countriesNationalities as $countryNationality) {
                         $country = $countryNationality->getCountry();
                         echo "<option value=\"$country\">$country</option>";

@@ -34,7 +34,7 @@
             <td class="inputColumn">
                 <select name="agentNationality" id="agentNationality" class="formInput" required>
                     <?php
-                    $countriesNationalities = \app\classes\CountryNationality::getAllCountriesNationalities();
+                    $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();
                     foreach ($countriesNationalities as $countryNationality) {
                         $nationality = $countryNationality->getNationality();
                         echo "<option value=\"$nationality\">$nationality</option>";
@@ -58,7 +58,7 @@
             <td class="inputColumn">
                 <div class="formChkBox">
                     <?php
-                        $specialities = app\classes\Speciality::getAllSpecialities();
+                        $specialities = $specialityObj::getAllSpecialities();
                         foreach($specialities as $speciality) {
                             $specialityId = $speciality->getId(); ?>
                             <input type="checkbox" name="specialities[]" class="editChk" value="<?php echo $specialityId ?>" id="editSpeciality <?php echo $specialityId ?>">

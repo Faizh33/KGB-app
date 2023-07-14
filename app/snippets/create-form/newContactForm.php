@@ -29,12 +29,12 @@
         </tr>
         <tr>
             <td class="labelColumn">
-                <label for="contactNationality" class="labelForm">Nationalité</label>
+                <label for="agentNationality" class="labelForm">Nationalité</label>
             </td>
             <td class="inputColumn">
-                <select name="contactNationality" id="contactNationality" class="formInput" required>
+                <select name="agentNationality" id="agentNationality" class="formInput" required>
                     <?php
-                    $countriesNationalities = \app\classes\CountryNationality::getAllCountriesNationalities();
+                    $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();
                     foreach ($countriesNationalities as $countryNationality) {
                         $nationality = $countryNationality->getNationality();
                         echo "<option value=\"$nationality\">$nationality</option>";

@@ -1,3 +1,33 @@
+    <?php
+        include_once "../../config/database.php";
+        include_once "../classes/Agent.php";
+        include_once "../classes/Contact.php";
+        include_once "../classes/Target.php";
+        include_once "../classes/SafeHouse.php";
+        include_once "../classes/MissionType.php";
+        include_once "../classes/Speciality.php";
+        include_once "../classes/MissionStatus.php";
+        include_once "../classes/CountryNationality.php";
+
+        use app\classes\Agent;
+        use app\classes\Contact;
+        use app\classes\Target;
+        use app\classes\SafeHouse;
+        use app\classes\MissionType;
+        use app\classes\Speciality;
+        use app\classes\MissionStatus;
+        use app\classes\CountryNationality;
+
+        $agentObj = new Agent($pdo);
+        $contactObj = new Contact($pdo);
+        $targetObj = new Target($pdo);
+        $safehouseObj = new SafeHouse($pdo);
+        $missionTypeObj = new MissionType($pdo);
+        $specialityObj = new Speciality($pdo);
+        $missionStatusObj = new MissionStatus($pdo);
+        $countryNationalityObj = new CountryNationality($pdo);
+    ?>
+
     <h2>Créer une nouvelle mission</h2>
 
     <!--formulaire de création d'une mission -->
@@ -51,7 +81,7 @@
                     <select name="country" id="country" required>
                         <option value="">--Choisir un pays--</option>
                         <?php
-                            $countries = app\classes\CountryNationality::getAllCountriesNationalities();
+                            $countries = CountryNationality::getAllCountriesNationalities();
                             foreach ($countries as $country) {
                                 $countryId = $country->getId();
                                 $countryName = $country->getCountry();
@@ -68,7 +98,7 @@
                 <td class="inputColumn">
                     <div class="formChkBox">
                     <?php
-                        $agents = app\classes\Agent::getAllAgents();
+                        $agents = $agentObj::getAllAgents();
                         foreach($agents as $agent) {
                             $agentId = $agent->getId(); ?>
                             <input type="checkbox" name="agents[]" class="agent-checkbox" value="<?php echo $agentId ?>" id="editAgent <?php echo $agentId ?>">
@@ -84,7 +114,7 @@
                 <td class="inputColumn">
                     <div class="formChkBox">
                         <?php
-                        $contacts = app\classes\Contact::getAllContacts();
+                        $contacts = $contactObj::getAllContacts();
                         foreach($contacts as $contact) {
                             $contactId = $contact->getId(); ?>
                             <input type="checkbox" name="contacts[]" class="contact-checkbox" value="<?php echo $contactId ?>" id="editContact <?php echo $contactId ?>">
@@ -100,7 +130,7 @@
                 <td class="inputColumn">
                     <div class="formChkBox">
                         <?php
-                        $targets = app\classes\Target::getAllTargets();
+                        $targets = $targetObj::getAllTargets();
                         foreach($targets as $target) {
                             $targetId = $target->getId(); ?>
                             <input type="checkbox" name="targets[]" class="target-checkbox" value="<?php echo $targetId ?>" id="editTarget <?php echo $targetId ?>">
@@ -116,7 +146,7 @@
                 <td class="inputColumn">
                     <div class="formChkBox">
                         <?php
-                            $safeHouses = app\classes\SafeHouse::getAllSafeHouses();
+                            $safeHouses = $safehouseObj::getAllSafeHouses();
                             foreach($safeHouses as $safeHouse) {
                                 $safeHouseId = $safeHouse->getId(); ?>
                                 <input type="checkbox" name="safeHouses[]" class="editChk" value="<?php echo $safeHouseId ?>" id="editSafeHouse <?php echo $safeHouseId ?>">
@@ -133,7 +163,7 @@
                     <select name="missionType" id="missionType">
                         <option value="">--Choisir un type--</option>
                             <?php
-                                $missionTypes = app\classes\MissionType::getAllMissionTypes();
+                                $missionTypes = $missionTypeObj::getAllMissionTypes();
                                 foreach($missionTypes as $missionType) {
                                     $id = $missionType->getId();
                                     $type = $missionType->getType();
@@ -151,7 +181,7 @@
                     <select name="missionSpeciality" id="missionSpeciality">
                         <option value="">--Choisir une spécialité--</option>
                         <?php 
-                            $missionSpecialitys = app\classes\Speciality::getAllSpecialities();
+                            $missionSpecialitys = $specialityObj::getAllSpecialities();
                             foreach($missionSpecialitys as $missionSpeciality) {
                                 $id = $missionSpeciality->getId();
                                 $speciality = $missionSpeciality->getSpeciality();
@@ -169,7 +199,7 @@
                     <select name="missionStatus" id="missionStatus">
                         <option value="">--Choisir un statut--</option>
                         <?php
-                            $missionStatuses = app\classes\MissionStatus::getAllMissionStatuses();
+                            $missionStatuses = $missionStatusObj::getAllMissionStatuses();
                             foreach($missionStatuses as $missionStatus) {
                                 $id = $missionStatus->getId();
                                 $status = $missionStatus->getStatus();
