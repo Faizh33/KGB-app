@@ -26,8 +26,7 @@ $(document).on('click', '.deleteButton', function() {
                     messageDiv.html('Une erreur s\'est produite');
                 }
             },
-            error: function(xhr, status, error) {
-                console.error(error);
+            error: function() {
                 messageDiv.html('Suppression échouée');
             }
         });
