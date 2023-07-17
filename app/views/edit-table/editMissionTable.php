@@ -79,7 +79,7 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
     <?php 
     if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) :
         foreach ($missions as $mission) : ?>
-        <form method="POST" action="../controllers/updateControllers/updateMissionController.php" class="editForm">
+        <form method="POST" action="../../controllers/updateControllers/updateMissionController.php" class="editForm">
             <input type="hidden" name="missionId" value="<?php echo $mission->getId(); ?>">
             <table class="editTable editMissionTable">
                 <tbody>

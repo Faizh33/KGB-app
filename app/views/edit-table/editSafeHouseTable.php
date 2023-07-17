@@ -44,7 +44,7 @@ $safeHouses = $safeHouseObj::getAllSafeHousesPagination($page, $perPage);
     <?php 
     if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) :
         foreach($safeHouses as $safeHouse) { ?>
-        <form method="POST" action="../controllers/updateControllers/updateSafeHouseController.php" class="editForm">
+        <form method="POST" action="../../controllers/updateControllers/updateSafeHouseController.php" class="editForm">
             <input type="hidden" name="safeHouseId" value="<?php echo $safeHouse->getId(); ?>">
             <table class="editTable editTables">
                 <tr>

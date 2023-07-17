@@ -46,7 +46,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
     if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) :
         foreach($contacts as $contact) { 
     ?>
-        <form method="POST" action="../controllers/updateControllers/updateContactController.php" class="editForm">
+        <form method="POST" action="../../controllers/updateControllers/updateContactController.php" class="editForm">
             <input type="hidden" name="contactId" value="<?php echo $contact->getId(); ?>">
             <table class="editTable editTables">
                 <tr>

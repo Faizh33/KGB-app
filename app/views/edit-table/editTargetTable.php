@@ -45,7 +45,7 @@ $targets = $targetObj::getAllTargetsPagination($page, $perPage);
     if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) :
         foreach($targets as $target) {
     ?>
-        <form method="POST" action="../controllers/updateControllers/updateTargetController.php" class="editForm">
+        <form method="POST" action="../../controllers/updateControllers/updateTargetController.php" class="editForm">
             <input type="hidden" name="targetId" value="<?php echo $target->getId(); ?>">
             <table class="editTable editTables">
                 <tr>

@@ -42,7 +42,7 @@ $specialities = $specialityObj::getAllSpecialitiesPagination($page, $perPage);
     if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) :
         foreach($specialities as $speciality) { 
     ?>
-        <form method="POST" action="../controllers/updateControllers/updateSpecialityController.php" class="editForm">
+        <form method="POST" action="../../controllers/updateControllers/updateSpecialityController.php" class="editForm">
             <input type="hidden" name="specialityId" value="<?php echo $speciality->getId(); ?>">
             <table class="editTable editTables">
                 <tr>

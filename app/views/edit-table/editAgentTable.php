@@ -53,7 +53,7 @@ $agents = $agentObj::getAllAgentsPagination($page, $perPage);
     if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) :
         foreach($agents as $agent) { 
     ?>
-        <form method="POST" action="../controllers/updateControllers/updateAgentController.php" class="editForm">
+        <form method="POST" action="../../controllers/updateControllers/updateAgentController.php" class="editForm">
             <input type="hidden" name="agentId" value="<?php echo $agent->getId(); ?>" />
             <table class="editTable editTables">
                 <tr>

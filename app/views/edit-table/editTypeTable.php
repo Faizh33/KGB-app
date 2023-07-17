@@ -42,7 +42,7 @@ $missionTypes = $missionTypeObj::getAllMissionTypesPagination($page, $perPage);
     if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) :
         foreach($missionTypes as $missionType) { 
     ?>
-        <form method="POST" action="../controllers/updateControllers/updateTypeController.php" class="editForm">
+        <form method="POST" action="../../controllers/updateControllers/updateTypeController.php" class="editForm">
             <input type="hidden" name="typeId" value="<?php echo $missionType->getId(); ?>">
             <table class="editTable editTables">
                 <tr>

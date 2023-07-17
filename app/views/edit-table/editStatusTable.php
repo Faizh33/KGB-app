@@ -42,7 +42,7 @@ $missionStatuses = $missionStatusObj::getAllMissionStatusesPagination($page, $pe
     if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) :
         foreach($missionStatuses as $missionStatus) { 
     ?>
-        <form method="POST" action="../controllers/updateControllers/updateStatusController.php" class="editForm">
+        <form method="POST" action="../../controllers/updateControllers/updateStatusController.php" class="editForm">
             <input type="hidden" name="statusId" value="<?php echo $missionStatus->getId(); ?>">
             <table class="editTable editTables">
                 <tr>
