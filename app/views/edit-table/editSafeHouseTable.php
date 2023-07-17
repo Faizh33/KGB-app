@@ -34,6 +34,7 @@ $safeHouses = $safeHouseObj::getAllSafeHousesPagination($page, $perPage);
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../../../public/css/dashboard.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" type="text/javascript"></script>
     <title>Planques</title>
 </head>
 <body>
@@ -113,6 +114,7 @@ $safeHouses = $safeHouseObj::getAllSafeHousesPagination($page, $perPage);
             <span class="backText">Retour</span>
         </a>
     </div>
-    <script src="../../public/js/confirmDelete.js"></script>
+    <script src="../../../public/js/confirmDelete.js"></script>
+    <script src="../../../public/js/toggleEdit.js"></script>
 </body>
 </html>

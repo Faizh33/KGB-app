@@ -31,6 +31,7 @@ $missionStatuses = $missionStatusObj::getAllMissionStatusesPagination($page, $pe
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../../../public/css/dashboard.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" type="text/javascript"></script>
     <title>Statuts</title>
 </head>
 <body>
@@ -81,6 +82,7 @@ $missionStatuses = $missionStatusObj::getAllMissionStatusesPagination($page, $pe
             <span class="backText">Retour</span>
         </a>
     </div>
-    <script src="../../public/js/confirmDelete.js"></script>
+    <script src="../../../public/js/confirmDelete.js"></script>
+    <script src="../../../public/js/toggleEdit.js"></script>
 </body>
 </html>

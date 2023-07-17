@@ -34,6 +34,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="../../../public/css/dashboard.css">
     <title>Contacts</title>
 </head>
@@ -127,6 +128,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
             <span class="backText">Retour</span>
         </a>
     </div>
-    <script src="../../public/js/confirmDelete.js"></script>
+    <script src="../../../public/js/confirmDelete.js"></script>
+    <script src="../../../public/js/toggleEdit.js"></script>
 </body>
 </html>
