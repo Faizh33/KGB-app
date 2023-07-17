@@ -52,8 +52,17 @@ $specialityObj = new Speciality($pdo);
             <tr>
                 <th scope="row" class="thTable">Nationalité</th>
                 <td class="tdTable">
-                    <span id="agentNationality"><?php echo $agent->getNationality(); ?></span>
-                    <input type="text" class="editInput" id="editAgentNationality" name="agentNationality" placeholder="<?php echo $agent->getNationality() ?>" style="display:none;">
+                    <span id="agentNationality"><?php echo $agent->getNationality()->getNationality(); ?></span>
+                    <select name="agentNationality" id="agentNationality" class="editInput" style="display: none;">
+                    <option value="">--<?php echo $agent->getNationality()->getNationality(); ?>--</option>
+                    <?php
+                    $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();
+                    foreach ($countriesNationalities as $countryNationality) {
+                        $nationality = $countryNationality->getNationality();
+                        echo "<option value=\"$nationality\">$nationality</option>";
+                    }
+                    ?>
+                    </select>
                 </td>
             </tr>
             <tr>

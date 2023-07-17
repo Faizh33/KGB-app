@@ -15,6 +15,7 @@ use app\classes\MissionSafeHouse;
 use app\classes\SafeHouse;
 use app\classes\Speciality;
 use app\classes\MissionStatus;
+use app\classes\CountryNationality;
 
 include_once "../../config/database.php";
 include_once "../classes/Mission.php";
@@ -29,6 +30,7 @@ include_once "../classes/MissionSafeHouse.php";
 include_once "../classes/Speciality.php";
 include_once "../classes/MissionStatus.php";
 include_once "../classes/SafeHouse.php";
+include_once "../classes/CountryNationality.php";
 
 // Créer une instance des classes nécessaires
 $mission = new Mission($pdo);
@@ -43,6 +45,7 @@ $missionSafeHouseObj = new MissionSafeHouse($pdo);
 $specialityObj = new Speciality($pdo);
 $missionStatusObj = new MissionStatus($pdo);
 $safeHouseObj = new SafeHouse($pdo);
+$countryNationalityObj = new CountryNationality($pdo);
 
 $missions = $mission->getAllMissions();
 
@@ -82,8 +85,23 @@ $missions = $mission->getAllMissions();
                     <!-- Pays de la mission -->
                     <th scope="row" class="thMissionTable">Pays</th>
                     <td class="tdMissionTable">
-                        <span id="missionCountry"><?php echo $mission->getCountry(); ?></span>
-                        <input type="text" name="country" class="editInput" id="editMissionCountry" placeholder="<?php echo $mission->getCountry(); ?>" style="display:none;">
+                        <span id="missionCountry">
+                        <?php 
+                            $country = $countryNationalityObj::getCountryNationalityById($mission->getCountry()->getId());
+                            echo $country->getCountry();
+                        ?>
+                        </span>
+                        <select name="country" id="country" style="display:none;" required>
+                        <option value="">--<?php echo $country->getCountry() ?>--</option>
+                        <?php
+                            $countries = CountryNationality::getAllCountriesNationalities();
+                            foreach ($countries as $country) {
+                                $countryId = $country->getId();
+                                $countryName = $country->getCountry();
+                                echo "<option value=\"$countryId\">$countryName</option>";
+                            }
+                        ?>
+                    </select>
                     </td>
                 </tr>
                 <tr>
@@ -149,7 +167,8 @@ $missions = $mission->getAllMissions();
                                 foreach($missionAgents as $missionAgent) {
                                     $agentId = $missionAgent->getAgentId();
                                     $agent = $agentObj->getAgentById($agentId);
-                                    echo "<br>Nom : " . $agent->getLastName() . " " . $agent->getFirstName() . "<br>" . "Date de naissance: " . $agent->getBirthDate() . "<br>" . "Nationalité :  " . $agent->getNationality() . "<br>" . "Code d'identification : " . $agent->getIdentificationCode() . "<br><br>";
+                                    $nationality = $countryNationalityObj::getCountryNationalityById($agent->getNationality()->getId())->getNationality();
+                                    echo "<br>Nom : " . $agent->getLastName() . " " . $agent->getFirstName() . "<br>" . "Date de naissance: " . $agent->getBirthDate() . "<br>" . "Nationalité :  " . $nationality . "<br>" . "Code d'identification : " . $agent->getIdentificationCode() . "<br><br>";
                                 }
                             ?>
                         </span>
@@ -181,7 +200,8 @@ $missions = $mission->getAllMissions();
                                 foreach($missionContacts as $missionContact) {
                                     $contactId = $missionContact->getContactId();
                                     $contact = $contactObj->getContactById($contactId);
-                                    echo "<br>Nom : " . $contact->getLastName() . " " . $contact->getFirstName() . "<br>" . "Date de naissance: " . $contact->getBirthDate() . "<br>" . "Nationalité :  " . $contact->getNationality() . "<br>" . "Code d'identification : " . $contact->getCodeName() . "<br><br>";
+                                    $nationality = $countryNationalityObj::getCountryNationalityById($contact->getNationality()->getId())->getNationality();
+                                    echo "<br>Nom : " . $contact->getLastName() . " " . $contact->getFirstName() . "<br>" . "Date de naissance: " . $contact->getBirthDate() . "<br>" . "Nationalité :  " . $nationality . "<br>" . "Code d'identification : " . $contact->getCodeName() . "<br><br>";
                                 }
                             ?>
                         </span> 
@@ -213,7 +233,8 @@ $missions = $mission->getAllMissions();
                                     foreach($missionTargets as $missionTarget) {
                                         $targetId = $missionTarget->getTargetId();
                                         $target = $targetObj->getTargetById($targetId);
-                                        echo "<br>Nom : " . $target->getLastName() . " " . $target->getFirstName() . "<br>" . "Date de naissance: " . $target->getBirthDate() . "<br>" . "Nationalité :  " . $target->getNationality() . "<br>" . "Code d'identification : " . $target->getCodeName() . "<br><br>";
+                                        $nationality = $countryNationalityObj::getCountryNationalityById($target->getNationality()->getId())->getNationality();
+                                        echo "<br>Nom : " . $target->getLastName() . " " . $target->getFirstName() . "<br>" . "Date de naissance: " . $target->getBirthDate() . "<br>" . "Nationalité :  " . $nationality . "<br>" . "Code d'identification : " . $target->getCodeName() . "<br><br>";
                                     }
                                 ?>
                             </span> 
@@ -247,8 +268,9 @@ $missions = $mission->getAllMissions();
                                 } else {
                                     foreach ($missionSafeHouses as $missionSafeHouse) {
                                         $safeHouse = $safeHouseObj->getSafeHouseById($missionSafeHouse->getSafeHouseId());
+                                        $country = $countryNationalityObj::getCountryNationalityById($safeHouse->getCountry()->getId())->getCountry();
                                         if ($safeHouse) {
-                                            echo "<span><br>Code : " . $safeHouse->getCode() . "<br>" . "Adresse: " . $safeHouse->getAddress() . "<br>" . "Pays :  " . $safeHouse->getCountry() . "<br>" . "Type : " . $safeHouse->getType() . "<br><br></span>";
+                                            echo "<span><br>Code : " . $safeHouse->getCode() . "<br>" . "Adresse: " . $safeHouse->getAddress() . "<br>" . "Pays :  " . $country . "<br>" . "Type : " . $safeHouse->getType() . "<br><br></span>";
                                         }
                                     }
                                 }
@@ -256,7 +278,7 @@ $missions = $mission->getAllMissions();
                         </span>
                         <?php $safeHouses = $safeHouseObj->getAllSafeHouses();
                         foreach($safeHouses as $safeHouse) {
-                            $safeHouseId = $safeHouse->getId(); 
+                            $safeHouseId = $safeHouse->getId();
                             $isChecked = false;
                             foreach($missionSafeHouses as $missionSafeHouse) {
                                 if ($missionSafeHouse->getSafeHouseId() == $safeHouseId) {
@@ -267,7 +289,11 @@ $missions = $mission->getAllMissions();
                         ?>
                             <div class="chk" style="display:none;">
                                 <input type="checkbox" name="safeHouses[]" class="editChk" value="<?php echo $safeHouseId ?>" id="editSafeHouse<?php echo $safeHouseId ?>" <?php if ($isChecked) echo "checked"; ?>>
-                                <label for="editSafeHouse<?php echo $safeHouseId ?>" class="labelChk"><?php echo $safeHouse->getAddress() . ', ' . $safeHouse->getCountry() ?></label><br>
+                                <label for="editSafeHouse<?php echo $safeHouseId ?>" class="labelChk">
+                                <?php 
+                                echo $safeHouse->getAddress() . ', ' . $safeHouse->getCountry()->getCountry(); 
+                                ?>
+                                </label><br>
                             </div>
                         <?php } ?>
                     </td>

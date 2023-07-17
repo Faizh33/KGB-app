@@ -45,8 +45,17 @@ $targets = $targetObj->getAllTargets();
             <tr>
                 <th scope="row" class="thTable">Nationalité</th>
                 <td class="tdTable">
-                    <span id="targetNationality" class="tdContent"><?php echo $target->getNationality(); ?></span>
-                    <input type="text" class="editInput" id="editTargetNationality" name="nationality" placeholder="<?php echo $target->getNationality(); ?>" style="display:none;">
+                    <span id="targetNationality" class="tdContent"><?php echo $target->getNationality()->getNationality(); ?></span>
+                    <select name="targetNationality" id="targetNationality" class="editInput" style="display:none;" required>
+                    <option value="">--<?php echo $target->getNationality()->getNationality(); ?>--</option>
+                        <?php
+                        $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();
+                        foreach ($countriesNationalities as $countryNationality) {
+                            $nationality = $countryNationality->getNationality();
+                            echo "<option value=\"$nationality\">$nationality</option>";
+                        }
+                        ?>
+                    </select>
                 </td>
             </tr>
             <tr>

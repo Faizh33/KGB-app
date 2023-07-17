@@ -81,7 +81,7 @@ class Person
             $lastName = $personData['lastName'];
             $firstName = $personData['firstName'];
             $birthDate = $personData['birthDate'];
-            $nationalityId = $personData['nationality'];
+            $nationalityId = $personData['countrynationality_id'];
 
             if (!isset(self::$persons[$id])) {
                 $nationality = CountryNationality::getCountryNationalityById($nationalityId);
@@ -109,7 +109,7 @@ class Person
     public static function addPerson(string $lastName, string $firstName, string $birthDate, int $nationalityId): ?Person
     {
         // Vérifier si la personne existe déjà dans la base de données
-        $query = "SELECT * FROM Persons WHERE lastName = :lastName AND firstName = :firstName AND birthDate = :birthDate AND nationality = :nationality";
+        $query = "SELECT * FROM Persons WHERE lastName = :lastName AND firstName = :firstName AND birthDate = :birthDate AND countrynationality_id = :nationality";
         $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':lastName', $lastName);
         $stmt->bindValue(':firstName', $firstName);
@@ -132,7 +132,7 @@ class Person
     
         // Insérer la nouvelle personne dans la base de données et dans la classe
         $id = generateUUID();
-        $query = "INSERT INTO Persons (id, lastName, firstName, birthDate, nationality) VALUES (:id, :lastName, :firstName, :birthDate, :nationality)";
+        $query = "INSERT INTO Persons (id, lastName, firstName, birthDate, countrynationality_id) VALUES (:id, :lastName, :firstName, :birthDate, :nationality)";
         $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':id', $id);
         $stmt->bindValue(':lastName', $lastName);
@@ -172,7 +172,7 @@ class Person
                 }
             }
 
-            $query = "UPDATE Persons SET lastName = :lastName, firstName = :firstName, birthDate = :birthDate, nationality = :nationality WHERE id = :id";
+            $query = "UPDATE Persons SET lastName = :lastName, firstName = :firstName, birthDate = :birthDate, countrynationality_id = :nationality WHERE id = :id";
             $stmt = self::$pdo->prepare($query);
             $stmt->bindValue(':id', $id);
             $stmt->bindValue(':lastName', $person->lastName);

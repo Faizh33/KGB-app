@@ -5,17 +5,20 @@ require_once '../classes/Mission.php';
 require_once '../classes/Speciality.php';
 require_once '../classes/MissionStatus.php';
 require_once '../classes/MissionType.php';
+require_once '../classes/CountryNationality.php';
 
 use app\classes\Mission;
 use app\classes\Speciality;
 use app\classes\MissionStatus;
 use app\classes\MissionType;
+use app\classes\CountryNationality;
 
 // Création des objets
 $missionObj = new Mission($pdo);
 $specialityObj = new Speciality($pdo);
 $missionStatusObj = new MissionStatus($pdo);
 $missionTypeObj = new MissionType($pdo);
+$missionCountryNationality = new CountryNationality($pdo);
 
 // Obtenez la page actuelle à partir des paramètres GET
 $page = isset($_GET['page']) ? $_GET['page'] : 1;

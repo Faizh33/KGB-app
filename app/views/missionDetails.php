@@ -15,6 +15,7 @@ use app\classes\MissionSafeHouse;
 use app\classes\SafeHouse;
 use app\classes\Speciality;
 use app\classes\MissionStatus;
+use app\classes\CountryNationality;
 
 
 $missions = []; 
@@ -31,6 +32,7 @@ include_once "../classes/MissionSafeHouse.php";
 include_once "../classes/Speciality.php";
 include_once "../classes/MissionStatus.php";
 include_once "../classes/SafeHouse.php";
+include_once "../classes/CountryNationality.php";
 
 // Vérifier si l'ID de la mission est passé en paramètre
 if (isset($_GET['mission'])) {
@@ -49,6 +51,7 @@ if (isset($_GET['mission'])) {
     $specialityObj = new Speciality($pdo);
     $missionStatusObj = new MissionStatus($pdo);
     $safeHouseObj = new SafeHouse($pdo);
+    $countryNationalityObj = new CountryNationality($pdo);
 
     // Récupérer la mission spécifique en utilisant son ID
     $mission = $mission::getMissionById($missionId);
@@ -98,7 +101,12 @@ if (isset($_GET['mission'])) {
                     <!-- Pays de la mission -->
                     <th scope="row">Pays</th>
                     <td>
-                        <span id="missionCountry"><?php echo $mission->getCountry(); ?></span>
+                        <span id="missionCountry">
+                            <?php 
+                            $country = $countryNationalityObj::getCountryNationalityById($mission->getCountry()->getId());
+                            echo $country->getCountry();
+                            ?>
+                        </span>
                     </td>
                 </tr>
                 <tr>
@@ -151,7 +159,7 @@ if (isset($_GET['mission'])) {
                                 foreach($missionAgents as $missionAgent) {
                                     $agentId = $missionAgent->getAgentId();
                                     $agent = $agentObj::getAgentById($agentId);
-                                    echo "<br>Nom : " . $agent->getLastName() . " " . $agent->getFirstName() . "<br>" . "Date de naissance: " . $agent->getBirthDate() . "<br>" . "Nationalité :  " . $agent->getNationality() . "<br>" . "Code d'identification : " . $agent->getIdentificationCode() . "<br><br>";
+                                    echo "<br>Nom : " . $agent->getLastName() . " " . $agent->getFirstName() . "<br>" . "Date de naissance: " . $agent->getBirthDate() . "<br>" . "Nationalité :  " . $agent->getNationality()->getNationality() . "<br>" . "Code d'identification : " . $agent->getIdentificationCode() . "<br><br>";
                                 }
                             ?>
                         </span>
@@ -167,7 +175,7 @@ if (isset($_GET['mission'])) {
                                 foreach($missionContacts as $missionContact) {
                                     $contactId = $missionContact->getContactId();
                                     $contact = $contactObj::getContactById($contactId);
-                                    echo "<br>Nom : " . $contact->getLastName() . " " . $contact->getFirstName() . "<br>" . "Date de naissance: " . $contact->getBirthDate() . "<br>" . "Nationalité :  " . $contact->getNationality() . "<br>" . "Code d'identification : " . $contact->getCodeName() . "<br><br>";
+                                    echo "<br>Nom : " . $contact->getLastName() . " " . $contact->getFirstName() . "<br>" . "Date de naissance: " . $contact->getBirthDate() . "<br>" . "Nationalité :  " . $contact->getNationality()->getNationality() . "<br>" . "Code d'identification : " . $contact->getCodeName() . "<br><br>";
                                 }
                             ?>
                         </span>
@@ -183,7 +191,7 @@ if (isset($_GET['mission'])) {
                                 foreach($missionTargets as $missionTarget) {
                                     $targetId = $missionTarget->getTargetId();
                                     $target = $targetObj::getTargetById($targetId);
-                                    echo "<br>Nom : " . $target->getLastName() . " " . $target->getFirstName() . "<br>" . "Date de naissance: " . $target->getBirthDate() . "<br>" . "Nationalité :  " . $target->getNationality() . "<br>" . "Code d'identification : " . $target->getCodeName() . "<br><br>";
+                                    echo "<br>Nom : " . $target->getLastName() . " " . $target->getFirstName() . "<br>" . "Date de naissance: " . $target->getBirthDate() . "<br>" . "Nationalité :  " . $target->getNationality()->getNationality() . "<br>" . "Code d'identification : " . $target->getCodeName() . "<br><br>";
                                 }
                             ?>
                         </span>
@@ -196,10 +204,14 @@ if (isset($_GET['mission'])) {
                         <span id="missionSafeHouse">
                         <?php
                             $missionSafeHouses = $missionSafeHouseObj::getSafeHousesByMissionId($missionId);
-                            foreach ($missionSafeHouses as $missionSafeHouse) {
-                                $safeHouse = $safeHouseObj::getSafeHouseById($missionSafeHouse->getSafeHouseId());
-                                if ($safeHouse) {
-                                    echo "<span><br>Code : " . $safeHouse->getCode() . "<br>" . "Adresse: " . $safeHouse->getAddress() . "<br>" . "Pays :  " . $safeHouse->getCountry() . "<br>" . "Type : " . $safeHouse->getType() . "<br><br></span>";
+                            if(empty($missionSafeHouses)) {
+                                echo "Aucune";
+                            } else {
+                                foreach ($missionSafeHouses as $missionSafeHouse) {
+                                    $safeHouse = $safeHouseObj::getSafeHouseById($missionSafeHouse->getSafeHouseId());
+                                    if ($safeHouse) {
+                                        echo "<span><br>Code : " . $safeHouse->getCode() . "<br>" . "Adresse: " . $safeHouse->getAddress() . "<br>" . "Pays :  " . $safeHouse->getCountry()->getCountry() . "<br>" . "Type : " . $safeHouse->getType() . "<br><br></span>";
+                                    }
                                 }
                             }
                             ?>

@@ -45,8 +45,17 @@ $contacts = $contactObj::getAllContacts();
             <tr>
                 <th scope="row" class="thTable">Nationalité</th>
                 <td class="tdTable">
-                    <span id="contactNationality" class="tdContent"><?php echo $contact->getNationality(); ?></span>
-                    <input type="text" class="editInput" id="editContactNationality" name="contactNationality" placeholder="<?php echo $contact->getNationality() ?>" style="display:none;" >
+                    <span id="contactNationality" class="tdContent"><?php echo $contact->getNationality()->getNationality(); ?></span>
+                    <select name="contactNationality" id="contactNationality" class="editInput" style="display:none;" required>
+                    <option value="">--<?php echo $contact->getNationality()->getNationality(); ?>--</option>
+                    <?php
+                        $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();
+                        foreach ($countriesNationalities as $countryNationality) {
+                            $nationality = $countryNationality->getNationality();
+                            echo "<option value=\"$nationality\">$nationality</option>";
+                        }
+                    ?>
+                    </select>                
                 </td>
             </tr>
             <tr>

@@ -9,6 +9,8 @@
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="../../public/css/dashboard.css">
+    <script src="../../public/js/dashboard.js"></script>
+    <script src="../../public/js/confirmDelete.js"></script>
     <title>Tableau de bord</title>
 </head>
 <body>
@@ -110,7 +112,6 @@
     </div>
     <?php endif; ?>
 
-    <script src="../../public/js/dashboard.js"></script>
-    <script src="../../public/js/confirmDelete.js"></script>
+
 </body>
 </html>

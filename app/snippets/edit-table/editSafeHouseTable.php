@@ -31,8 +31,17 @@ $safeHouses = $safeHouseObj->getAllSafeHouses();
             <tr>
                 <th scope="row" class="thTable">Pays</th>
                 <td class="tdTable">
-                    <span id="safeHouseCountry" class="tdContent"><?php echo $safeHouse->getCountry(); ?></span>
-                    <input type="text" class="editInput" id="editSafeHouseCountry" name="safeHouseCountry" placeholder="<?php echo $safeHouse->getCountry() ?>" style="display:none;" >
+                    <span id="safeHouseCountry" class="tdContent"><?php echo $safeHouse->getCountry()->getCountry(); ?></span>
+                    <select name="safeHouseCountry" id="safeHouseCountry" class="editInput" style="display:none" required>
+                    <option value="">--<?php echo $safeHouse->getCountry()->getCountry(); ?>--</option>
+                    <?php
+                    $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();
+                    foreach ($countriesNationalities as $countryNationality) {
+                        $country = $countryNationality->getCountry();
+                        echo "<option value=\"$country\">$country</option>";
+                    }
+                    ?>
+                    </select>
                 </td>
             </tr>
             <tr>
