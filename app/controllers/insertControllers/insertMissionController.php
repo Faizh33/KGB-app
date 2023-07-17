@@ -29,7 +29,6 @@ $missionStatusObj = new MissionStatus($pdo);
 $missionTypeObj = new MissionType($pdo);
 $countryNationalityObj = new CountryNationality($pdo);
 
-
 // Vérifie si la méthode de requête est POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -49,10 +48,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $targetsId = ($_POST["targets"]);
         $safeHousesId = ($_POST["safeHouses"]);     
 
-        // Récupère les objets de spécialité, statut de mission et type de mission à partir de leurs identifiants
+        //Récupère les objets de spécialité, statut de mission et type de mission à partir de leurs identifiants
         $speciality = $specialityObj::getSpecialityById($specialityId);
         $missionStatus = $missionStatusObj::getMissionStatusById($missionStatusId);
         $missionType = $missionTypeObj::getMissionTypeById($missionStatusId);
+
+        //Création de tableaux pour stocker les différents id
+        $targetsNationalityId = array();
+        $contactsNationalityId = array(); 
+        $agentsNationalityId = array();
+        $agentsSpecialityId = array();
+        $safeHousesCountryId = array();
 
         //Récupération de la nationalité des cibles et des contacts
         foreach($targetsId as $targetId) {
@@ -60,6 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $target = $targetObj::getTargetById($targetId);
             $targetNationality = $countryNationalityObj::getCountryNationalityById($target->getNationality()->getId());
             $targetNationalityId = $targetNationality->getId();
+            $targetsNationalityId[] = $targetNationalityId;
         }
 
         foreach($contactsId as $contactId) {
@@ -67,6 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $contact = $contactObj::getContactById($contactId);
             $contactNationality = $countryNationalityObj::getCountryNationalityById($contact->getNationality()->getId());
             $contactNationalityId = $contactNationality->getId();
+            $contactsNationalityId[] = $targetNationalityId;
         }
 
         //Récupération de la nationalité et de la spécialité des agents
@@ -75,9 +83,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $agent = $agentObj::getAgentById($agentId);
             $agentNationality = $countryNationalityObj::getCountryNationalityById($agent->getNationality()->getId());
             $agentNationalityId = $agentNationality->getId();
+            $agentsNationalityId[] = $agentNationalityId;
+
             $agentSpecialityObj = new AgentSpeciality($pdo);
             $agentSpeciality = $agentSpecialityObj::getSpecialitiesByAgentId($agentId);
             $agentSpecialityId = $agentSpeciality[0]->getSpecialityId();
+            $agentsSpecialityId[] = $agentSpeciality;
         }
 
         //Récupération du pays des planques
@@ -86,24 +97,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $safeHouse = $safeHouseObj::getSafeHouseById($safeHouseId);
             $safeHouseCountry = $countryNationalityObj::getCountryNationalityById($safeHouse->getCountry()->getId());
             $safeHouseCountryId = $safeHouseCountry->getId();
+            $safeHousesCountryId[] = $safeHouseCountryId;
         }
 
-        // Crée une nouvelle instance de la classe Mission
-        $mission = new Mission($pdo);
+        // Vérification des contraintes
+        $constraintsSatisfied = true;
 
-        // Ajoute une nouvelle mission à la base de données
-        $newMission = $mission::addMission($title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType, $agentsId, $contactsId, $targetsId, $safeHousesId);
+        // Vérification de la contrainte : les cibles ne peuvent pas avoir la même nationalité que les agents
+        foreach ($targetsNationalityId as $targetNationalityId) {
+            if (in_array($targetNationalityId, $agentsNationalityId)) {
+                $constraintsSatisfied = false;
+                echo "Erreur : Les cibles ne peuvent pas avoir la même nationalité que les agents.";
+                break;
+            }
+        }
 
-        if(isset($newMission)) {
-            echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Nouvelle mission ajoutée en base de données</div>";
-            echo "<div style='color:rgb(3, 114, 103);font-style:italic'>Redirection dans 3 secondes</div>";
-            echo "<script>
-                setTimeout(function() {
-                    window.location.href = '../../views/dashboardCreate.php';
-                }, 3000);
-            </script>";
-            exit;
-        }  
+        // Vérification de la contrainte : les contacts sont obligatoirement de la nationalité du pays de la mission
+        if (!in_array($country->getId(), $contactsNationalityId)) {
+            $constraintsSatisfied = false;
+            echo "Erreur : Les contacts doivent être de la nationalité du pays de la mission.";
+        }
+
+        // Vérification de la contrainte : la planque est obligatoirement dans le même pays que la mission
+        foreach ($safeHousesCountryId as $safeHouseCountryId) {
+            if ($safeHouseCountryId !== $country->getId()) {
+                $constraintsSatisfied = false;
+                echo "Erreur : La planque doit être dans le même pays que la mission.";
+                break;
+            }
+        }
+
+        // Vérification de la contrainte : au moins 1 agent avec la spécialité requise
+        $requiredSpecialityId = $speciality->getId();
+        $hasRequiredSpeciality = false;
+        foreach ($agentsSpecialityId as $agentSpecialityId) {
+            if ($agentSpecialityId === $requiredSpecialityId) {
+                $hasRequiredSpeciality = true;
+                break;
+            }
+        }
+        if (!$hasRequiredSpeciality) {
+            $constraintsSatisfied = false;
+            echo "Erreur : Il faut assigner au moins 1 agent disposant de la spécialité requise.";
+        }
+
+        // Si toutes les contraintes sont satisfaites, ajoute la mission à la base de données
+        if ($constraintsSatisfied) {
+            // Crée une nouvelle instance de la classe Mission
+            $mission = new Mission($pdo);
+
+            // Ajoute une nouvelle mission à la base de données
+            $newMission = $mission::addMission($title, $description, $codeName, $country, $startDate, $endDate, $speciality, $missionStatus, $missionType, $agentsId, $contactsId, $targetsId, $safeHousesId);
+
+            if (isset($newMission)) {
+                echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Nouvelle mission ajoutée en base de données</div>";
+                echo "<div style='color:rgb(3, 114, 103);font-style:italic'>Redirection dans 3 secondes</div>";
+                echo "<script>
+                    setTimeout(function() {
+                        window.location.href = '../../views/dashboardCreate.php';
+                    }, 3000);
+                </script>";
+                exit;
+            }
+        }
     } else {
         echo "Tous les champs sont requis.";
     }
