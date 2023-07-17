@@ -29,8 +29,8 @@
                     $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();
                     foreach ($countriesNationalities as $countryNationality) {
                         $country = $countryNationality->getCountry();
-                        echo "<option value=\"$country\">$country</option>";
-                    }
+                        $countryId = $countryNationality->getId();
+                        echo "<option value=\"$countryId\">$country</option>";                    }
                     ?>
                 </select>
             </td>
