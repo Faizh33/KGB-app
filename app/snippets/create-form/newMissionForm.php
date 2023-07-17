@@ -214,5 +214,3 @@
             <input type="submit" value="Enregistrer" class="formButton button" />
         </div>
     </form>
-    
-    <script src="../../../public/js/form-validation.js"></script>

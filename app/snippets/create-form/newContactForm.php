@@ -32,7 +32,7 @@
                 <label for="agentNationality" class="labelForm">Nationalité</label>
             </td>
             <td class="inputColumn">
-                <select name="agentNationality" id="agentNationality" class="formInput" required>
+                <select name="contactNationality" id="contactNationality" class="formInput" required>
                     <?php
                     $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();
                     foreach ($countriesNationalities as $countryNationality) {
