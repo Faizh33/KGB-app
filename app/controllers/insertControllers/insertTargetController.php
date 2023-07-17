@@ -1,10 +1,14 @@
 <?php
 
 use app\classes\Target;
+use app\classes\CountryNationality;
 
 include_once "../../../config/database.php";
 include_once "../../helpers/dataHelpers.php";
 include_once "../../classes/Target.php";
+include_once "../../classes/CountryNationality.php";
+
+$countryNationalityObj = new CountryNationality($pdo);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Vérifier si les informations sont passées dans le POST
@@ -12,12 +16,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $lastName = valid_datas($_POST["targetLastName"]);
         $firstName = valid_datas($_POST["targetFirstName"]);
         $birthDate = valid_datas($_POST["targetBirthDate"]);
-        $nationality = valid_datas($_POST["targetNationality"]);
+        $nationality = $countryNationalityObj->getCountryNationalityById($_POST["targetNationality"]);
         $idCode = valid_datas($_POST["targetIdCode"]);
+
+        //Récupération de l'id de la nationalité
+        $nationalityId = $nationality->getId();
 
         //Création d'un nouvel objet Target et insertion des données
         $targetObj = new Target($pdo);
-        $target = $targetObj::addTargetProperties($lastName, $firstName, $birthDate, $nationality, $idCode);
+        $target = $targetObj::addTargetProperties($lastName, $firstName, $birthDate, $nationalityId, $idCode);
 
         //Si l'ajout en base de données à réussi : redirection vers la page de création
         if(isset($target)) {

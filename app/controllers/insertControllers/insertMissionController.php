@@ -6,6 +6,10 @@ use app\classes\MissionStatus;
 use app\classes\MissionType;
 use app\classes\Agent;
 use app\classes\Target;
+use app\classes\Contact;
+use app\classes\SafeHouse;
+use app\classes\AgentSpeciality;
+use app\classes\CountryNationality;
 
 include_once "../../../config/database.php";
 include_once "../../helpers/dataHelpers.php";
@@ -15,10 +19,15 @@ include_once "../../classes/MissionStatus.php";
 include_once "../../classes/MissionType.php";
 include_once "../../classes/Agent.php";
 include_once "../../classes/Target.php";
+include_once "../../classes/Contact.php";
+include_once "../../classes/SafeHouse.php";
+include_once "../../classes/AgentSpeciality.php";
+include_once "../../classes/CountryNationality.php";
 
 $specialityObj = new Speciality($pdo);
 $missionStatusObj = new MissionStatus($pdo);
 $missionTypeObj = new MissionType($pdo);
+$countryNationalityObj = new CountryNationality($pdo);
 
 
 // Vérifie si la méthode de requête est POST
@@ -29,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $title = valid_datas($_POST["title"]);
         $description = valid_datas($_POST["description"]);
         $codeName = valid_datas($_POST["codeName"]);
-        $country = ($_POST["country"]);
+        $country = $countryNationalityObj::getCountryNationalityById($_POST["country"]);
         $startDate = ($_POST["startDate"]);
         $endDate = ($_POST["endDate"]);
         $specialityId = ($_POST["missionSpeciality"]);
@@ -45,19 +54,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $missionStatus = $missionStatusObj::getMissionStatusById($missionStatusId);
         $missionType = $missionTypeObj::getMissionTypeById($missionStatusId);
 
-        //Récupération de la nationalité des agents et des cibles
-        foreach($agentsId as $agentId) {
-            $agentObj = new Agent($pdo);
-            $agent = $agentObj::getAgentById($agentId);
-            $agentNationality = $agent->getNationality();
-        }
-
+        //Récupération de la nationalité des cibles et des contacts
         foreach($targetsId as $targetId) {
             $targetObj = new Target($pdo);
             $target = $targetObj::getTargetById($targetId);
-            $targetNationality = $target->getNationality();
+            $targetNationality = $countryNationalityObj::getCountryNationalityById($target->getNationality()->getId());
+            $targetNationalityId = $targetNationality->getId();
         }
 
+        foreach($contactsId as $contactId) {
+            $contactObj = new Contact($pdo);
+            $contact = $contactObj::getContactById($contactId);
+            $contactNationality = $countryNationalityObj::getCountryNationalityById($contact->getNationality()->getId());
+            $contactNationalityId = $contactNationality->getId();
+        }
+
+        //Récupération de la nationalité et de la spécialité des agents
+        foreach($agentsId as $agentId) {
+            $agentObj = new Agent($pdo);
+            $agent = $agentObj::getAgentById($agentId);
+            $agentNationality = $countryNationalityObj::getCountryNationalityById($agent->getNationality()->getId());
+            $agentNationalityId = $agentNationality->getId();
+            $agentSpecialityObj = new AgentSpeciality($pdo);
+            $agentSpeciality = $agentSpecialityObj::getSpecialitiesByAgentId($agentId);
+            $agentSpecialityId = $agentSpeciality[0]->getSpecialityId();
+        }
+
+        //Récupération du pays des planques
+        foreach($safeHousesId as $safeHouseId) {
+            $safeHouseObj = new SafeHouse($pdo);
+            $safeHouse = $safeHouseObj::getSafeHouseById($safeHouseId);
+            $safeHouseCountry = $countryNationalityObj::getCountryNationalityById($safeHouse->getCountry()->getId());
+            $safeHouseCountryId = $safeHouseCountry->getId();
+        }
 
         // Crée une nouvelle instance de la classe Mission
         $mission = new Mission($pdo);

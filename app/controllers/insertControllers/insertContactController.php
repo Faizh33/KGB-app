@@ -1,10 +1,14 @@
 <?php
 
-use app\classes\Contact;
-
 include_once "../../../config/database.php";
 include_once "../../helpers/dataHelpers.php";
 include_once "../../classes/Contact.php";
+include_once "../../classes/CountryNationality.php";
+
+use app\classes\Contact;
+use app\classes\CountryNationality;
+
+$countryNationalityObj = new CountryNationality($pdo);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Vérifier si les informations sont passées dans le POST
@@ -12,12 +16,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $lastName = valid_datas($_POST["contactLastName"]);
         $firstName = valid_datas($_POST["contactFirstName"]);
         $birthDate = valid_datas($_POST["contactBirthDate"]);
-        $nationality = valid_datas($_POST["contactNationality"]);
-        $idCode = valid_datas($_POST["contactIdCode"]);
+        $nationality = $countryNationalityObj->getCountryNationalityById($_POST["contactNationality"]);
+        $codeName = valid_datas($_POST["contactIdCode"]);
+
+        //Récupération de l'id de la nationalité
+        $nationalityId = $nationality->getId();
 
         //Création d'un nouvel objet Contact et insertion des données
         $contactObj = new Contact($pdo);
-        $contact = $contactObj::addContact($lastName, $firstName, $birthDate, $nationality, $idCode);
+        $contact = $contactObj::addContactProperties($lastName, $firstName, $birthDate, $nationalityId, $codeName);
 
         //Si l'ajout en base de données à réussi : redirection vers la page de création
         if(isset($contact)) {
