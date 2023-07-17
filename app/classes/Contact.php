@@ -2,7 +2,7 @@
 
 namespace app\classes;
 
-require_once 'person.php';
+require_once 'Person.php';
 require_once 'CountryNationality.php';
 
 class Contact extends Person
@@ -90,7 +90,7 @@ class Contact extends Person
      * @param string $codeName Le nom de code du contact.
      * @return Contact|null Le contact ajouté, ou null en cas d'erreur.
      */
-    public static function addContact(string $lastName, string $firstName, string $birthDate, string $nationality, string $codeName): ?Contact
+    public static function addContactProperties(string $lastName, string $firstName, string $birthDate, string $nationality, string $codeName): ?Contact
     {
         // Ajouter une personne à la base de données en utilisant la méthode addPerson de la classe parente
         $person = parent::addPerson($lastName, $firstName, $birthDate, $nationality);

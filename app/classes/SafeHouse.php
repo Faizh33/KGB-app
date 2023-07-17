@@ -110,7 +110,7 @@ class SafeHouse
      * @param CountryNationality $country L'objet CountryNationality représentant le pays de la SafeHouse.
      * @return SafeHouse|null La nouvelle SafeHouse ajoutée, ou null si le code existe déjà.
      */
-    public static function addSafeHouse(string $code, string $address, string $type, CountryNationality $country): ?SafeHouse
+    public static function addSafeHouse(string $code, string $address, string $type, int $countryId): ?SafeHouse
     {
         // Vérifier si le code de la SafeHouse existe déjà dans la base de données
         $query = "SELECT * FROM SafeHouses WHERE code = :code";
@@ -130,8 +130,11 @@ class SafeHouse
         $stmt->bindValue(':code', $code);
         $stmt->bindValue(':address', $address);
         $stmt->bindValue(':type', $type);
-        $stmt->bindValue(':countryId', $country->getId());
+        $stmt->bindValue(':countryId', $countryId);
         $stmt->execute();
+
+        // Récupérer l'objet CountryNationality correspondant à l'identifiant de nationalité
+        $country = CountryNationality::getCountryNationalityById($countryId);
 
         $newSafeHouseId = self::$pdo->lastInsertId();
 
