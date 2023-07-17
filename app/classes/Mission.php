@@ -75,7 +75,8 @@ class Mission
             // Vérifier si la mission existe déjà dans la liste des missions
             if (!isset(self::$missions[$id])) {
                 // Récupérer l'objet Speciality, MissionStatus et MissionType correspondant à partir de leurs identifiants
-                $country = CountryNationality::getCountryNationalityById($countryId);
+                $countryNationalityObj = new CountryNationality(self::$pdo);
+                $country = $countryNationalityObj::getCountryNationalityById($countryId);
                 $speciality = Speciality::getSpecialityById($specialityId);
                 $missionStatus = MissionStatus::getMissionStatusById($missionStatusId);
                 $missionType = MissionType::getMissionTypeById($missionTypeId);
@@ -128,7 +129,8 @@ class Mission
             // Vérifier si la mission existe déjà dans la liste des missions
             if (!isset(self::$missions[$id])) {
                 // Récupérer l'objet Speciality, MissionStatus et MissionType correspondant à partir de leurs identifiants
-                $country = CountryNationality::getCountryNationalityById($countryId);
+                $countryNationalityObj = new CountryNationality(self::$pdo);
+                $country = $countryNationalityObj::getCountryNationalityById($countryId);
                 $speciality = Speciality::getSpecialityById($specialityId);
                 $missionStatus = MissionStatus::getMissionStatusById($missionStatusId);
                 $missionType = MissionType::getMissionTypeById($missionTypeId);
@@ -192,10 +194,14 @@ class Mission
             $missionTypeId = $missionData['missiontype_id'];
 
             // Récupérer les objets Speciality, MissionStatus et MissionType correspondants à partir de leurs identifiants
-            $country = CountryNationality::getCountryNationalityById($countryId);
-            $speciality = Speciality::getSpecialityById($specialityId);
-            $missionStatus = MissionStatus::getMissionStatusById($missionStatusId);
-            $missionType = MissionType::getMissionTypeById($missionTypeId);
+            $countryNationalityObj = new CountryNationality(self::$pdo);
+            $country = $countryNationalityObj::getCountryNationalityById($countryId);
+            $specialityObj = new Speciality(self::$pdo);
+            $speciality = $specialityObj::getSpecialityById($specialityId);
+            $missionStatusObj = new MissionStatus(self::$pdo);
+            $missionStatus = $missionStatusObj::getMissionStatusById($missionStatusId);
+            $missionTypeObj = new MissionType(self::$pdo);
+            $missionType = $missionTypeObj::getMissionTypeById($missionTypeId);
 
             // Création d'une nouvelle instance de Mission
             $mission = new Mission(self::$pdo, $id, $title, $description, $codeName, $startDate, $endDate, $country, $speciality, $missionStatus, $missionType);

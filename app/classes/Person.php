@@ -50,7 +50,8 @@ class Person
         $birthDate = $personData['birthDate'];
         $nationalityId = $personData['countrynationality_id'];
 
-        $nationality = CountryNationality::getCountryNationalityById($nationalityId);
+        $countryNationalityObj = new CountryNationality(self::$pdo);
+        $nationality = $countryNationalityObj::getCountryNationalityById($nationalityId);
 
         if ($personData) {
             $person = new Person(self::$pdo, $id, $lastName, $firstName, $birthDate, $nationality);
@@ -84,7 +85,8 @@ class Person
             $nationalityId = $personData['countrynationality_id'];
 
             if (!isset(self::$persons[$id])) {
-                $nationality = CountryNationality::getCountryNationalityById($nationalityId);
+                $countryNationalityObj = new CountryNationality(self::$pdo);
+                $nationality = $countryNationalityObj::getCountryNationalityById($nationalityId);
                 $person = new Person(self::$pdo, $id, $lastName, $firstName, $birthDate, $nationality);
                 self::$persons[$id] = $person;
             }

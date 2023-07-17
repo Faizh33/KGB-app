@@ -2,6 +2,8 @@
 
 namespace app\classes;
 
+require_once 'CountryNationality.php';
+
 class SafeHouse
 {
     private int $id;
@@ -51,7 +53,8 @@ class SafeHouse
         $countryId = $safeHouseData['countrynationality_id'];
 
         if ($safeHouseData) {
-            $country = CountryNationality::getCountryNationalityById($countryId);
+            $countryNationalityObj = new CountryNationality(self::$pdo);
+            $country = $countryNationalityObj::getCountryNationalityById($countryId);
             $safeHouse = new SafeHouse( self::$pdo, $id, $code, $address, $type, $country);
 
             self::$safeHouses[$id] = $safeHouse;
@@ -82,7 +85,9 @@ class SafeHouse
             $address = $safeHouseData['address'];
             $type = $safeHouseData['type'];
             $countryId = $safeHouseData['countrynationality_id'];
-            $country = CountryNationality::getCountryNationalityById($countryId);
+
+            $countryNationalityObj = new CountryNationality(self::$pdo);
+            $country = $countryNationalityObj::getCountryNationalityById($countryId);
 
             if (!isset(self::$safeHouses[$id])) {
                 $safeHouse = new SafeHouse(self::$pdo, $id, $code, $address, $type, $country);
