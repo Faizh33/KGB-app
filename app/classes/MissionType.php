@@ -96,6 +96,58 @@ class MissionType
     }
 
     /**
+     * Récupère tous les types de mission de la base de données et les insère dans la classe.
+     *
+     * @return array Les types de mission récupérés.
+     */
+    public static function getAllMissionTypesPagination(int $page, int $perPage): array
+    {
+        // Calculer l'offset pour la page spécifiée
+        $offset = ($page - 1) * $perPage;
+
+        // Requête SQL avec les clauses LIMIT et OFFSET
+        $query = "SELECT * FROM MissionTypes LIMIT :perPage OFFSET :offset";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':perPage', $perPage, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Récupérer les données de tous les types de mission
+        $missionTypesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        // Tableau pour stocker les types de mission
+        $missionTypes = [];
+
+        // Parcourir les données de chaque type de mission
+        foreach ($missionTypesData as $missionTypeData) {
+            $missionTypeId = $missionTypeData['id'];
+            // Vérifier si le type de mission n'est pas déjà présent dans le tableau des types de mission
+            if (!isset(self::$missionTypes[$missionTypeId])) {
+                // Créer une nouvelle instance de la classe MissionType avec les données du type de mission
+                $missionType = new MissionType(self::$pdo, $missionTypeId, $missionTypeData['type']);
+                // Ajouter le type de mission au tableau des types de mission pour une utilisation ultérieure
+                self::$missionTypes[$missionTypeId] = $missionType;
+            }
+
+            // Ajouter le type de mission au tableau des types de mission à retourner
+            $missionTypes[] = self::$missionTypes[$missionTypeId];
+        }
+
+        return $missionTypes;
+    }
+
+    public static function countMissionTypes(): int
+    {
+        $query = "SELECT COUNT(*) AS total FROM MissionTypes";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return (int) $result['total'];
+    }
+
+    /**
      * Ajoute un nouveau type de mission.
      *
      * @param string $type Le nom du nouveau type de mission.

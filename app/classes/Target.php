@@ -77,6 +77,62 @@ class Target extends Person
     }
 
     /**
+     * Récupère toutes les cibles de la base de données avec pagination.
+     *
+     * @param int $page Le numéro de la page à récupérer.
+     * @param int $perPage Le nombre d'éléments par page.
+     * @return array Un tableau contenant les cibles de la page spécifiée.
+     */
+    public static function getAllTargetsPagination(int $page, int $perPage): array
+    {
+        // Calculer l'offset pour la page spécifiée
+        $offset = ($page - 1) * $perPage;
+
+        // Requête SQL avec les clauses LIMIT et OFFSET
+        $query = "SELECT * FROM Targets LIMIT :perPage OFFSET :offset";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':perPage', $perPage, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        $targetsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $targets = [];
+        foreach ($targetsData as $targetData) {
+            $id = $targetData['id'];
+            $codeName = $targetData['code_name'];
+
+            // Utilisez la méthode getPersonById pour récupérer l'objet Person associé a la cible
+            $person = Person::getPersonById($id);
+
+            if ($person) {
+                $targets[] = new Target(
+                    self::$pdo,
+                    $person->getId(),
+                    $person->getLastName(),
+                    $person->getFirstName(),
+                    $person->getBirthDate(),
+                    $person->getNationality(),
+                    $codeName
+                );
+            }
+        }
+
+        return $targets;
+    }
+
+    public static function countTargets(): int
+    {
+        $query = "SELECT COUNT(*) AS total FROM Targets";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return (int) $result['total'];
+    }
+
+    /**
      * Ajoute les propriétés d'une nouvelle cible dans la base de données et dans la classe.
      *
      * @param PDO    $pdo         L'objet PDO pour la connexion à la base de données.

@@ -102,6 +102,59 @@ class SafeHouse
     }
 
     /**
+     * Récupère toutes les SafeHouses de la base de données.
+     *
+     * @return array Les SafeHouses.
+     */
+    public static function getAllSafeHousesPagination(int $page, int $perPage): array
+    {
+        // Calculer l'offset pour la page spécifiée
+        $offset = ($page - 1) * $perPage;
+
+        // Requête SQL avec les clauses LIMIT et OFFSET
+        $query = "SELECT * FROM SafeHouses LIMIT :perPage OFFSET :offset";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':perPage', $perPage, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        $safeHousesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $safeHouses = [];
+        foreach ($safeHousesData as $safeHouseData) {
+            $id = $safeHouseData['id'];
+            $code = $safeHouseData['code'];
+            $address = $safeHouseData['address'];
+            $type = $safeHouseData['type'];
+            $countryId = $safeHouseData['countrynationality_id'];
+
+            $countryNationalityObj = new CountryNationality(self::$pdo);
+            $country = $countryNationalityObj::getCountryNationalityById($countryId);
+
+            if (!isset(self::$safeHouses[$id])) {
+                $safeHouse = new SafeHouse(self::$pdo, $id, $code, $address, $type, $country);
+
+                self::$safeHouses[$id] = $safeHouse;
+            }
+
+            $safeHouses[] = self::$safeHouses[$id];
+        }
+
+        return $safeHouses;
+    }
+
+    public static function countSafeHouses(): int
+    {
+        $query = "SELECT COUNT(*) AS total FROM SafeHouses";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return (int) $result['total'];
+    }
+
+    /**
      * Ajoute une nouvelle SafeHouse.
      *
      * @param string $code Le code de la SafeHouse.

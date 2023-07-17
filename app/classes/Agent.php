@@ -87,6 +87,62 @@ class Agent extends Person
     }
 
     /**
+     * Récupère tous les agents de la base de données et crée une pagination.
+     *
+     * @Value \PDO $pdo L'objet PDO pour exécuter la requête SQL.
+     *
+     * @return array Le tableau contenant toutes les instances d'agents récupérées de la base de données.
+     */
+    public static function getAllAgentsPagination(int $page, int $perPage): array
+    {
+        // Calculer l'offset pour la page spécifiée
+        $offset = ($page - 1) * $perPage;
+
+        // Requête SQL pour récupérer l'agent correspondant à la personne
+        $query = "SELECT * FROM Agents LIMIT :perPage OFFSET :offset";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':perPage', $perPage, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        $agentsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $agents= [];
+        foreach ($agentsData as $agentData) {
+            $id = $agentData['id'];
+            $identificationCode = $agentData['identification_code'];
+
+            // Utilisez la méthode getPersonById pour récupérer l'objet Person associé a l'agent
+            $person = Person::getPersonById($id);
+
+            if ($person) {
+                $agents[] = new Agent(
+                    self::$pdo,
+                    $person->getId(),
+                    $person->getLastName(),
+                    $person->getFirstName(),
+                    $person->getBirthDate(),
+                    $person->getNationality(),
+                    $identificationCode
+                );
+            }
+        }
+
+        return $agents;
+    }
+
+    public static function countAgents(): int
+    {
+        $query = "SELECT COUNT(*) AS total FROM Agents";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return (int) $result['total'];
+    }
+
+    /**
      * Ajoute un nouvel agent dans la base de données et dans la classe.
      *
      * @Value \PDO $pdo L'objet PDO pour exécuter la requête SQL.

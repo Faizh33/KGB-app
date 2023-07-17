@@ -77,6 +77,50 @@ class MissionStatus
     }
 
     /**
+     * Récupère tous les statuts de mission de la base de données.
+     *
+     * @return array Les statuts de mission.
+     */
+    public static function getAllMissionStatusesPagination(int $page, int $perPage): array
+    {
+        // Calculer l'offset pour la page spécifiée
+        $offset = ($page - 1) * $perPage;
+
+        // Requête SQL avec les clauses LIMIT et OFFSET
+        $query = "SELECT * FROM MissionStatuses LIMIT :perPage OFFSET :offset";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':perPage', $perPage, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+        $missionStatusesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $missionStatuses = [];
+        foreach ($missionStatusesData as $missionStatusData) {
+            $missionStatusId = $missionStatusData['id'];
+
+            if (!isset(self::$missionStatuses[$missionStatusId])) {
+                $missionStatus = new MissionStatus(self::$pdo, $missionStatusId, $missionStatusData['status']);
+                self::$missionStatuses[$missionStatusId] = $missionStatus;
+            }
+
+            $missionStatuses[] = self::$missionStatuses[$missionStatusId];
+        }
+
+        return $missionStatuses;
+    }
+
+    public static function countMissionStatuses(): int
+    {
+        $query = "SELECT COUNT(*) AS total FROM MissionStatuses";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return (int) $result['total'];
+    }
+
+    /**
      * Ajoute un nouveau statut de mission.
      *
      * @param string $status Le statut de mission à ajouter.

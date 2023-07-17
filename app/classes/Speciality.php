@@ -89,6 +89,56 @@ class Speciality
     }
 
     /**
+     * Récupère toutes les spécialités de la base de données et les insère dans la classe.
+     *
+     * @return array Un tableau contenant toutes les spécialités.
+     */
+    public static function getAllSpecialitiesPagination(int $page, int $perPage): array
+    {
+        // Calculer l'offset pour la page spécifiée
+        $offset = ($page - 1) * $perPage;
+
+        // Requête SQL avec les clauses LIMIT et OFFSET
+        $query = "SELECT * FROM Specialities LIMIT :perPage OFFSET :offset";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':perPage', $perPage, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        $specialitiesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $specialities = [];
+        foreach ($specialitiesData as $specialityData) {
+            $id = $specialityData['id'];
+            $specialityName = $specialityData['speciality'];
+
+            if (!isset(self::$specialities[$id])) {
+                // Si la spécialité n'existe pas encore dans le tableau $specialities, créer une nouvelle instance de Speciality
+                $speciality = new Speciality(self::$pdo, $id, $specialityName);
+                // Ajouter la spécialité au tableau $specialities
+                self::$specialities[$id] = $speciality;
+            }
+
+            // Ajouter la spécialité au tableau de résultats
+            $specialities[] = self::$specialities[$id];
+        }
+
+        // Retourner le tableau contenant toutes les spécialités
+        return $specialities;
+    }
+
+    public static function countSpecialities(): int
+    {
+        $query = "SELECT COUNT(*) AS total FROM Specialities";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return (int) $result['total'];
+    }
+
+    /**
      * Ajoute une nouvelle spécialité dans la base de données et dans la classe.
      *
      * @param string $speciality La spécialité à ajouter.

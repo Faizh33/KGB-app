@@ -72,11 +72,74 @@ class Contact extends Person
 
             if($contactDatas !== false) {
                 $codeName = $contactDatas['code_name'];
-                $contacts[] = new Contact(self::$pdo, $person->getId(), $person->getLastName(), $person->getFirstName(), $person->getBirthDate(), $person->getNationality(), $codeName);
+                $contacts[] = new Contact(
+                    self::$pdo, $person->getId(), 
+                    $person->getLastName(), 
+                    $person->getFirstName(), 
+                    $person->getBirthDate(), 
+                    $person->getNationality(), 
+                    $codeName
+                );
             }
         }
 
         return $contacts;
+    }
+
+    /**
+     * Récupère tous les contacts de la base de données avec pagination.
+     *
+     * @param int $page Le numéro de la page à récupérer.
+     * @param int $perPage Le nombre d'éléments par page.
+     * @return array Un tableau contenant les contacts de la page spécifiée.
+     */
+    public static function getAllContactsPagination(int $page, int $perPage): array
+    {
+        // Calculer l'offset pour la page spécifiée
+        $offset = ($page - 1) * $perPage;
+
+        // Requête SQL avec les clauses LIMIT et OFFSET
+        $query = "SELECT * FROM Contacts LIMIT :perPage OFFSET :offset";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':perPage', $perPage, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        $contactsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $contacts = [];
+        foreach ($contactsData as $contactData) {
+            $id = $contactData['id'];
+            $codeName = $contactData['code_name'];
+
+            // Utilisez la méthode getPersonById pour récupérer l'objet Person associé au contact
+            $person = Person::getPersonById($id);
+
+            if ($person) {
+                $contacts[] = new Contact(
+                    self::$pdo,
+                    $person->getId(),
+                    $person->getLastName(),
+                    $person->getFirstName(),
+                    $person->getBirthDate(),
+                    $person->getNationality(),
+                    $codeName
+                );
+            }
+        }
+
+        return $contacts;
+    }
+
+    public static function countContacts(): int
+    {
+        $query = "SELECT COUNT(*) AS total FROM Contacts";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return (int) $result['total'];
     }
 
     /**
