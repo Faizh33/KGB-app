@@ -97,7 +97,9 @@
         </table>
     </div>
     <div class="dashBoardButton createButton dashboardButtonEdit">
-        <a href="dashboardCreate.php" class="dashboardButtonLink createButtonLink">Créer</a>
+        <a href="dashboardCreate.php" class="dashboardButtonLink createButtonLink">
+            Créer
+        </a>
     </div>
     <?php endif; ?>
 </body>
