@@ -88,10 +88,18 @@ h2 {
     justify-content: center;
     margin-bottom: 2vw;
     background: rgb(3, 114, 103);
+}
+
+.dashboardButtonLink {
     color: white;
-    font-size: 1vw;
+    font-size: 1.8vw;
     font-weight: bold;
     cursor: pointer;
+    text-decoration: none; 
+}
+
+.dashboardButtonLink:hover {
+    text-decoration: none;
 }
 
 /*CSS des formulaires et tableaux*/
@@ -249,22 +257,28 @@ table#form {
 }
 
 /* Style du bouton de retour en arrière */
-.backButton {
+.backButtonContainer {
     cursor: pointer;
-    margin-left: 73%;
+    margin-left: 70%;
     margin-bottom: 3vw;
     margin-top: 1vw;
     display: flex;
-    align-items: center; 
-    width: 6vw;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 8vw;
     height: 2.5vw;
     background-color: rgb(23, 157, 143);
     border: 0.2vw solid rgb(215, 236, 235);
     border-radius: 5px;
 }
 
-.backText {
+.backButton {
     color: white;
     font-weight: bold;
     margin-left: 0.5vw;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
