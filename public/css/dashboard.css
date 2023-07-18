@@ -94,12 +94,12 @@ h2 {
 }
 
 .dashboardButtonCreate {
-    width: 23vw;
-    height: 5vw;
+    width: 20vw;
+    height: 4vw;
 }
 
 .dashboardButtonEdit {
-    width: 22vw;
+    width: 18vw;
     height: 3vw;
 }
 
@@ -113,7 +113,7 @@ h2 {
 }
 
 .dashboardButtonLink, button.dashboardButton  {
-    font-size: 1.8vw;
+    font-size: 1.6vw;
     font-weight: bold;
     cursor: pointer;
     text-decoration: none; 
