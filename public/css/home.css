@@ -151,8 +151,8 @@ a {
     background: rgb(175, 238, 231);
 }
   
-.paginationLink:active {
-    background: rgb(2, 59, 53);
+.paginationLink.active {
+    background: rgb(3, 114, 103);
     color: rgb(175, 238, 231);
 }
 
