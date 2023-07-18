@@ -48,7 +48,7 @@ body {
 h1, h2 {
     display: flex;
     justify-content: center;
-    margin-bottom: 3vw;
+    margin-bottom: 5vw;
     margin-top: 3%;
     font-family: 'Roboto Slab', serif;
     color: white;
@@ -68,8 +68,12 @@ h2 {
 
 /*CSS des boutons des dashboards*/
 .dashboardTable {
-    width: 50%;
+    width: 80%;
     margin: auto;
+}
+
+.dashboardEdit {
+    margin-top: 8vw;
 }
 
 .dashboardContainer {
@@ -86,7 +90,7 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 2vw;
+    margin-bottom: 4vw;
     background: rgb(3, 114, 103);
 }
 
@@ -293,7 +297,6 @@ table#form {
     background: rgb(175, 238, 231);
     color: rgb(2, 59, 53);
 }
-
 
 /* Style du bouton de retour en arrière */
 .backButtonContainer {
