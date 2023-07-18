@@ -49,6 +49,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
         <form method="POST" action="../../controllers/updateControllers/updateContactController.php" class="editForm">
             <input type="hidden" name="contactId" value="<?php echo $contact->getId(); ?>">
             <table class="editTable editTables">
+                <!-- Nom du contact -->
                 <tr>
                     <th scope="row" class="thTable">Nom</th>
                     <td class="tdTable">
@@ -56,6 +57,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
                         <input type="text" class="editInput" id="editContactLastName" name="contactLastName" placeholder="<?php echo $contact->getLastName() ?>" style="display:none;" >
                     </td>
                 </tr>
+                <!-- Prénom du contact -->
                 <tr>
                     <th scope="row" class="thTable">Prénom</th>
                     <td class="tdTable">
@@ -63,6 +65,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
                         <input type="text" class="editInput" id="editContactFirstName" name="contactFirstName" placeholder="<?php echo $contact->getFirstName() ?>" style="display:none;" >
                     </td>
                 </tr>
+                <!-- Date de naissance du contact -->
                 <tr>
                     <th scope="row" class="thTable">Date de naissance</th>
                     <td class="tdTable">
@@ -77,6 +80,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
                         <input type="text" class="editInput" id="editContactBirthDate" name="contactBirthDate" placeholder="<?php echo $formattedBirthDate; ?>" style="display:none;" >
                     </td>
                 </tr>
+                <!-- Nationalité du contact -->
                 <tr>
                     <th scope="row" class="thTable">Nationalité</th>
                     <td class="tdTable">
@@ -93,6 +97,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
                         </select>                
                     </td>
                 </tr>
+                <!-- Nom de code du contact -->
                 <tr>
                     <th scope="row" class="thTable">Nom de code</th>
                     <td class="tdTable">
@@ -100,6 +105,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
                         <input type="text" class="editInput" id="editContactCodeName" name="contactCodeName" placeholder="<?php echo $contact->getCodeName() ?>" style="display:none;" >
                     </td>
                 </tr>
+                <!-- Boutons d'édition, de sauvegarde et de suppression -->
                 <td class="tbTable" colspan="2">
                     <div class="buttonsContainer">
                         <button type="button" class="button editButton" onClick="toggleEdit(this)">Modifier</button>
@@ -108,11 +114,13 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
                     </div>
                 </td>
             </table>
+            <!-- message affiché à la suppression -->
             <div class="messageDivContainer">
                 <div class="messageDiv"></div>
             </div>
         </form>
     <?php } endif; ?>
+    <!-- Liens de la pagination -->
     <div class="pagination">
         <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
             <a href="?page=<?php echo $i; ?>" class="paginationLink"><?php echo $i; ?></a>
@@ -122,10 +130,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
     <!-- Bouton de retour arrière -->
     <div class="backButtonContainer">
         <a href="../../views/dashboardEdit.php" class="backButton">
-            <svg xmlns="http://www.w3.org/2000/svg" width="1.5vw" height="1.5vw" fill="currentColor" color="white" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-            </svg>
-            <span class="backText">Retour</span>
+            Retour
         </a>
     </div>
     <script src="../../../public/js/confirmDelete.js"></script>

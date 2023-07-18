@@ -83,32 +83,32 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
             <input type="hidden" name="missionId" value="<?php echo $mission->getId(); ?>">
             <table class="editTable editMissionTable">
                 <tbody>
+                    <!-- Titre de la mission -->
                     <tr>
-                        <!-- Titre de la mission -->
                         <th scope="row" class="thMissionTable">Titre</th>
                         <td class="tdMissionTable">
                             <span id="missionTitle"><?php echo $mission->getTitle(); ?></span>
                             <input type="text" name="title" class="editInput" id="editMissionTitle" placeholder="<?php echo $mission->getTitle(); ?>" style="display:none;">
                         </td>
                     </tr>
+                    <!-- Description de la mission -->
                     <tr>
-                        <!-- Description de la mission -->
                         <th scope="row" class="thMissionTable">Description</th>
                         <td class="tdMissionTable">
                             <span id="missionDescription"><?php echo $mission->getDescription(); ?></span>
                             <textarea class="editInput" name="description" id="editMissionDescription" placeholder="<?php echo $mission->getDescription(); ?>" style="display:none;"></textarea>
                         </td>
                     </tr>
+                    <!-- Nom de code de la mission -->
                     <tr>
-                        <!-- Nom de code de la mission -->
                         <th scope="row" class="thMissionTable">Nom de Code</th>
                         <td class="tdMissionTable">
                             <span id="missionCodeName"><?php echo $mission->getCodeName(); ?></span>
                             <input type="text" name="codeName" class="editInput" id="editMissionCodeName" placeholder="<?php echo $mission->getCodeName(); ?>" style="display:none;">
                         </td>
                     </tr>
+                    <!-- Pays de la mission -->
                     <tr>
-                        <!-- Pays de la mission -->
                         <th scope="row" class="thMissionTable">Pays</th>
                         <td class="tdMissionTable">
                             <span id="missionCountry">
@@ -130,8 +130,8 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
                         </select>
                         </td>
                     </tr>
+                    <!-- Date de début de la mission -->
                     <tr>
-                        <!-- Date de début de la mission -->
                         <th scope="row" class="thMissionTable">Date de début</th>
                         <td class="tdMissionTable">
                             <span id="missionStartDate">
@@ -183,8 +183,8 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
                             </select>
                         </td>
                     </tr>
+                    <!-- Agents participant à la mission -->
                     <tr>
-                        <!-- Agents participant à la mission -->
                         <th scope="row" class="thMissionTable">Agent(s)</th>
                         <td class="tdMissionTable">
                             <span id="missionAgent">
@@ -216,8 +216,8 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
                             <?php } ?>
                         </td>
                     </tr>
+                    <!-- Contacts participant à la mission -->
                     <tr>
-                        <!-- Contacts participant à la mission -->
                         <th scope="row" class="thMissionTable">Contact(s)</th>
                         <td class="tdMissionTable">
                             <span id="missionContact">
@@ -249,41 +249,41 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
                             <?php } ?>
                         </td>
                     </tr>
-                        <tr>
-                            <!-- Cibles concernées par la mission -->
-                            <th scope="row" class="thMissionTable">Cible(s)</th>
-                            <td class="tdMissionTable">
-                                <span id="missionTarget">
-                                    <?php 
-                                        $missionTargets = $missionTargetObj->getTargetsByMissionId($mission->getId());
-                                        foreach($missionTargets as $missionTarget) {
-                                            $targetId = $missionTarget->getTargetId();
-                                            $target = $targetObj->getTargetById($targetId);
-                                            $nationality = $countryNationalityObj::getCountryNationalityById($target->getNationality()->getId())->getNationality();
-                                            echo "<br>Nom : " . $target->getLastName() . " " . $target->getFirstName() . "<br>" . "Date de naissance: " . $target->getBirthDate() . "<br>" . "Nationalité :  " . $nationality . "<br>" . "Code d'identification : " . $target->getCodeName() . "<br><br>";
-                                        }
-                                    ?>
-                                </span> 
-                                <?php $targets = $targetObj->getAllTargets();
-                                foreach($targets as $target) {
-                                    $targetId = $target->getId(); 
-                                    $isChecked = false;
+                    <tr>
+                        <!-- Cibles concernées par la mission -->
+                        <th scope="row" class="thMissionTable">Cible(s)</th>
+                        <td class="tdMissionTable">
+                            <span id="missionTarget">
+                                <?php 
+                                    $missionTargets = $missionTargetObj->getTargetsByMissionId($mission->getId());
                                     foreach($missionTargets as $missionTarget) {
-                                        if ($missionTarget->getTargetId() == $targetId) {
-                                            $isChecked = true;
-                                            break;
-                                        }
+                                        $targetId = $missionTarget->getTargetId();
+                                        $target = $targetObj->getTargetById($targetId);
+                                        $nationality = $countryNationalityObj::getCountryNationalityById($target->getNationality()->getId())->getNationality();
+                                        echo "<br>Nom : " . $target->getLastName() . " " . $target->getFirstName() . "<br>" . "Date de naissance: " . $target->getBirthDate() . "<br>" . "Nationalité :  " . $nationality . "<br>" . "Code d'identification : " . $target->getCodeName() . "<br><br>";
                                     }
                                 ?>
-                                    <div class="chk" style="display:none;">
-                                        <input type="checkbox" name="targets[]" class="editChk" value="<?php echo $targetId ?>" id="editTarget<?php echo $targetId ?>" <?php if ($isChecked) echo "checked"; ?>>
-                                        <label for="editTarget<?php echo $targetId ?>" class="labelChk"><?php echo $target->getLastName() . ' ' . $target->getFirstName() ?></label><br>
-                                    </div>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                        <tr>
-                        <!-- Planques allouées à la mission -->
+                            </span> 
+                            <?php $targets = $targetObj->getAllTargets();
+                            foreach($targets as $target) {
+                                $targetId = $target->getId(); 
+                                $isChecked = false;
+                                foreach($missionTargets as $missionTarget) {
+                                    if ($missionTarget->getTargetId() == $targetId) {
+                                        $isChecked = true;
+                                        break;
+                                    }
+                                }
+                            ?>
+                                <div class="chk" style="display:none;">
+                                    <input type="checkbox" name="targets[]" class="editChk" value="<?php echo $targetId ?>" id="editTarget<?php echo $targetId ?>" <?php if ($isChecked) echo "checked"; ?>>
+                                    <label for="editTarget<?php echo $targetId ?>" class="labelChk"><?php echo $target->getLastName() . ' ' . $target->getFirstName() ?></label><br>
+                                </div>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                    <!-- Planques allouées à la mission -->
+                    <tr>
                         <th scope="row" class="thMissionTable">Planque(s)</th>
                         <td class="tdMissionTable">
                             <span id="missionSafeHouse">
@@ -324,8 +324,8 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
                             <?php } ?>
                         </td>
                     </tr>
+                    <!-- Spécialité nécessaire à la mission -->
                     <tr>
-                        <!-- Spécialité nécessaire à la mission -->
                         <th scope="row" class="thMissionTable">Spécialité</th>
                         <td class="tdMissionTable">
                             <span id="missionSpeciality">
@@ -347,8 +347,8 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
                             </select>
                         </td>
                     </tr>
+                    <!-- Statut de la mission -->
                     <tr>
-                        <!-- Statut de la mission -->
                         <th scope="row" class="thMissionTable">Statut</th>
                         <td class="tdMissionTable tdEnd">
                             <span id="missionStatus">
@@ -370,6 +370,7 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
                             </select>
                         </td>
                     </tr>
+                    <!-- Boutons d'édition, de sauvegarde et de suppression -->
                     <tr>
                         <td class="tdTable" colspan="2">
                             <div class="buttonsContainer">
@@ -381,11 +382,13 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
                     </tr>
                 </tbody>
             </table>
+            <!-- message affiché à la suppression -->
             <div class="messageDivContainer">
                 <div class="messageDiv"></div>
             </div>
         </form>
     <?php endforeach; endif; ?>
+    <!-- Liens de la pagination -->
     <div class="pagination">
         <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
             <a href="?page=<?php echo $i; ?>" class="paginationLink"><?php echo $i; ?></a>
@@ -395,10 +398,7 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
     <!-- Bouton de retour arrière -->
     <div class="backButtonContainer">
         <a href="../../views/dashboardEdit.php" class="backButton">
-            <svg xmlns="http://www.w3.org/2000/svg" width="1.5vw" height="1.5vw" fill="currentColor" color="white" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-            </svg>
-            <span class="backText">Retour</span>
+            Retour
         </a>
     </div>
     <script src="../../../public/js/confirmDelete.js"></script>

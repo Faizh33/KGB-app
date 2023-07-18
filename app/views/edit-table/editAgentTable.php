@@ -56,6 +56,7 @@ $agents = $agentObj::getAllAgentsPagination($page, $perPage);
         <form method="POST" action="../../controllers/updateControllers/updateAgentController.php" class="editForm">
             <input type="hidden" name="agentId" value="<?php echo $agent->getId(); ?>" />
             <table class="editTable editTables">
+                <!-- Nom de l'agent -->
                 <tr>
                     <th scope="row" class="thTable">Nom</th>
                     <td class="tdTable">
@@ -63,6 +64,7 @@ $agents = $agentObj::getAllAgentsPagination($page, $perPage);
                         <input type="text" class="editInput" id="editAgentLastName" name="agentLastName" placeholder="<?php echo $agent->getLastName() ?>" style="display:none;">
                     </td>
                 </tr>
+                <!-- Prénom de l'agent -->
                 <tr>
                     <th scope="row" class="thTable">Prénom</th>
                     <td class="tdTable">
@@ -70,6 +72,7 @@ $agents = $agentObj::getAllAgentsPagination($page, $perPage);
                         <input type="text" class="editInput" id="editAgentFirstName" name="agentFirstName" placeholder="<?php echo $agent->getFirstName() ?>" style="display:none;">
                     </td>
                 </tr>
+                <!-- Date de naissance de l'agent -->
                 <tr>
                     <th scope="row" class="thTable">Date de naissance</th>
                     <td class="tdTable">
@@ -84,6 +87,7 @@ $agents = $agentObj::getAllAgentsPagination($page, $perPage);
                         <input type="text" class="editInput" id="editAgentBirthDate" name="agentBirthDate" placeholder="<?php echo $formattedBirthDate; ?>" style="display:none;">
                     </td>
                 </tr>
+                <!-- Nationalité de l'agent -->
                 <tr>
                     <th scope="row" class="thTable">Nationalité</th>
                     <td class="tdTable">
@@ -101,6 +105,7 @@ $agents = $agentObj::getAllAgentsPagination($page, $perPage);
                         </select>
                     </td>
                 </tr>
+                <!-- Code d'identification de l'agent -->
                 <tr>
                     <th scope="row" class="thTable">Code d'identification</th>
                     <td class="tdTable">
@@ -108,6 +113,7 @@ $agents = $agentObj::getAllAgentsPagination($page, $perPage);
                         <input type="text" class="editInput" id="editAgentIdCode" name="agentIdCode" placeholder="<?php echo $agent->getIdentificationCode() ?>" style="display:none;">
                     </td>
                 </tr>
+                <!-- Spécialité(s) de l'agent -->
                 <tr>
                     <th scope="row" class="thTable">Spécialité(s)</th>
                     <td class="tdTable">
@@ -130,6 +136,7 @@ $agents = $agentObj::getAllAgentsPagination($page, $perPage);
                         <?php } ?>
                     </td>
                 </tr>
+                <!-- Boutons d'édition, de sauvegarde et de suppression -->
                 <tr>
                     <td class="tbTable" colspan="2">
                         <div class="buttonsContainer">
@@ -140,11 +147,13 @@ $agents = $agentObj::getAllAgentsPagination($page, $perPage);
                     </td>
                 </tr>
             </table>
+            <!-- message affiché à la suppression -->
             <div class="messageDivContainer">
                 <div class="messageDiv"></div>
             </div>
         </form>
     <?php } endif; ?>
+    <!-- Liens de la pagination -->
     <div class="pagination">
         <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
             <a href="?page=<?php echo $i; ?>" class="paginationLink"><?php echo $i; ?></a>
@@ -154,10 +163,7 @@ $agents = $agentObj::getAllAgentsPagination($page, $perPage);
     <!-- Bouton de retour arrière -->
     <div class="backButtonContainer">
         <a href="../../views/dashboardEdit.php" class="backButton">
-            <svg xmlns="http://www.w3.org/2000/svg" width="1.5vw" height="1.5vw" fill="currentColor" color="white" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-            </svg>
-            <span class="backText">Retour</span>
+            Retour
         </a>
     </div>
     <script src="../../../public/js/confirmDelete.js"></script>
