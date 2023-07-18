@@ -1,5 +1,8 @@
 <?php
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once '../../config/database.php';
 require_once '../classes/Mission.php';
 require_once '../classes/Speciality.php';
@@ -20,16 +23,16 @@ $missionStatusObj = new MissionStatus($pdo);
 $missionTypeObj = new MissionType($pdo);
 $missionCountryNationality = new CountryNationality($pdo);
 
-// Obtenez la page actuelle à partir des paramètres GET
+// Obtenir la page actuelle à partir des paramètres GET
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 
 // Nombre d'éléments par page
 $perPage = 2;
 
-// Obtenez le nombre total d'éléments
+// Obtenir le nombre total d'éléments
 $totalItems = $missionObj::countMissions();
 
-// Calculez le nombre total de pages nécessaires
+// Calculer le nombre total de pages nécessaires
 $totalPages = ceil($totalItems / $perPage);
 
 // Récupération de toutes les missions
@@ -54,9 +57,9 @@ $missionTypes = $missionTypeObj::getAllMissionTypes();
             <div id="logButton" class="button">
                 <?php
                 if (isset($_SESSION['admin'])) {
-                    echo "<a href='../controllers/logControllers/logoutController.php' class='link'>Déconnexion</a>";
+                    echo "<a href='../controllers/logControllers/logoutController.php' id='logLink' class='link'>Déconnexion</a>";
                 } else {
-                    echo "<a href='loginForm.php' class='link'>Se connecter</a>";
+                    echo "<a href='loginForm.php' id='logLink' class='link'>Se connecter</a>";
                 }
                 ?>
             </div>
@@ -114,11 +117,8 @@ $missionTypes = $missionTypeObj::getAllMissionTypes();
     </div>
     <?php if (isset($_SESSION['admin'])) { ?>
         <div class="adminButtonContainer">
-            <div id="createButton" class="button adminButton" >
-                <a href='../views/dashboardCreate.php' id='createLink' class="link">Créer</a>
-            </div>
-            <div id="editButton" class="button adminButton">
-                <a href='../views/dashboardEdit.php' id='editLink' class="link">Modifier</a>
+            <div id="dashboardHomeButton" class="button adminButton" >
+                <a href='../views/dashboardEdit.php' id='dashboardLink' class="link">Tableau de bord</a>
             </div>
         </div>
     <?php } ?>
