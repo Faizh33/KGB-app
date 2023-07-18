@@ -179,6 +179,24 @@ class MissionTarget
     }
 
     /**
+     * Supprime toutes les cibles associées à une mission donnée.
+     *
+     * @param string $missionId L'identifiant de la mission.
+     * @return bool Indique si la suppression a été effectuée avec succès.
+     */
+    public static function deleteTargetsByMissionId(string $missionId): bool
+    {
+        $query = "DELETE FROM Missions_targets WHERE mission_id = :missionId";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':missionId', $missionId);
+        $stmt->execute();
+
+        unset(self::$missionTargets[$missionId]);
+
+        return true;
+    }
+
+    /**
      * Supprime toutes les missions associées à une cible donnée.
      *
      * @param string $targetId L'identifiant de la cible.
