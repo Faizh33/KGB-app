@@ -148,13 +148,15 @@ class MissionTarget
      */
     public static function updateMissionTargetProperties(string $missionId, array $propertiesToUpdate): bool
     {
-        $targetId = MissionTarget::getTargetId();
-
         $updatedMissionTargets = [];
 
         foreach (self::$missionTargets[$missionId] as $missionTarget) {
             foreach ($propertiesToUpdate as $property => $value) {
-                if ($missionTarget->$property !== $value) {
+                if ($property === 'targetId') {
+                    foreach ($value as $index => $targetId) {
+                        $missionTarget->setTargetId($targetId);
+                    }
+                } elseif ($missionTarget->$property !== $value) {
                     $missionTarget->$property = $value;
                 }
             }
@@ -163,30 +165,15 @@ class MissionTarget
 
         $query = "UPDATE Missions_targets SET target_id = :newTargetId WHERE mission_id = :missionId AND target_id = :targetId";
         $stmt = self::$pdo->prepare($query);
-        $stmt->bindValue(':newTargetId', $targetId);
-        $stmt->bindValue(':missionId', $missionId);
-        $stmt->bindValue(':targetId', $targetId);
-        $stmt->execute();
+
+        foreach ($propertiesToUpdate['targetId'] as $index => $targetId) {
+            $stmt->bindValue(':newTargetId', $targetId);
+            $stmt->bindValue(':missionId', $missionId);
+            $stmt->bindValue(':targetId', $targetId);
+            $stmt->execute();
+        }
 
         self::$missionTargets[$missionId] = $updatedMissionTargets;
-
-        return true;
-    }
-
-    /**
-     * Supprime toutes les cibles associées à une mission donnée.
-     *
-     * @param string $missionId L'identifiant de la mission.
-     * @return bool Indique si la suppression a été effectuée avec succès.
-     */
-    public static function deleteTargetsByMissionId(string $missionId): bool
-    {
-        $query = "DELETE FROM Missions_targets WHERE mission_id = :missionId";
-        $stmt = self::$pdo->prepare($query);
-        $stmt->bindValue(':missionId', $missionId);
-        $stmt->execute();
-
-        unset(self::$missionTargets[$missionId]);
 
         return true;
     }
@@ -215,8 +202,18 @@ class MissionTarget
         return $this->missionId;
     }
 
+    public function setMissionId(string $missionId): void
+    {
+        $this->missionId = $missionId;
+    }
+
     public function getTargetId(): string
     {
         return $this->targetId;
+    }
+
+    public function setTargetId(string $targetId): void
+    {
+        $this->targetId = $targetId;
     }
 }

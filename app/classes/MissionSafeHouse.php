@@ -145,30 +145,32 @@ class MissionSafeHouse
      */
     public static function updateSafeHouseProperties(string $missionId, array $propertiesToUpdate): bool
     {
-        $safeHouseId = self::getSafeHouseId();
-
         $updatedMissionSafeHouses = [];
-
+    
         foreach (self::$missionSafeHouses[$missionId] as $missionSafeHouse) {
             foreach ($propertiesToUpdate as $property => $value) {
-                if ($missionSafeHouse->$property !== $value) {
-                    $missionSafeHouse->$property = $value;
+                if ($property === 'safeHouseId' && is_array($value) && isset($value[0])) {
+                    $missionSafeHouse->setSafeHouseId($value[0]);
+                } else {
+                    if ($missionSafeHouse->$property !== $value) {
+                        $missionSafeHouse->$property = $value;
+                    }
                 }
             }
             $updatedMissionSafeHouses[] = $missionSafeHouse;
         }
-
+    
         $query = "UPDATE Missions_safehouses SET safehouse_id = :newSafeHouseId WHERE mission_id = :missionId AND safehouse_id = :safeHouseId";
         $stmt = self::$pdo->prepare($query);
-        $stmt->bindValue(':newSafeHouseId', $safeHouseId);
+        $stmt->bindValue(':newSafeHouseId', $propertiesToUpdate['safeHouseId'][0]);
         $stmt->bindValue(':missionId', $missionId);
-        $stmt->bindValue(':safeHouseId', $safeHouseId);
+        $stmt->bindValue(':safeHouseId', $propertiesToUpdate['safeHouseId'][0]);
         $stmt->execute();
-
+    
         self::$missionSafeHouses[$missionId] = $updatedMissionSafeHouses;
-
+    
         return true;
-    }
+    }      
 
     /**
      * Supprime toutes les planques associées à une mission donnée.
@@ -212,8 +214,18 @@ class MissionSafeHouse
         return $this->missionId;
     }
 
+    public function setMissionId(string $missionId): void
+    {
+        $this->missionId = $missionId;
+    }
+
     public function getSafeHouseId(): string
     {
         return $this->safeHouseId;
+    }
+
+    public function setSafeHouseId(string $safeHouseId): void
+    {
+        $this->safeHouseId = $safeHouseId;
     }
 }

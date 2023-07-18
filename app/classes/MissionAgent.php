@@ -150,16 +150,18 @@ class MissionAgent
      * @param array $propertiesToUpdate Les propriétés à mettre à jour.
      * @return bool Indique si la mise à jour a réussi.
      */
-    public static function updateMissionAgentProperties(string $missionId, array $propertiesToUpdate): bool
+        public static function updateMissionAgentProperties(string $missionId, array $propertiesToUpdate): bool
     {
-        $agentId = MissionAgent::getAgentId();
-
         $updatedMissionAgents = [];
 
         foreach (self::$missionAgents[$missionId] as $missionAgent) {
             foreach ($propertiesToUpdate as $property => $value) {
-                if ($missionAgent->$property !== $value) {
-                    $missionAgent->$property = $value;
+                if ($property === 'agentId' && is_array($value) && isset($value[0])) {
+                    $missionAgent->setAgentId($value[0]);
+                } else {
+                    if ($missionAgent->$property !== $value) {
+                        $missionAgent->$property = $value;
+                    }
                 }
             }
             $updatedMissionAgents[] = $missionAgent;
@@ -167,9 +169,9 @@ class MissionAgent
 
         $query = "UPDATE Missions_agents SET agent_id = :newAgentId WHERE mission_id = :missionId AND agent_id = :agentId";
         $stmt = self::$pdo->prepare($query);
-        $stmt->bindValue(':newAgentId', $agentId);
+        $stmt->bindValue(':newAgentId', $value[0]);
         $stmt->bindValue(':missionId', $missionId);
-        $stmt->bindValue(':agentId', $agentId);
+        $stmt->bindValue(':agentId', $value[0]);
         $stmt->execute();
 
         self::$missionAgents[$missionId] = $updatedMissionAgents;
@@ -219,8 +221,18 @@ class MissionAgent
         return $this->missionId;
     }
 
+    public function setMissionId(string $missionId): void
+    {
+        $this->missionId = $missionId;
+    }
+
     public function getAgentId(): string
     {
         return $this->agentId;
+    }
+
+    public function setAgentId(string $agentId): void
+    {
+        $this->agentId = $agentId;
     }
 }

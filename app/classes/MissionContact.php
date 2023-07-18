@@ -115,28 +115,6 @@ class MissionContact
     }
 
     /**
-     * Ajoute un contact à une mission spécifique.
-     *
-     * @param string $missionId L'ID de la mission.
-     * @param string $contactId L'ID du contact.
-     * @return MissionContact|null L'instance de MissionContact représentant l'association entre la mission et le contact, ou null en cas d'erreur.
-     */
-    public static function addContactToMission(string $missionId, string $contactId): ?MissionContact
-    {
-        $query = "INSERT INTO Missions_contacts (mission_id, contact_id) VALUES (:missionId, :contactId)";
-        $stmt = self::$pdo->prepare($query);
-        $stmt->bindValue(':missionId', $missionId);
-        $stmt->bindValue(':contactId', $contactId);
-        $stmt->execute();
-
-        $newMissionContact = new MissionContact(self::$pdo, $missionId, $contactId);
-        self::$missionContacts[$missionId][] = $newMissionContact;
-        self::$missionContacts[$contactId][] = $newMissionContact;
-
-        return $newMissionContact;
-    }
-
-    /**
      * Met à jour les propriétés d'un contact dans toutes les missions associées.
      *
      * @param string $missionId L'ID de la mission.
@@ -145,14 +123,16 @@ class MissionContact
      */
     public static function updateMissionContactProperties(string $missionId, array $propertiesToUpdate): bool
     {
-        $contactId = MissionContact::getContactId();
-
         $updatedMissionContacts = [];
 
         foreach (self::$missionContacts[$missionId] as $missionContact) {
             foreach ($propertiesToUpdate as $property => $value) {
-                if ($missionContact->$property !== $value) {
-                    $missionContact->$property = $value;
+                if ($property === 'contactId' && is_array($value) && isset($value[0])) {
+                    $missionContact->setContactId($value[0]);
+                } else {
+                    if ($missionContact->$property !== $value) {
+                        $missionContact->$property = $value;
+                    }
                 }
             }
             $updatedMissionContacts[] = $missionContact;
@@ -160,10 +140,13 @@ class MissionContact
 
         $query = "UPDATE Missions_contacts SET contact_id = :newContactId WHERE mission_id = :missionId AND contact_id = :contactId";
         $stmt = self::$pdo->prepare($query);
-        $stmt->bindValue(':newContactId', $contactId);
-        $stmt->bindValue(':missionId', $missionId);
-        $stmt->bindValue(':contactId', $contactId);
-        $stmt->execute();
+
+        foreach ($propertiesToUpdate['contactId'] as $index => $contactId) {
+            $stmt->bindValue(':newContactId', $contactId);
+            $stmt->bindValue(':missionId', $missionId);
+            $stmt->bindValue(':contactId', $contactId);
+            $stmt->execute();
+        }
 
         self::$missionContacts[$missionId] = $updatedMissionContacts;
 
@@ -212,8 +195,18 @@ class MissionContact
         return $this->missionId;
     }
 
+    public function setMissionId(string $missionId): void
+    {
+        $this->missionId = $missionId;
+    }
+
     public function getContactId(): string
     {
         return $this->contactId;
+    }
+
+    public function setContactId(string $contactId): void
+    {
+        $this->contactId = $contactId;
     }
 }
