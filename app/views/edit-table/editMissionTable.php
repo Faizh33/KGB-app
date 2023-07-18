@@ -376,7 +376,7 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
                             <div class="buttonsContainer">
                                 <button type="button" class="button editButton" onClick="toggleEdit(this)">Modifier</button>
                                 <button type="submit" class="button saveButton" style="display:none;">Sauvegarder</button>
-                                <button type="button" class="button deleteButton" data-url="../controllers/deleteControllers/deleteMissionController.php">Supprimer</button>
+                                <button type="button" class="button deleteButton" data-url="../../controllers/deleteControllers/deleteMissionController.php">Supprimer</button>
                             </div>
                         </td>
                     </tr>

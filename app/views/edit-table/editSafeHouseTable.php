@@ -94,7 +94,7 @@ $safeHouses = $safeHouseObj::getAllSafeHousesPagination($page, $perPage);
                         <div class="buttonsContainer">
                             <button class="button editButton" type="button" onClick="toggleEdit(this)">Modifier</button>
                             <button class="button saveButton" type="submit" style="display:none;">Sauvegarder</button>
-                            <button class="button deleteButton" type="button" data-url="../controllers/deleteControllers/deleteSafeHouseController.php">Supprimer</button>
+                            <button class="button deleteButton" type="button" data-url="../../controllers/deleteControllers/deleteSafeHouseController.php">Supprimer</button>
                         </div>
                     </td>
                 </tr>
