@@ -73,6 +73,13 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
     <title>Missions</title>
 </head>
 <body>
+    <header id="dashboardHeader">
+        <!-- Bouton de retour à l'accueil -->
+        <div id="homeBtn">
+            <a href="../views/home.php" id="homeBtnLink">Accueil</a>
+        </div>  
+    </header>
+
     <h1>Tableau de bord Administrateur</h1>
     <h2>Missions</h2>
 

@@ -47,8 +47,16 @@ $agents = $agentObj::getAllAgentsPagination($page, $perPage);
     <title>Agents</title>
 </head>
 <body>
+    <header id="dashboardHeader">
+        <!-- Bouton de retour à l'accueil -->
+        <div id="homeBtn">
+            <a href="../views/home.php" id="homeBtnLink">Accueil</a>
+        </div>  
+    </header>
+
     <h1>Tableau de bord Administrateur</h1>
     <h2>Agents</h2>
+    
     <?php 
     if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) :
         foreach($agents as $agent) { 
