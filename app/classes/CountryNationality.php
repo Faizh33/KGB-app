@@ -84,6 +84,57 @@ class CountryNationality
         return $countriesNationalities;
     }
 
+        /**
+     * Récupère toutes les spécialités de la base de données et met en place une pagination.
+     *
+     * @return array Un tableau contenant toutes les spécialités.
+     */
+    public static function getAllCountriesNationalitiesPagination(int $page, int $perPage): array
+    {
+        // Calculer l'offset pour la page spécifiée
+        $offset = ($page - 1) * $perPage;
+
+        // Requête SQL avec les clauses LIMIT et OFFSET
+        $query = "SELECT * FROM CountriesNationalities LIMIT :perPage OFFSET :offset";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':perPage', $perPage, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        $countriesNationalitiesData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $countriesNationalities = [];
+        foreach ($countriesNationalitiesData as $countryNationalityData) {
+            $id = $countryNationalityData['id'];
+            $country = $countryNationalityData['country'];
+            $nationality = $countryNationalityData['nationality'];
+
+            if (!isset(self::$countriesNationalities[$id])) {
+                // Si la spécialité n'existe pas encore dans le tableau $countriesNationalities, créer une nouvelle instance de countryNationality
+                $countryNationality = new CountryNationality(self::$pdo, $id, $country, $nationality);
+                // Ajouter la spécialité au tableau $countriesNationalities
+                self::$countriesNationalities[$id] = $countryNationality;
+            }
+
+            // Ajouter la spécialité au tableau de résultats
+            $countriesNationalities[] = self::$countriesNationalities[$id];
+        }
+
+        // Retourner le tableau contenant toutes les spécialités
+        return $countriesNationalities;
+    }
+
+    public static function countCountriesNationalities(): int
+    {
+        $query = "SELECT COUNT(*) AS total FROM CountriesNationalities";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->execute();
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return (int) $result['total'];
+    }
+
     /**
      * Ajoute un nouveau pays et une nouvelle nationalité.
      *
@@ -167,6 +218,37 @@ class CountryNationality
      */
     public static function deleteCountryNationalityById(int $id)
     {
+        // Vérifier si l'association pays/nationalité est utilisée dans une ou plusieurs personnes
+        $query = "SELECT COUNT(*) FROM Persons WHERE countrynationality_id = :id";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        $countInPerson = $stmt->fetchColumn();
+
+        // Vérifier si l'association pays/nationalité est utilisée dans une ou plusieurs planques
+        $query = "SELECT COUNT(*) FROM SafeHouses WHERE countrynationality_id = :id";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        $countInSafeHouse = $stmt->fetchColumn();
+
+        // Vérifier si l'association pays/nationalité est utilisée dans une ou plusieurs missions
+        $query = "SELECT COUNT(*) FROM Missions WHERE countrynationality_id = :id";
+        $stmt = self::$pdo->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+
+        $countInMission = $stmt->fetchColumn();
+        
+
+        // Si la spécialité est utilisée ailleurs, ne pas le supprimer
+        if ($countInPerson > 0 || $countInSafeHouse > 0 || $countInMission > 0) {
+            echo json_encode(array('status' => 'used'));
+            exit;
+        }
+
         // Supprimer le pays et la nationalité de la base de données
         $query = "DELETE FROM CountriesNationalities WHERE id = :id";
         $stmt = self::$pdo->prepare($query);
