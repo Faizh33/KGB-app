@@ -24,53 +24,65 @@
     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
     <div class="dashboardContainer">
         <!-- Contenu du tableau de bord -->
-        <table class="dashboardTable">
+        <table class="dashboardTable dashboardEdit">
             <tr>
                 <td>
-                    <button class="dashboardButton" data-form="missionForm">
+                    <button class="dashboardButton datasButton dashboardButtonCreate" data-form="missionForm">
                         Nouvelle mission
                     </button>
+                
                 </td>
                 <td>
-                    <button class="dashboardButton" data-form="agentForm">
+                    <button class="dashboardButton datasButton dashboardButtonCreate" data-form="agentForm">
                         Nouvel agent
                     </button>
+                
                 </td>
-            </tr>
-            <tr>
                 <td>
-                    <button class="dashboardButton" data-form="contactForm">
+                    <button class="dashboardButton datasButton dashboardButtonCreate" data-form="contactForm">
                         Nouveau contact
                     </button>
+                
                 </td>
+            </tr>
+            <tr>
                 <td>
-                    <button class="dashboardButton" data-form="targetForm">
+                    <button class="dashboardButton datasButton dashboardButtonCreate" data-form="targetForm">
                         Nouvelle cible
                     </button>
+                
                 </td>
-            </tr>
-            <tr>
                 <td>
-                    <button class="dashboardButton" data-form="specialityForm">
+                    <button class="dashboardButton datasButton dashboardButtonCreate" data-form="specialityForm">
                         Nouvelle spécialité
                     </button>
+                
                 </td>
                 <td>
-                    <button class="dashboardButton" data-form="safehouseForm">
+                    <button class="dashboardButton datasButton dashboardButtonCreate" data-form="safehouseForm">
                         Nouvelle planque
                     </button>
+                
                 </td>
             </tr>
             <tr>
                 <td>
-                    <button class="dashboardButton" data-form="statusForm">
+                    <button class="dashboardButton datasButton dashboardButtonCreate" data-form="statusForm">
                         Nouveau statut de mission
                     </button>
+                
                 </td>
                 <td>
-                    <button class="dashboardButton" data-form="typeForm">
+                    <button class="dashboardButton datasButton dashboardButtonCreate" data-form="typeForm">
                         Nouveau type de mission
                     </button>
+                
+                </td>
+                <td>
+                    <button class="dashboardButton datasButton dashboardButtonCreate" data-form="countryNationalityForm">
+                        Nouveau pays/nationalité
+                    </button>
+                
                 </td>
             </tr>
         </table>
@@ -101,10 +113,11 @@
     </div>
     <!-- Bouton de retour arrière -->
     <div class="backButtonContainer" style="display:none;">
-        <button class="backButton">
-            <svg xmlns="http://www.w3.org/2000/svg" width="1.5vw" height="1.5vw" fill="currentColor" color="white" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-            </svg>
+    <button class="backButton">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1.5vw" height="1.5vw" fill="currentColor" color="white" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+
+        </svg>
             <span class="backText">Retour</span>
         </button>
     </div>

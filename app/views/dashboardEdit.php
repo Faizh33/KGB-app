@@ -27,22 +27,22 @@
         <table class="dashboardTable">
             <tr>
                 <td>
-                    <div class="dashboardButton">    
-                        <a href="edit-table/editMissionTable.php" class="dashboardButtonLink">
+                    <div class="dashboardButton datasButton dashboardButtonEdit">    
+                        <a href="edit-table/editMissionTable.php" class="dashboardButtonLink datasButtonLink">
                             Missions
                         </a>
                     </div>
                 </td>
                 <td>
-                    <div class="dashboardButton">    
-                        <a href="edit-table/editAgentTable.php" class="dashboardButtonLink">
+                    <div class="dashboardButton datasButton dashboardButtonEdit">    
+                        <a href="edit-table/editAgentTable.php" class="dashboardButtonLink datasButtonLink">
                             Agents
                         </a>
                     </div>
                 </td>
                 <td>
-                    <div class="dashboardButton">    
-                        <a href="edit-table/editContactTable.php" class="dashboardButtonLink">
+                    <div class="dashboardButton datasButton dashboardButtonEdit">    
+                        <a href="edit-table/editContactTable.php" class="dashboardButtonLink datasButtonLink">
                             Contacts
                         </a>
                     </div>
@@ -50,22 +50,22 @@
             </tr>
             <tr>
                 <td>
-                    <div class="dashboardButton">    
-                        <a href="edit-table/editTargetTable.php" class="dashboardButtonLink">
+                    <div class="dashboardButton datasButton dashboardButtonEdit">    
+                        <a href="edit-table/editTargetTable.php" class="dashboardButtonLink datasButtonLink">
                             Cibles
                         </a>
                     </div>
                 </td>
                 <td>
-                    <div class="dashboardButton">    
-                        <a href="edit-table/editSpecialityTable.php" class="dashboardButtonLink">
+                    <div class="dashboardButton datasButton dashboardButtonEdit">    
+                        <a href="edit-table/editSpecialityTable.php" class="dashboardButtonLink datasButtonLink">
                             Spécialités
                         </a>
                     </div>
                 </td>
                 <td>
-                    <div class="dashboardButton">    
-                        <a href="edit-table/editSafeHouseTable.php" class="dashboardButtonLink">
+                    <div class="dashboardButton datasButton dashboardButtonEdit">    
+                        <a href="edit-table/editSafeHouseTable.php" class="dashboardButtonLink datasButtonLink">
                             Planques
                         </a>
                     </div>
@@ -73,28 +73,31 @@
             </tr>
             <tr>
                 <td>
-                    <div class="dashboardButton">    
-                        <a href="edit-table/editStatusTable.php" class="dashboardButtonLink">
+                    <div class="dashboardButton datasButton dashboardButtonEdit">    
+                        <a href="edit-table/editStatusTable.php" class="dashboardButtonLink datasButtonLink">
                             Statuts de mission
                         </a>
                     </div>
                 </td>
                 <td>
-                    <div class="dashboardButton">    
-                        <a href="edit-table/editTypeTable.php" class="dashboardButtonLink">
+                    <div class="dashboardButton datasButton dashboardButtonEdit">    
+                        <a href="edit-table/editTypeTable.php" class="dashboardButtonLink datasButtonLink">
                             Types de mission
                         </a>
                     </div>
                 </td>
                 <td>
-                    <div class="dashboardButton">    
-                        <a href="edit-table/editCountryNationalityTable.php" class="dashboardButtonLink">
+                    <div class="dashboardButton datasButton dashboardButtonEdit">    
+                        <a href="edit-table/editCountryNationalityTable.php" class="dashboardButtonLink datasButtonLink">
                             Pays / Nationalités
                         </a>
                     </div>
                 </td>
             </tr>
         </table>
+    </div>
+    <div class="dashBoardButton createButton dashboardButtonEdit">
+        <a href="dashboardCreate.php" class="dashboardButtonLink createButtonLink">Créer</a>
     </div>
     <?php endif; ?>
 </body>
