@@ -32,17 +32,23 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 10vw;
-    height: 2.5vw;
     background: rgb(3, 114, 103);
     border-radius: 6px;
+}
+
+#logButton {
+    width: 10vw;
+    height: 2.5vw;
 }
 
 .link {
     color: white;
     text-decoration: none;
-    font-size: 1.5vw;
     font-weight: bold;
+}
+
+#logLink {
+    font-size: 1.5vw;
 }
 
 /* Titre de la page */
@@ -150,9 +156,9 @@ a {
     color: rgb(175, 238, 231);
 }
 
-/*CSS des boutons de création et de modification */
+/* CSS du bouton du tableau de bord */
 .adminButtonContainer {
-    margin-top: 3vw;
+    margin-top: 5vw;
     width: 100%;
     text-align: center;
 }
@@ -163,8 +169,10 @@ a {
     justify-content: center;
     text-align: center;
     position: relative;
+    width: 16vw;
+    height: 4vw;
 }
 
-#createButton {
-    margin-right: 3vw;
+#dashboardLink {
+    font-size: 2vw;
 }
