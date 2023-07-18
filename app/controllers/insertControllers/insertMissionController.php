@@ -161,8 +161,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
     } else {
-        echo "Tous les champs sont requis.";
+        echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Tous les champs sont requis.</div>";
     }
 } else {
-    echo "La requête doit être de type POST.";
+    echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>La requête doit être de type POST.</div>";
 }
