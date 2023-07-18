@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = isset($_POST["title"]) && $_POST["title"] !== '' ? valid_datas($_POST["title"]) : $mission->getTitle();
     $description = isset($_POST["description"]) && $_POST["description"] !== '' ? valid_datas($_POST["description"]) : $mission->getDescription();
     $codeName = isset($_POST["codeName"]) && $_POST["codeName"] !== '' ? valid_datas($_POST["codeName"]) : $mission->getCodeName();
-    $country = isset($_POST["country"]) && $_POST["country"] !== '' ? valid_datas($_POST["country"]) : $mission->getCountry();
+    $country = isset($_POST["country"]) && $_POST["country"] !== '' ? valid_datas($_POST["country"]) : $mission->getCountry()->getId();
     $startDateInput = isset($_POST["startDate"]) ? $_POST["startDate"] : $mission->getStartDate();
     $startDate = $startDateInput !== '' ? DateTime::createFromFormat('d/m/Y', $startDateInput)->format('Y-m-d') : $mission->getStartDate();    
     $endDateInput = isset($_POST["endDate"]) ? $_POST["endDate"] : $mission->getEndDate();

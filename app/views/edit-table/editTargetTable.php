@@ -86,8 +86,8 @@ $targets = $targetObj::getAllTargetsPagination($page, $perPage);
                             $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();
                             foreach ($countriesNationalities as $countryNationality) {
                                 $nationality = $countryNationality->getNationality();
-                                echo "<option value=\"$nationality\">$nationality</option>";
-                            }
+                                $nationalityId = $countryNationality->getId();
+                                echo "<option value=\"$nationalityId\">$nationality</option>";                            }
                             ?>
                         </select>
                     </td>

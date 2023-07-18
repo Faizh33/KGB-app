@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $firstName = isset($_POST["contactFirstName"]) && $_POST["contactFirstName"] !== '' ? valid_datas($_POST["contactFirstName"]) : $contact->getFirstName();
     $birthDateInput = isset($_POST["contactBirthDate"]) ? $_POST["contactBirthDate"] : $contact->getBirthDate();
     $birthDate = $birthDateInput !== '' ? DateTime::createFromFormat('d/m/Y', $birthDateInput)->format('Y-m-d') : $contact->getBirthDate();    
-    $nationality = isset($_POST["contactNationality"]) && $_POST["contactNationality"] !== '' ? valid_datas($_POST["contactNationality"]) : $contact->getNationality();
+    $nationality = isset($_POST["contactNationality"]) && $_POST["contactNationality"] !== '' ? valid_datas($_POST["contactNationality"]) : $contact->getNationality()->getId();
     $codeName = isset($_POST["contactCodeName"]) && $_POST["contactCodeName"] !== '' ? valid_datas($_POST["contactCodeName"]) : $contact->getCodeName();
 
     $propertiesToUpdate = [

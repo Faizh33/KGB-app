@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Si elles sont vides, conserver les valeurs existantes
     $code = isset($_POST["safeHouseCode"]) && $_POST["safeHouseCode"] !== '' ? valid_datas($_POST["safeHouseCode"]) : $safeHouse->getCode();
     $address = isset($_POST["safeHouseAddress"]) && $_POST["safeHouseAddress"] !== '' ? valid_datas($_POST["safeHouseAddress"]) : $safeHouse->getAddress();  
-    $country = isset($_POST["safeHouseCountry"]) && $_POST["safeHouseCountry"] !== '' ? valid_datas($_POST["safeHouseCountry"]) : $safeHouse->getCountry();
+    $country = isset($_POST["safeHouseCountry"]) && $_POST["safeHouseCountry"] !== '' ? valid_datas($_POST["safeHouseCountry"]) : $safeHouse->getCountry()->getId();
     $type = isset($_POST["safeHouseType"]) && $_POST["safeHouseType"] !== '' ? valid_datas($_POST["safeHouseType"]) : $safeHouse->getType();
 
     $propertiesToUpdate = [

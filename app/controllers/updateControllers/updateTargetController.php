@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $firstName = isset($_POST["firstName"]) && $_POST["firstName"] !== '' ? valid_datas($_POST["firstName"]) : $target->getFirstName();
     $birthDateInput = isset($_POST["birthDate"]) ? $_POST["birthDate"] : $target->getBirthDate();
     $birthDate = $birthDateInput !== '' ? DateTime::createFromFormat('d/m/Y', $birthDateInput)->format('Y-m-d') : $target->getBirthDate();    
-    $nationality = isset($_POST["nationality"]) && $_POST["nationality"] !== '' ? valid_datas($_POST["nationality"]) : $target->getNationality();
+    $nationality = isset($_POST["nationality"]) && $_POST["nationality"] !== '' ? valid_datas($_POST["nationality"]) : $target->getNationality()->getId();
     $codeName = isset($_POST["codeName"]) && $_POST["codeName"] !== '' ? valid_datas($_POST["codeName"]) : $target->getCodeName();
 
     $propertiesToUpdate = [

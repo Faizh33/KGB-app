@@ -3,8 +3,10 @@
 include_once "../../../config/database.php";
 include_once "../../helpers/dataHelpers.php";
 include_once "../../classes/Agent.php";
+include_once "../../classes/CountryNationality.php";
 
 use app\classes\Agent;
+use app\classes\CountryNationality;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Vérifier si l'id est passé dans le POST
@@ -21,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $firstName = isset($_POST["agentFirstName"]) && $_POST["agentFirstName"] !== '' ? valid_datas($_POST["agentFirstName"]) : $agent->getFirstName();
     $birthDateInput = isset($_POST["agentBirthDate"]) ? $_POST["agentBirthDate"] : $agent->getBirthDate();
     $birthDate = $birthDateInput !== '' ? DateTime::createFromFormat('d/m/Y', $birthDateInput)->format('Y-m-d') : $agent->getBirthDate();    
-    $nationality = isset($_POST["agentNationality"]) && $_POST["agentNationality"] !== '' ? valid_datas($_POST["agentNationality"]) : $agent->getNationality();
+    $nationality = isset($_POST["agentNationality"]) && $_POST["agentNationality"] !== '' ? valid_datas($_POST["agentNationality"]) : $agent->getNationality()->getId();
     $idCode = isset($_POST["agentIdCode"]) && $_POST["agentIdCode"] !== '' ? valid_datas($_POST["agentIdCode"]) : $agent->getIdentificationCode();
 
     $propertiesToUpdate = [
