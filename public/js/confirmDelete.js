@@ -1,9 +1,9 @@
 $(document).on('click', '.deleteButton', function() {
     if (confirm('Êtes-vous sûr de vouloir supprimer ?')) {
-        var form = $(this).closest('form');
-        var table = $(this).closest('table');
-        var url = $(this).data('url');
-        var messageDiv = $(this).closest('.editForm').find('.messageDiv');
+        const form = $(this).closest('form');
+        const table = $(this).closest('table');
+        const url = $(this).data('url');
+        const messageDiv = $(this).closest('.editForm').find('.messageDiv');
 
         $.ajax({
             url: url,

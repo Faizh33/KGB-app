@@ -1,40 +1,40 @@
 // Fonction permettant d'afficher les inputs des tableaux
 function toggleEdit(button) {
-    var row = button.parentNode.parentNode.parentNode.parentNode;
-    var spans = row.getElementsByTagName('span');
-    var inputs = row.getElementsByTagName('input');
-    var textareas = row.getElementsByTagName('textarea');
-    var selects = row.getElementsByTagName('select');
-    var chkDivs = row.getElementsByClassName('chk');
-    var checkboxes = row.getElementsByClassName('editChk');
-    var labels = row.getElementsByClassName('labelChk');
+    const row = button.parentNode.parentNode.parentNode.parentNode;
+    const spans = row.getElementsByTagName('span');
+    const inputs = row.getElementsByTagName('input');
+    const textareas = row.getElementsByTagName('textarea');
+    const selects = row.getElementsByTagName('select');
+    const chkDivs = row.getElementsByClassName('chk');
+    const checkboxes = row.getElementsByClassName('editChk');
+    const labels = row.getElementsByClassName('labelChk');
 
     // Masquer tous les spans et afficher tous les inputs, textareas, selects et checkboxes
-    for (var i = 0; i < spans.length; i++) {
+    for (let i = 0; i < spans.length; i++) {
         spans[i].style.display = 'none';
     }
 
-    for (var j = 0; j < inputs.length; j++) {
+    for (let j = 0; j < inputs.length; j++) {
         inputs[j].style.display = 'block';
     }
 
-    for (var k = 0; k < textareas.length; k++) {
+    for (let k = 0; k < textareas.length; k++) {
         textareas[k].style.display = 'block';
     }
 
-    for (var l = 0; l < selects.length; l++) {
+    for (let l = 0; l < selects.length; l++) {
         selects[l].style.display = 'block';
     }
 
-    for (var m = 0; m < chkDivs.length; m++) {
+    for (let m = 0; m < chkDivs.length; m++) {
         chkDivs[m].style.display = 'block';
     }
 
-    for (var n = 0; n < checkboxes.length; n++) {
+    for (let n = 0; n < checkboxes.length; n++) {
         checkboxes[n].style.display = 'inline-block';
     }
 
-    for (var o = 0; o < labels.length; o++) {
+    for (let o = 0; o < labels.length; o++) {
         labels[o].style.display = 'inline-block';
     }
 
