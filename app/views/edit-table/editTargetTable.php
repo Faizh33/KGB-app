@@ -80,7 +80,7 @@ $targets = $targetObj::getAllTargetsPagination($page, $perPage);
                     <th scope="row" class="thTable">Nationalité</th>
                     <td class="tdTable">
                         <span id="targetNationality" class="tdContent"><?php echo $target->getNationality()->getNationality(); ?></span>
-                        <select name="targetNationality" id="targetNationality" class="editInput" style="display:none;" required>
+                        <select name="targetNationality" id="targetNationality" class="editInput" style="display:none;" >
                         <option value="">--<?php echo $target->getNationality()->getNationality(); ?>--</option>
                             <?php
                             $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();

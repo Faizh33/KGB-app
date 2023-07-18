@@ -117,7 +117,7 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
                                 echo $country->getCountry();
                             ?>
                             </span>
-                            <select name="country" id="country" style="display:none;" required>
+                            <select name="country" id="country" style="display:none;">
                             <option value="">--<?php echo $country->getCountry() ?>--</option>
                             <?php
                                 $countries = CountryNationality::getAllCountriesNationalities();
@@ -145,8 +145,8 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
                             <input type="date" name="startDate" class="editInput" id="editMissionStartDate" value="<?php echo $mission->getStartDate(); ?>" style="display:none;">
                         </td>
                     </tr>
+                    <!-- Date de fin de la mission -->
                     <tr>
-                        <!-- Date de fin de la mission -->
                         <th scope="row" class="thMissionTable">Date de fin</th>
                         <td class="tdMissionTable">
                             <span id="missionEndDate">
@@ -160,8 +160,8 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
                             <input type="date" name="endDate" class="editInput" id="editMissionEndDate" value="<?php echo $mission->getEndDate(); ?>" style="display:none;">
                         </td>
                     </tr>
+                    <!-- Type de mission -->
                     <tr>
-                        <!-- Type de mission -->
                         <th scope="row" class="thMissionTable">Type de mission</th>
                         <td class="tdMissionTable">
                             <span id="missionType">

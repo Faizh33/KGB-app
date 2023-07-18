@@ -81,7 +81,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
                     <th scope="row" class="thTable">Nationalité</th>
                     <td class="tdTable">
                         <span id="contactNationality" class="tdContent"><?php echo $contact->getNationality()->getNationality(); ?></span>
-                        <select name="contactNationality" id="contactNationality" class="editInput" style="display:none;" required>
+                        <select name="contactNationality" id="contactNationality" class="editInput" style="display:none;" >
                         <option value="">--<?php echo $contact->getNationality()->getNationality(); ?>--</option>
                         <?php
                             $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();

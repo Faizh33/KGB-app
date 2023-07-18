@@ -65,7 +65,7 @@ $safeHouses = $safeHouseObj::getAllSafeHousesPagination($page, $perPage);
                     <th scope="row" class="thTable">Pays</th>
                     <td class="tdTable">
                         <span id="safeHouseCountry" class="tdContent"><?php echo $safeHouse->getCountry()->getCountry(); ?></span>
-                        <select name="safeHouseCountry" id="safeHouseCountry" class="editInput" style="display:none" required>
+                        <select name="safeHouseCountry" id="safeHouseCountry" class="editInput" style="display:none" >
                         <option value="">--<?php echo $safeHouse->getCountry()->getCountry(); ?>--</option>
                         <?php
                         $countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();
