@@ -256,6 +256,45 @@ table#form {
     font-weight: bold;
 }
 
+/* CSS des liens de pagination */
+.pagination {
+    width: 100%;
+    margin-top: 0.5vw;
+    display:flex;
+    justify-content: center;
+}
+
+.paginationLink {
+    margin-right: 1vw;
+    text-decoration: none;
+}
+
+.paginationLink:link {
+    color: rgb(175, 238, 231);
+}
+  
+.paginationLink:visited {
+    color: rgb(6, 199, 180);
+}
+  
+.paginationLink:focus {
+    border-bottom: 1px solid;
+    background: rgb(145, 233, 223);
+    color: rgb(2, 59, 53);
+}
+  
+.paginationLink:hover {
+    border-bottom: 1px solid;
+    background: rgb(175, 238, 231);
+    color: rgb(2, 59, 53);
+}
+
+.paginationLink.active {
+    background: rgb(175, 238, 231);
+    color: rgb(2, 59, 53);
+}
+
+
 /* Style du bouton de retour en arrière */
 .backButtonContainer {
     cursor: pointer;
