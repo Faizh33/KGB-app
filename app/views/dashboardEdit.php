@@ -9,16 +9,14 @@
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="../../public/css/dashboard.css">
-    <script src="../../public/js/dashboard.js"></script>
-    <script src="../../public/js/confirmDelete.js"></script>
     <title>Tableau de bord</title>
 </head>
 <body>
     <header id="dashboardHeader">
         <!-- Bouton de retour à l'accueil -->
-        <div id="homeBtn">
+        <div id="homeBtn">  
             <a href="../views/home.php" id="homeBtnLink">Accueil</a>
-        </div>
+        </div>  
     </header>
 
     <h1>Tableau de bord Administrateur</h1>
@@ -29,78 +27,71 @@
         <table class="dashboardTable">
             <tr>
                 <td>
-                    <button class="dashboardButton" data-form="missionForm">
-                        Missions
-                    </button>
+                    <div class="dashboardButton">    
+                        <a href="edit-table/editMissionTable.php" class="dashboardButtonLink">
+                            Missions
+                        </a>
+                    </div>
                 </td>
                 <td>
-                    <button class="dashboardButton" data-form="agentForm">
-                        Agents
-                    </button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button class="dashboardButton" data-form="contactForm">
-                        Contacts
-                    </button>
-                </td>
-                <td>
-                    <button class="dashboardButton" data-form="targetForm">
-                        Cibles
-                    </button>
+                    <div class="dashboardButton">    
+                        <a href="edit-table/editAgentTable.php" class="dashboardButtonLink">
+                            Agents
+                        </a>
+                    </div>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <button class="dashboardButton" data-form="specialityForm">
-                        Spécialités
-                    </button>
+                    <div class="dashboardButton">    
+                        <a href="edit-table/editContactTable.php" class="dashboardButtonLink">
+                            Contacts
+                        </a>
+                    </div>
                 </td>
                 <td>
-                    <button class="dashboardButton" data-form="safehouseForm">
-                        Planques
-                    </button>
+                    <div class="dashboardButton">    
+                        <a href="edit-table/editTargetTable.php" class="dashboardButtonLink">
+                            Cibles
+                        </a>
+                    </div>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <button class="dashboardButton" data-form="statusForm">
-                        Statuts de mission
-                    </button>
+                    <div class="dashboardButton">    
+                        <a href="edit-table/editSpecialityTable.php" class="dashboardButtonLink">
+                            Spécialités
+                        </a>
+                    </div>
                 </td>
                 <td>
-                    <button class="dashboardButton" data-form="typeForm">
-                        Types de mission
-                    </button>
+                    <div class="dashboardButton">    
+                        <a href="edit-table/editSafeHouseTable.php" class="dashboardButtonLink">
+                            Planques
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="dashboardButton">    
+                        <a href="edit-table/editStatusTable.php" class="dashboardButtonLink">
+                            Statuts de mission
+                        </a>
+                    </div>
+                </td>
+                <td>
+                    <div class="dashboardButton">    
+                        <a href="edit-table/editTypeTable.php" class="dashboardButtonLink">
+                            Types de mission
+                        </a>
+                    </div>
                 </td>
             </tr>
         </table>
     </div>
-    <div class="tableContainer" id="missionForm" style="display:none;">
-        <?php include_once "../snippets/edit-table/editMissionTable.php"; ?>
-    </div>
-    <div class="tableContainer" id="agentForm" style="display:none;">
-        <?php include_once "../snippets/edit-table/editAgentTable.php"; ?>
-    </div>    
-    <div class="tableContainer" id="contactForm" style="display:none;">
-        <?php include_once "../snippets/edit-table/editContactTable.php"; ?>
-    </div>    
-    <div class="tableContainer" id="targetForm" style="display:none;">
-        <?php include_once "../snippets/edit-table/editTargetTable.php"; ?>
-    </div>
-    <div class="tableContainer" id="specialityForm" style="display:none;">
-        <?php include_once "../snippets/edit-table/editSpecialityTable.php"; ?>
-    </div>
-    <div class="tableContainer" id="safehouseForm" style="display:none;">
-        <?php include_once "../snippets/edit-table/editSafeHouseTable.php"; ?>
-    </div>    
-    <div class="tableContainer" id="statusForm" style="display:none;">
-        <?php include_once "../snippets/edit-table/editStatusTable.php"; ?>
-    </div>    
-    <div class="tableContainer" id="typeForm" style="display:none;">
-        <?php include_once "../snippets/edit-table/editTypeTable.php"; ?>
-    </div>
+
     <!-- Bouton de retour arrière -->
     <div class="backButtonContainer" style="display:none;">
         <button class="backButton">
@@ -111,7 +102,6 @@
         </button>
     </div>
     <?php endif; ?>
-
-
+    <script src="../../public/js/dashboard.js"></script>
 </body>
 </html>
