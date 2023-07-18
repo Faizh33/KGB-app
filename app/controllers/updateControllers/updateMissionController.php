@@ -39,12 +39,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $description = isset($_POST["description"]) && $_POST["description"] !== '' ? valid_datas($_POST["description"]) : $mission->getDescription();
     $codeName = isset($_POST["codeName"]) && $_POST["codeName"] !== '' ? valid_datas($_POST["codeName"]) : $mission->getCodeName();
     $country = isset($_POST["country"]) && $_POST["country"] !== '' ? valid_datas($_POST["country"]) : $mission->getCountry()->getId();
-    $startDateInput = isset($_POST["startDate"]) ? $_POST["startDate"] : $mission->getStartDate();
-    $startDate = $startDateInput !== '' ? DateTime::createFromFormat('d/m/Y', $startDateInput)->format('Y-m-d') : $mission->getStartDate();    
-    $endDateInput = isset($_POST["endDate"]) ? $_POST["endDate"] : $mission->getEndDate();
-    $endDate = $endDateInput !== '' ? DateTime::createFromFormat('d/m/Y', $endDateInput)->format('Y-m-d') : $mission->getEndDate();    
+
+    $startDateInput = isset($_POST["startDate"]) ? $_POST["startDate"] : '';
+    $startDate = $startDateInput !== '' ? DateTime::createFromFormat('d/m/Y', $startDateInput) : false;
+    $startDate = $startDate !== false ? $startDate->format('Y-m-d') : $mission->getStartDate();
+
+    $endDateInput = isset($_POST["endDate"]) ? $_POST["endDate"] : '';
+    $endDate = $endDateInput !== '' ? DateTime::createFromFormat('d/m/Y', $endDateInput) : false;
+    $endDate = $endDate !== false ? $endDate->format('Y-m-d') : $mission->getEndDate();
+
     $type = isset($_POST["type"]) && $_POST["type"] !== '' ? valid_datas($_POST["type"]) : $mission->getMissionType();
-    
+
+    // Obtenez l'identifiant de la missionType
+    $missionTypeId = $type->getId();
+
     $agents = isset($_POST["agent"]) && $_POST["agent"] !== '' ? $_POST["agent"] : [];
     if (!empty($missionAgents)) {
         $agentIds = [];
@@ -81,8 +89,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $safeHouses = $safeHouseIds;
     }
 
-    $speciality = isset($_POST["speciality"]) && $_POST["speciality"] !== '' ? valid_datas($_POST["speciality"]) : $mission->getSpeciality();
-    $status = isset($_POST["status"]) && $_POST["status"] !== '' ? valid_datas($_POST["status"]) : $mission->getMissionStatus();
+    $specialityId = isset($_POST["speciality"]) && $_POST["speciality"] !== '' ? valid_datas($_POST["speciality"]) : $mission->getSpeciality()->getId();
+    $statusId = isset($_POST["status"]) && $_POST["status"] !== '' ? valid_datas($_POST["status"]) : $mission->getMissionStatus()->getId();
 
     $propertiesToUpdateMission = [
         'title' => $title,
@@ -91,9 +99,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'country' => $country,
         'startDate' => $startDate,
         'endDate' => $endDate,
-        'missionTypeId' => $type,
-        'specialityId' => $speciality,
-        'missionStatusId' => $status
+        'missionTypeId' => $missionTypeId,
+        'specialityId' => $specialityId,
+        'missionStatusId' => $statusId
     ];
 
     $propertiesToUpdateMissionAgents = [
@@ -113,14 +121,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     ];
 
     //Insertion des nouvelles données
-    $mission = $missionObj::updateMissionProperties($missionId, $propertiesToUpdateMission);
-    $missionAgents = $missionAgentObj::updateMissionAgentProperties($missionId, $propertiesToUpdateMissionAgents);
+    $mission = $missionObj::updateMissionProperties($mission, $propertiesToUpdateMission);
+    $missionAgentObj->updateMissionAgentProperties($missionId, $propertiesToUpdateMissionAgents);
+    $missionAgents = $missionAgentObj::getAgentsByMissionId($missionId);
     $missionContacts = $missionContactObj::updateMissionContactProperties($missionId, $propertiesToUpdateMissionContacts);
     $missionTargets = $missionTargetObj::updateMissionTargetProperties($missionId, $propertiesToUpdateMissionTargets);
     $missionSafeHouses = $missionSafeHouseObj::updateSafeHouseProperties($missionId, $propertiesToUpdateMissionSafeHouses);
-    
-    //Si la modification en base de données à réussi : redirection vers la page de création
-    if(isset($mission)) {
+
+    //Si la modification en base de données a réussi : redirection vers la page de création
+    if (isset($mission)) {
         echo "<br><div style='font-weight:bold;color:rgb(3, 114, 103)'>Données modifiées en base de données</div><br>";
         echo "<div style='color:rgb(3, 114, 103);font-style:italic'>Redirection dans 3 secondes</div>";
         echo "<script>
@@ -129,5 +138,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }, 3000);
         </script>";
         exit;
-    } 
+    }
 }
