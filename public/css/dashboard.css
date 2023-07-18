@@ -28,8 +28,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 8vw;
-    height: 2vw;
+    width: 10vw;
+    height: 3vw;
+    font-size: 1.8vw;
     background: rgb(15, 159, 144);
     border-radius: 6px;
     border-style: solid;
@@ -84,22 +85,46 @@ h2 {
     margin: auto;
     border-style: solid;
     border-width: 0.5vw;
-    border-image: linear-gradient(45deg, rgb(170, 239, 232), white) 1;
-    width: 22vw;
-    height: 3vw;
+    border-image: linear-gradient(45deg, rgb(135, 230, 221), rgb(204, 244, 240)) 1;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 4vw;
+    font-family: Didot, serif;
+}
+
+.dashboardButtonCreate {
+    width: 23vw;
+    height: 5vw;
+}
+
+.dashboardButtonEdit {
+    width: 22vw;
+    height: 3vw;
+}
+
+.datasButton {
     background: rgb(3, 114, 103);
 }
 
-.dashboardButtonLink {
-    color: white;
+.createButton {
+    background: white;
+    margin-top: 5vw;
+}
+
+.dashboardButtonLink, button.dashboardButton  {
     font-size: 1.8vw;
     font-weight: bold;
     cursor: pointer;
     text-decoration: none; 
+}
+
+.datasButtonLink, button.dashboardButton  {
+    color: white;
+}
+
+.createButtonLink {
+    color: rgb(3, 114, 103);
 }
 
 .dashboardButtonLink:hover {
