@@ -22,7 +22,7 @@
     <h1>Tableau de bord Administrateur</h1>
 
     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) :?>
-    <div class="dashboardContainer">
+    <div class="dashboardContainer dashboardEdit">
         <!-- Contenu du tableau de bord -->
         <table class="dashboardTable">
             <tr>
@@ -40,8 +40,6 @@
                         </a>
                     </div>
                 </td>
-            </tr>
-            <tr>
                 <td>
                     <div class="dashboardButton">    
                         <a href="edit-table/editContactTable.php" class="dashboardButtonLink">
@@ -49,6 +47,8 @@
                         </a>
                     </div>
                 </td>
+            </tr>
+            <tr>
                 <td>
                     <div class="dashboardButton">    
                         <a href="edit-table/editTargetTable.php" class="dashboardButtonLink">
@@ -56,8 +56,6 @@
                         </a>
                     </div>
                 </td>
-            </tr>
-            <tr>
                 <td>
                     <div class="dashboardButton">    
                         <a href="edit-table/editSpecialityTable.php" class="dashboardButtonLink">
@@ -85,6 +83,13 @@
                     <div class="dashboardButton">    
                         <a href="edit-table/editTypeTable.php" class="dashboardButtonLink">
                             Types de mission
+                        </a>
+                    </div>
+                </td>
+                <td>
+                    <div class="dashboardButton">    
+                        <a href="edit-table/editCountryNationalityTable.php" class="dashboardButtonLink">
+                            Pays / Nationalités
                         </a>
                     </div>
                 </td>
