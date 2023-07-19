@@ -29,10 +29,9 @@ body {
     align-items: center;
     justify-content: center;
     width: 10vw;
-    height: 3vw;
+    height: 2.5vw;
     font-size: 1.8vw;
     background: rgb(15, 159, 144);
-    border-radius: 6px;
     border-style: solid;
     border-width: 0.3vw;
     border-image: linear-gradient(45deg, rgb(170, 239, 232), white) 1;
@@ -49,7 +48,7 @@ body {
 h1, h2 {
     display: flex;
     justify-content: center;
-    margin-bottom: 5vw;
+    margin-bottom: 4vw;
     margin-top: 3%;
     font-family: 'Roboto Slab', serif;
     color: white;
