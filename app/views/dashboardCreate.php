@@ -87,7 +87,7 @@
             </tr>
             <tr>
                 <td colspan="3">
-                    <div class="dashBoardButton createButton dashboardButtonEdit">
+                    <div class="dashBoardButton createButton dashboardButtonEdit" style="text-align: center;">
                         <a href="dashboardEdit.php" class="dashboardButtonLink createButtonLink">
                             Retour au tableau de bord
                         </a>
