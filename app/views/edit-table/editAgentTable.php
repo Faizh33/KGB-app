@@ -126,22 +126,41 @@ $agents = $agentObj::getAllAgentsPagination($page, $perPage);
                     <th scope="row" class="thTable">Spécialité(s)</th>
                     <td class="tdTable">
                         <?php 
-                        $specialities = $agentSpecialityObj::getSpecialitiesByAgentId($agent->getId());
-                        foreach($specialities as $speciality) {
-                            $specialityId = $speciality->getSpecialityId();
-                            $specialityName = $specialityObj::getSpecialityById($specialityId)->getSpeciality();
-                        ?>
-                        <span id="agentSpeciality"><?php echo $specialityName; ?><br></span>
-                        <?php 
-                        }
+                        $agentId = $agent->getId();
+                        $agentSpecialities = $agentSpecialityObj::getSpecialitiesByAgentId($agentId);
                         $specialities = $specialityObj::getAllSpecialities();
+                        
+                        // Afficher les spécialités de l'agent
+                        foreach($agentSpecialities as $agentSpeciality) {
+                            $specialityId = $agentSpeciality->getSpecialityId();
+                            $speciality = $specialityObj::getSpecialityById($specialityId);
+                            
+                            ?>
+                            <span id="agentSpeciality"><?php echo $speciality->getSpeciality(); ?><br></span>
+                            <?php 
+                        }
+                        
+                        // Afficher toutes les spécialités avec les cases à cocher appropriées
                         foreach($specialities as $speciality) {
-                            $specialityId = $speciality->getId(); ?>
+                            $specialityId = $speciality->getId();
+                            $specialityName = $speciality->getSpeciality();
+                            
+                            $isChecked = false;
+                            foreach($agentSpecialities as $agentSpeciality) {
+                                if ($agentSpeciality->getSpecialityId() == $specialityId) {
+                                    $isChecked = true;
+                                    break;
+                                }
+                            }
+                            
+                            ?>
                             <div class="chk" style="display:none;">
-                                <input type="checkbox" name="specialities[]" class="editChk" value="<?php echo $specialityId ?>" id="editSpeciality <?php echo $specialityId ?>">
-                                <label for="editSpeciality <?php echo $specialityId ?>" class="labelChk"> <?php echo $speciality->getSpeciality() ?> </label><br>
+                                <input type="checkbox" name="specialities[]" class="editChk" value="<?php echo $specialityId ?>" id="editSpeciality <?php echo $specialityId ?>" <?php if ($isChecked) echo "checked"; ?>>
+                                <label for="editSpeciality <?php echo $specialityId ?>" class="labelChk"> <?php echo $specialityName ?> </label><br>
                             </div>
-                        <?php } ?>
+                            <?php
+                        }
+                        ?>
                     </td>
                 </tr>
                 <!-- Boutons d'édition, de sauvegarde et de suppression -->
