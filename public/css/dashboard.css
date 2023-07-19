@@ -67,6 +67,11 @@ h2 {
     -webkit-text-fill-color: transparent;
 }
 
+/* CSS du lien vers la page de création */
+.plusLink {
+    margin-left: 67%;
+}
+
 /*CSS des boutons des dashboards*/
 .dashboardTable {
     width: 80%;
@@ -109,7 +114,7 @@ h2 {
 
 .createButton {
     background: white;
-    margin-top: 5vw;
+    margin-top: 2vw;
 }
 
 .dashboardButtonLink, button.dashboardButton  {
@@ -137,7 +142,8 @@ h2 {
     background-color: rgb(215, 236, 235);
     padding: 1vw;
     margin: auto;
-    margin-top: 2vw;
+    margin-top: 1vw;
+    margin-bottom: 2vw;
     font-size: 1vw;
 }
 
@@ -288,7 +294,6 @@ table#form {
 /* CSS des liens de pagination */
 .pagination {
     width: 100%;
-    margin-top: 0.5vw;
     display:flex;
     justify-content: center;
 }
@@ -296,6 +301,7 @@ table#form {
 .paginationLink {
     margin-right: 1vw;
     text-decoration: none;
+    font-size: 1.1vw;
 }
 
 .paginationLink:link {
