@@ -21,7 +21,7 @@ $missionObj = new Mission($pdo);
 $specialityObj = new Speciality($pdo);
 $missionStatusObj = new MissionStatus($pdo);
 $missionTypeObj = new MissionType($pdo);
-$missionCountryNationality = new CountryNationality($pdo);
+$countryNationalityObj = new CountryNationality($pdo);
 
 // Obtenir la page actuelle à partir des paramètres GET
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -35,12 +35,37 @@ $totalItems = $missionObj::countMissions();
 // Calculer le nombre total de pages nécessaires
 $totalPages = ceil($totalItems / $perPage);
 
-// Récupération de toutes les missions
+// Récupération de toutes les missions et données en lien
 $missions = $missionObj::getAllMissionsPagination($page, $perPage);
 $specialities = $specialityObj::getAllSpecialities();
 $missionStatuses = $missionStatusObj::getAllMissionStatuses();
 $missionTypes = $missionTypeObj::getAllMissionTypes();
+$countriesNationalities = $countryNationalityObj::getAllCountriesNationalities();
 
+// Vérifier si la variable de session contenant les missions filtrées existe
+if (isset($_SESSION['filteredMissions'])) {
+    // Utiliser les missions filtrées si elles existent
+    $filteredMissions = $_SESSION['filteredMissions'];
+
+    // Créer un tableau pour stocker les nouveaux objets Mission
+    $missionsToShow = [];
+
+    // Parcourir les objets stdClass filtrés et créer de nouveaux objets Mission
+    foreach ($filteredMissions as $missionData) {
+        // Extraire les propriétés de chaque objet stdClass
+        $id = $missionData->id;
+        // Créer un nouvel objet Mission en utilisant les propriétés extraites
+        $missionObj = new Mission($pdo);
+        $mission = $missionObj::getMissionById($id);
+        $missionsToShow[] = $mission;
+    }
+
+    // Supprimer la variable de session pour ne pas conserver les anciennes données filtrées
+    unset($_SESSION['filteredMissions']);
+} else {
+    // Utiliser toutes les missions si les données filtrées n'existent pas
+    $missionsToShow = $missions;
+}
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +74,7 @@ $missionTypes = $missionTypeObj::getAllMissionTypes();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../public/css/home.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" type="text/javascript"></script>
     <title>Missions du KGB</title>
 </head>
 <body>
@@ -66,6 +92,46 @@ $missionTypes = $missionTypeObj::getAllMissionTypes();
         </div>
     </header>
     <h1>Liste des missions du KGB</h1>
+        <!-- Formulaire de filtrage -->
+        <div class="filterBar">
+        <form method="post" action="../controllers/filterController.php">
+            <label for="country" class="filterLabelText">Pays :</label>
+            <select name="country" id="country">
+                <option value="">Tous les pays</option>
+                <?php foreach($countriesNationalities as $countryNationality) {
+                    $countryId = $countryNationality->getId();
+                    $country = $countryNationality->getCountry();
+                    echo "<option value='$countryId'>$country</option>";
+                 } ?>
+            </select>
+
+            <label for="startDate" class="filterLabelText">Date de début :</label>
+            <input type="date" name="startDate" id="startDate">
+
+            <label for="missionStatus" class="filterLabelText">Statut de mission :</label>
+            <select name="missionStatus" id="missionStatus">
+                <option value="">Tous les statuts</option>
+                <?php foreach($missionStatuses as $missionStatus) {
+                    $statusId = $missionStatus->getId();
+                    $status = $missionStatus->getStatus();
+                    echo "<option value='$statusId'>$status</option>";
+                 } ?>
+            </select>
+
+            <label for="missionType" class="filterLabelText">Type de mission :</label>
+            <select name="missionType" id="missionType">
+                <option value="">Tous les types de mission</option>
+                <?php foreach($missionTypes as $missionType) {
+                    $typeId = $missionType->getId();
+                    $type = $missionType->getType();
+                    echo "<option value='$typeId'>$type</option>";
+                 } ?>
+            </select>
+
+            <button type="submit">Filtrer</button>
+        </form>
+    </div>
+    <!-- tableau des missions -->
     <table>
         <tr>
             <th>Date de début</th>
@@ -75,7 +141,7 @@ $missionTypes = $missionTypeObj::getAllMissionTypes();
             <th></th>
         </tr>
 
-        <?php foreach ($missions as $mission) : ?>
+        <?php foreach ($missionsToShow as $mission) : ?>
             <tr>
                 <td>
                 <?php 

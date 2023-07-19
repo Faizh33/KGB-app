@@ -62,6 +62,17 @@ h1 {
     color: rgb(2, 59, 53);
 }
 
+/* Formulaire de filtrage */
+.filterBar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.2vw;
+}
+
+.filterLabelText {
+    font-size: 1vw;
+}
+
 /* Tableau des missions */
 table, th, td {
     border-bottom: 2px solid lightgray;
