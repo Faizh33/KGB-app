@@ -15,7 +15,7 @@
     <header id="dashboardHeader">
         <!-- Bouton de retour à l'accueil -->
         <div id="homeBtn">
-            <a href="../views/home.php" id="homeBtnLink">Accueil</a>
+            <a href="/" id="homeBtnLink">Accueil</a>
         </div>
     </header>
 
@@ -88,7 +88,7 @@
             <tr>
                 <td colspan="3">
                     <div class="dashBoardButton createButton dashboardButtonEdit" style="text-align: center;">
-                        <a href="dashboardEdit.php" class="dashboardButtonLink createButtonLink">
+                        <a href="/dashboard-edit" class="dashboardButtonLink createButtonLink">
                             Retour au tableau de bord
                         </a>
                     </div>
@@ -125,7 +125,7 @@
     </div>
     <!-- Bouton de retour arrière -->
     <div class="backButtonContainer" style="display:none;">
-        <a href="dashboardCreate.php" class="backButton">
+        <a href="/dashboard-create" class="backButton">
             Retour
         </a>
     </div>

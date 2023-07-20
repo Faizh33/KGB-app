@@ -42,7 +42,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
     <header id="dashboardHeader">
         <!-- Bouton de retour à l'accueil -->
         <div id="homeBtn">
-            <a href="../home.php" id="homeBtnLink">Accueil</a>
+            <a href="/" id="homeBtnLink">Accueil</a>
         </div>  
     </header>
 
@@ -51,7 +51,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
 
     <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] === true) : ?>
         <div class="plusItem">
-            <a href="../dashboardCreate.php" class="plusLink">
+            <a href="/dashboard-create" class="plusLink">
                 <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="rgb(186, 238, 233)" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
                 </svg>
@@ -144,7 +144,7 @@ $contacts = $contactObj::getAllContactsPagination($page, $perPage);
     </div>
     <!-- Bouton de retour arrière -->
     <div class="backButtonContainer">
-        <a href="../../views/dashboardEdit.php" class="backButton">
+        <a href="/dashboard-edit" class="backButton">
             Retour
         </a>
     </div>

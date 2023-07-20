@@ -61,7 +61,7 @@ $filteredMissions = $stmt->fetchAll(PDO::FETCH_OBJ);
 $_SESSION['filteredMissions'] = $filteredMissions;
 
 // Rediriger vers la page d'accueil avec les résultats de filtrage
-header('Location: ../views/home.php');
+header('Location: /');
 exit();
 }
 ?>

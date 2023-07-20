@@ -12,12 +12,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $adminObj = new Admin($pdo);
 
     if($adminObj->verifyCredentials($email, $password) == false) {
-        echo 'Identifiant ou Mot De Passe incorrect. Redirection vers la page de connexion.<br/>';
-        header("Refresh: 5; url=loginForm.php");
+        echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Identifiant ou Mot De Passe incorrect. <br> Redirection vers la page de connexion.</div><br/>";
+        echo "<script>
+                setTimeout(function() {
+                    window.location.href = '/login';
+                }, 3000);
+            </script>";
         exit();
     } else {
         $_SESSION['admin'] = true;
-        header("Location: ../../views/home.php");
+        header("Location: /");
         exit();
         }
     };

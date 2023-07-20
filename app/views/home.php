@@ -97,7 +97,7 @@ if (isset($_SESSION['filteredMissions'])) {
                 if (isset($_SESSION['admin'])) {
                     echo "<a href='../controllers/logControllers/logoutController.php' id='logLink' class='link'>Déconnexion</a>";
                 } else {
-                    echo "<a href='loginForm.php' id='logLink' class='link'>Se connecter</a>";
+                    echo "<a href='/login' id='logLink' class='link'>Se connecter</a>";
                 }
                 ?>
             </div>
@@ -199,7 +199,7 @@ if (isset($_SESSION['filteredMissions'])) {
                     echo $formattedStartDate;
                     ?>
                 </td>
-                <td><a href="missionDetails.php?mission=<?php echo $mission->getId(); ?>"><?php echo $mission->getTitle(); ?></a></td>
+                <td><a href="/mission-details?mission=<?php echo $mission->getId(); ?>"><?php echo $mission->getTitle(); ?></a></td>
                 <td><?php echo $mission->getCodeName(); ?></td>
                 <td>
                     <?php
@@ -238,7 +238,7 @@ if (isset($_SESSION['filteredMissions'])) {
     <?php if (isset($_SESSION['admin'])) { ?>
         <div class="adminButtonContainer">
             <div id="dashboardHomeButton" class="button adminButton" >
-                <a href='../views/dashboardEdit.php' id='dashboardLink' class="link">Tableau de bord</a>
+                <a href='/dashboard-edit' id='dashboardLink' class="link">Tableau de bord</a>
             </div>
         </div>
     <?php } ?>

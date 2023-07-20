@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<div style='color:rgb(3, 114, 103);font-style:italic'>Redirection dans 3 secondes</div>";
             echo "<script>
                 setTimeout(function() {
-                    window.location.href = '../../views/dashboardCreate.php';
+                    window.location.href = '/dashboard-create';
                 }, 3000);
             </script>";
             exit;
