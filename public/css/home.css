@@ -90,7 +90,15 @@ th, td {
 
 th {
     background-color: rgb(3, 114, 103);
+}
+
+.thLink {
     color: white;
+    text-decoration: none;
+}
+
+.thLink:hover {
+    text-decoration: underline;
 }
 
 td {
