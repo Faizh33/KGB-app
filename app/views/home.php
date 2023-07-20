@@ -243,6 +243,6 @@ if (isset($_SESSION['filteredMissions'])) {
         </div>
     <?php } ?>
     
-    <script src="../../public/js/confirmDelete.js"></script>
+    <script src="../../dist/confirmDelete.bundle.js"></script>
 </body>
 </html>

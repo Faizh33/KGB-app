@@ -417,7 +417,7 @@ $missions = $missionObj->getAllMissionsPagination($page, $perPage);
             Retour
         </a>
     </div>
-    <script src="../../../public/js/confirmDelete.js"></script>
-    <script src="../../../public/js/toggleEdit.js"></script>
+    <script src="../../../dist/confirmDelete.bundle.js"></script>
+    <script src="../../../dist/toggleEdit.bundle.js"></script>
 </body>
 </html>

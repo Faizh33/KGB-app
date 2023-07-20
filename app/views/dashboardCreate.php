@@ -131,6 +131,6 @@
     </div>
     <?php endif; ?>
 
-    <script src="../../public/js/dashboard.js"></script>
+    <script src="../../dist/dashboard.bundle.js"></script>
 </body>
 </html>
