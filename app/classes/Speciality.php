@@ -89,7 +89,7 @@ class Speciality
     }
 
     /**
-     * Récupère toutes les spécialités de la base de données et les insère dans la classe.
+     * Récupère toutes les spécialités de la base de données et met en place une pagination.
      *
      * @return array Un tableau contenant toutes les spécialités.
      */
