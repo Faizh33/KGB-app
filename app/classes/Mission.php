@@ -102,9 +102,32 @@ class Mission
     public static function getAllMissionsPagination(int $page, int $perPage): array
     {
         $offset = ($page - 1) * $perPage;
-
-        // Requête SQL pour récupérer toutes les missions
-        $query = "SELECT * FROM Missions LIMIT :offset, :perPage";
+    
+        // Obtenir le tri souhaité à partir du paramètre GET
+        $sort = isset($_GET['sort']) ? $_GET['sort'] : null;
+        $sortDirection = 'ASC'; // Direction de tri par défaut (croissant)
+    
+        // Options de tri
+        $validSortOptions = ['startDate', 'title', 'codeName', 'missionstatuses_id'];
+        $sortField = in_array($sort, $validSortOptions) ? $sort : null;
+    
+        if ($sortField) {
+            // Déterminer la direction de tri en fonction du paramètre URL
+            if (isset($_GET['sortDir']) && $_GET['sortDir'] === 'desc') {
+                $sortDirection = 'DESC';
+            }
+        }
+    
+        // Requête SQL pour récupérer toutes les missions avec pagination et tri
+        $query = "SELECT * FROM Missions";
+    
+        if ($sortField) {
+            // Ajouter le tri à la requête SQL
+            $query .= " ORDER BY $sortField $sortDirection";
+        }
+    
+        $query .= " LIMIT :offset, :perPage";
+    
         $stmt = self::$pdo->prepare($query);
         $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
         $stmt->bindValue(':perPage', $perPage, \PDO::PARAM_INT);
@@ -112,6 +135,62 @@ class Mission
 
         // Récupérer les données des missions
         $missionsData = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        // Obtenir le tri souhaité à partir du paramètre GET
+        $sort = isset($_GET['sort']) ? $_GET['sort'] : null;
+
+        // Options de tri
+        $validSortOptions = ['startDate', 'title', 'codeName', 'missionstatuses_id'];
+        $sortField = in_array($sort, $validSortOptions) ? $sort : null;
+        $sortDirection = 'ASC'; // Direction de tri par défaut (croissant)
+
+        if ($sortField) {
+            // Déterminer la direction de tri en fonction du paramètre URL
+            if (isset($_GET['sortDir']) && $_GET['sortDir'] === 'desc') {
+                $sortDirection = 'DESC';
+            }
+
+            // Fonction de comparaison pour le tri des missions
+            $compareMissions = function ($a, $b) use ($sortField, $sortDirection) {
+                switch ($sortField) {
+                    case 'startDate':
+                        $propA = $a->getStartDate();
+                        $propB = $b->getStartDate();
+                        break;
+                    case 'title':
+                        $propA = $a->getTitle();
+                        $propB = $b->getTitle();
+                        break;
+                    case 'codeName':
+                        $propA = $a->getCodeName();
+                        $propB = $b->getCodeName();
+                        break;
+                    case 'missionstatuses_id':
+                        $propA = $a->getMissionStatus()->getStatus();
+                        $propB = $b->getMissionStatus()->getStatus();
+                        break;
+                    default:
+                        $propA = null;
+                        $propB = null;
+                        break;
+                }
+
+                // Effectuer le tri en fonction de la direction spécifiée
+                if ($sortDirection === 'asc') {
+                    return $propA <=> $propB;
+                } else {
+                    return $propB <=> $propA;
+                }
+            };
+
+            // Trier les missions en utilisant la fonction de comparaison
+            usort($missionsData, function ($a, $b) use ($compareMissions) {
+                if (!is_object($a) || !is_object($b)) {
+                    return 0;
+                }
+                return $compareMissions($a, $b);
+            });
+        }
 
         $missions = [];
         foreach ($missionsData as $missionData) {

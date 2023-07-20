@@ -35,6 +35,18 @@ $totalItems = $missionObj::countMissions();
 // Calculer le nombre total de pages nécessaires
 $totalPages = ceil($totalItems / $perPage);
 
+// Obtenir le tri souhaité à partir du paramètre GET
+$sort = isset($_GET['sort']) ? $_GET['sort'] : null;
+
+// Obtenir le tri actuel (ascendant ou descendant) à partir du paramètre GET
+$currentSortDir = isset($_GET['sortDir']) ? $_GET['sortDir'] : 'asc';
+
+// Inverser la direction du tri pour le prochain clic sur l'en-tête de colonne
+$nextSortDir = $currentSortDir === 'asc' ? 'desc' : 'asc';
+
+// Définir le lien pour inverser le tri
+$sortDirLink = "?sort=$sort&sortDir=" . ($currentSortDir === 'asc' ? 'desc' : 'asc');
+
 // Récupération de toutes les missions et données en lien
 $missions = $missionObj::getAllMissionsPagination($page, $perPage);
 $specialities = $specialityObj::getAllSpecialities();
@@ -134,32 +146,69 @@ if (isset($_SESSION['filteredMissions'])) {
     <!-- tableau des missions -->
     <table>
         <tr>
-            <th>Date de début</th>
-            <th>Titre de la mission</th>
-            <th>Nom de code</th>
-            <th>Statut</th>
+            <th>
+                <a href="?sort=startDate&sortDir=<?php echo $sort === 'startDate' ? $nextSortDir : 'asc'; ?>" class="thLink">
+                    <?php
+                    if ($sort === 'startDate') {
+                        echo ($currentSortDir === 'asc') ? ' ▲' : ' ▼';
+                    }
+                    ?>
+                    Date de début
+                </a>
+            </th>
+            <th>
+                <a href="?sort=title&sortDir=<?php echo $sort === 'title' ? $nextSortDir : 'asc'; ?>" class="thLink">
+                    <?php
+                    if ($sort === 'title') {
+                        echo ($currentSortDir === 'asc') ? ' ▲' : ' ▼';
+                    }
+                    ?>
+                    Titre de la mission
+                </a>
+            </th>
+            <th>
+                <a href="?sort=codeName&sortDir=<?php echo $sort === 'codeName' ? $nextSortDir : 'asc'; ?>" class="thLink">
+                    <?php
+                    if ($sort === 'codeName') {
+                        echo ($currentSortDir === 'asc') ? ' ▲' : ' ▼';
+                    }
+                    ?>
+                    Nom de code
+                </a>
+            </th>
+            <th>
+                <a href="?sort=missionstatuses_id&sortDir=<?php echo $sort === 'missionstatuses_id' ? $nextSortDir : 'asc'; ?>" class="thLink">
+                    <?php
+                    if ($sort === 'missionstatuses_id') {
+                        echo ($currentSortDir === 'asc') ? ' ▲' : ' ▼';
+                    }
+                    ?>
+                    Statut
+                </a>
+            </th>
             <th></th>
         </tr>
 
         <?php foreach ($missionsToShow as $mission) : ?>
             <tr>
                 <td>
-                <?php 
+                    <?php 
                     $startDate = $mission->getStartDate();
                     $startDateObj = DateTime::createFromFormat('Y-m-d', $startDate);
                     $formattedStartDate = $startDateObj->format('d/m/Y');
                     echo $formattedStartDate;
-                ?></td>
+                    ?>
+                </td>
                 <td><a href="missionDetails.php?mission=<?php echo $mission->getId(); ?>"><?php echo $mission->getTitle(); ?></a></td>
                 <td><?php echo $mission->getCodeName(); ?></td>
                 <td>
-                <?php
+                    <?php
                     $missionStatus = MissionStatus::getMissionStatusById($mission->getMissionStatus()->getId());
                     echo $missionStatus->getStatus();
-                ?>
+                    ?>
                 </td>
                 <td>
-                <?php
+                    <?php
                     $missionId = $mission->getId();
                     if(isset($_SESSION['admin'])) {
                         echo "<a href='../controllers/deleteControllers/deleteMissionController.php?mission=" . $missionId . "' id='deleteButton' class='' onclick='return confirmDelete();'>
@@ -169,7 +218,7 @@ if (isset($_SESSION['filteredMissions'])) {
                                 <span class='tooltip'>Supprimer</span>
                             </a>";
                     }
-                ?>
+                    ?>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -182,7 +231,7 @@ if (isset($_SESSION['filteredMissions'])) {
         $currentPage = isset($_GET['page']) ? $_GET['page'] : 1; // Définit la valeur par défaut de la page à 1 si elle n'est pas définie dans l'URL
         for ($i = 1; $i <= $totalPages; $i++) {
             $activeClass = ($currentPage == $i) ? 'active' : '';
-        ?>
+            ?>
             <a href="?page=<?php echo $i; ?>" class="paginationLink <?php echo $activeClass; ?>"><?php echo $i; ?></a>
         <?php } ?>
     </div>
