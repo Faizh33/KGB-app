@@ -28,7 +28,7 @@ if ($request === '/') {
     include('app/views/edit-table/editTargetTable.php');
 } elseif ($request === '/dashboard-edit/type') {
     include('app/views/edit-table/editTypeTable.php');
-} elseif ($request === '/dashboard-create') {
+} elseif ($request === '/dashboardCreate') {
     include('app/views/dashboardCreate.php');
 } else {
     // Gérer les pages d'erreur ou autres actions

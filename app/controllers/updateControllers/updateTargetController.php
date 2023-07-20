@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<div style='color:rgb(3, 114, 103);font-style:italic'>Redirection dans 3 secondes</div>";
         echo "<script>
             setTimeout(function() {
-                window.location.href = '/dashboard-edit';
+                window.location.href = '../../views/dashboardEdit.php';
             }, 3000);
         </script>";
         exit;
