@@ -84,12 +84,6 @@ $specialities = $specialityObj::getAllSpecialitiesPagination($page, $perPage);
     <?php } endif; ?>
     <!-- Liens de la pagination -->
     <div class="pagination">
-        <?php for ($i = 1; $i <= $totalPages; $i++) { ?>
-            <a href="?page=<?php echo $i; ?>" class="paginationLink"><?php echo $i; ?></a>
-        <?php } ?>
-    </div>
-    <!-- Bouton de retour arrière -->
-    <div class="pagination">
         <?php
         $currentPage = isset($_GET['page']) ? $_GET['page'] : 1; // Définit la valeur par défaut de la page à 1 si elle n'est pas définie dans l'URL
         for ($i = 1; $i <= $totalPages; $i++) {
@@ -97,6 +91,12 @@ $specialities = $specialityObj::getAllSpecialitiesPagination($page, $perPage);
         ?>
             <a href="?page=<?php echo $i; ?>" class="paginationLink <?php echo $activeClass; ?>"><?php echo $i; ?></a>
         <?php } ?>
+    </div>
+    <!-- Bouton de retour arrière -->
+    <div class="backButtonContainer">
+        <a href="../../views/dashboardEdit.php" class="backButton">
+            Retour
+        </a>
     </div>
     <script src="../../../dist/confirmDelete.bundle.js"></script>
     <script src="../../../dist/toggleEdit.bundle.js"></script>
