@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $agentsId = ($_POST["agents"]);
         $contactsId = ($_POST["contacts"]);
         $targetsId = ($_POST["targets"]);
-        $safeHousesId = ($_POST["safeHouses"]);     
+        $safeHousesId = ($_POST["safeHouses"]); 
 
         //Récupère les objets de spécialité, statut de mission et type de mission à partir de leurs identifiants
         $speciality = $specialityObj::getSpecialityById($specialityId);
@@ -103,11 +103,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Vérification des contraintes
         $constraintsSatisfied = true;
 
+        // Vérification de la contrainte : la date de début doit être avant la date de fin
+        if (strtotime($startDate) > strtotime($endDate)) {
+            $constraintsSatisfied = false;
+            echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Erreur : La date de début ne peut pas être après la date de fin.</div>";
+        }
+
         // Vérification de la contrainte : les cibles ne peuvent pas avoir la même nationalité que les agents
         foreach ($targetsNationalityId as $targetNationalityId) {
             if (in_array($targetNationalityId, $agentsNationalityId)) {
                 $constraintsSatisfied = false;
-                echo "Erreur : Les cibles ne peuvent pas avoir la même nationalité que les agents.";
+                echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Erreur : Les cibles ne peuvent pas avoir la même nationalité que les agents.</div>";
                 break;
             }
         }
@@ -115,14 +121,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Vérification de la contrainte : les contacts sont obligatoirement de la nationalité du pays de la mission
         if (!in_array($country->getId(), $contactsNationalityId)) {
             $constraintsSatisfied = false;
-            echo "Erreur : Les contacts doivent être de la nationalité du pays de la mission.";
+            echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Erreur : Les contacts doivent être de la nationalité du pays de la mission.</div>";
         }
 
         // Vérification de la contrainte : la planque est obligatoirement dans le même pays que la mission
         foreach ($safeHousesCountryId as $safeHouseCountryId) {
             if ($safeHouseCountryId !== $country->getId()) {
                 $constraintsSatisfied = false;
-                echo "Erreur : La planque doit être dans le même pays que la mission.";
+                echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Erreur : La planque doit être dans le même pays que la mission.</div>";
                 break;
             }
         }
@@ -138,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         if (!$hasRequiredSpeciality) {
             $constraintsSatisfied = false;
-            echo "Erreur : Il faut assigner au moins 1 agent disposant de la spécialité requise.";
+            echo "<div style='font-weight:bold;color:rgb(3, 114, 103)'>Erreur : Il faut assigner au moins 1 agent disposant de la spécialité requise.</div>";
         }
 
         // Si toutes les contraintes sont satisfaites, ajoute la mission à la base de données
