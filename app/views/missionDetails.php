@@ -59,7 +59,6 @@ if (isset($_GET['mission'])) {
     // Ajout de la mission au cache
     $missions[$mission->getId()] = $mission;
 }
-
 ?>
 
 <!DOCTYPE html>
