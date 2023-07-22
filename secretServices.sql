@@ -318,5 +318,5 @@ VALUES
 
 INSERT INTO Admins
 VALUES 
-    ('7203ffdd-10dd-11ee-8afc-0a0027000006', 'Clavet', 'Christian', 'christian.clavet@kgb.fr', 'G8km7s4]-UTR7[{k', '2023-06-22'),
-    ('7204086f-10dd-11ee-8afc-0a0027000006', 'Gosselin', 'Arlette', 'arlette.gosselin@kgb.fr', '3Zn}w#6ya37GQ(', '2023-06-23');
+    ('7203ffdd-10dd-11ee-8afc-0a0027000006', 'Clavet', 'Christian', 'christian.clavet@kgb.fr', '$2y$10$1nDx1ICZJ7ughF/ucyniq.abbJzquGBv0G8g2mDeg39w1N0eGPqCm', '2023-06-22'),
+    ('7204086f-10dd-11ee-8afc-0a0027000006', 'Gosselin', 'Arlette', 'arlette.gosselin@kgb.fr', '$2y$10$p0OvRKYfpyV1Yhf3PQbGde8.TQoifq1oQtToTzfNv42t8HSttTu3e', '2023-06-23');

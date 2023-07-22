@@ -48,11 +48,14 @@ class Admin
     public function verifyCredentials(string $email, string $password): bool
     {
         foreach (self::$admins as $adminData) {
-            if ($adminData['email'] === $email && $adminData['password'] === $password) {
-                return true;
+            if ($adminData['email'] === $email) {
+                // Utilisez password_verify() pour vérifier si le mot de passe saisi correspond au hachage stocké.
+                if (password_verify($password, $adminData['password'])) {
+                    return true;
+                }
             }
         }
-
+    
         return false;
-    }
+    }    
 }
