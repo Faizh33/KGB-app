@@ -4,6 +4,7 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 require_once '../../config/database.php';
+require_once '../../url.php';
 require_once '../classes/Mission.php';
 require_once '../classes/Speciality.php';
 require_once '../classes/MissionStatus.php';
@@ -95,9 +96,9 @@ if (isset($_SESSION['filteredMissions'])) {
             <div id="logButton" class="button">
                 <?php
                 if (isset($_SESSION['admin'])) {
-                    echo "<a href='../controllers/logControllers/logoutController.php' id='logLink' class='link'>Déconnexion</a>";
+                    echo "<a href='{$base_url}app/controllers/logControllers/logoutController.php' id='logLink' class='link'>Déconnexion</a>";
                 } else {
-                    echo "<a href='loginForm.php' id='logLink' class='link'>Se connecter</a>";
+                    echo "<a href='{$base_url}app/views/loginForm.php' id='logLink' class='link'>Se connecter</a>";
                 }
                 ?>
             </div>
@@ -199,7 +200,11 @@ if (isset($_SESSION['filteredMissions'])) {
                     echo $formattedStartDate;
                     ?>
                 </td>
-                <td><a href="missionDetails.php?mission=<?php echo $mission->getId(); ?>"><?php echo $mission->getTitle(); ?></a></td>
+                <td>
+                    <a href="<?php echo $base_url; ?>app/views/missionDetails.php?mission=<?php echo $mission->getId(); ?>">
+                        <?php echo $mission->getTitle(); ?>
+                    </a>
+                </td>
                 <td><?php echo $mission->getCodeName(); ?></td>
                 <td>
                     <?php
