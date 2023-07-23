@@ -9,7 +9,8 @@
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="../../public/css/dashboard.css">
-    <title>Tableau de bord</title>
+    <title>Tableau de bord d'édition</title>
+    <meta description="Tableau de bord des administrateurs du KGB permettant de visualiser, modifier et supprimer des informations en base de données">
 </head>
 <body>
     <header id="dashboardHeader">

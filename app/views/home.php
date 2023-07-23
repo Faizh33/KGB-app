@@ -89,6 +89,7 @@ if (isset($_SESSION['filteredMissions'])) {
     <link rel="stylesheet" href="../../public/css/home.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" type="text/javascript"></script>
     <title>Missions du KGB</title>
+    <meta description="Bienvenue sur la page d'accueil de l'agence du KGB où se trouve la liste de toutes les missions du KGB, accessible à tous">
 </head>
 <body>
     <header id="homeHeader">
@@ -212,19 +213,6 @@ if (isset($_SESSION['filteredMissions'])) {
                     echo $missionStatus->getStatus();
                     ?>
                 </td>
-                <td>
-                    <?php
-                    $missionId = $mission->getId();
-                    if(isset($_SESSION['admin'])) {
-                        echo "<a href='../controllers/deleteControllers/deleteMissionController.php?mission=" . $missionId . "' id='deleteButton' class='' onclick='return confirmDelete();'>
-                                <svg xmlns='http://www.w3.org/2000/svg' width='1.5vw' height='1.5vw' fill='currentColor' class='bi bi-trash3-fill' viewBox='0 0 16 16'>
-                                    <path d='M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z'/>
-                                </svg>
-                                <span class='tooltip'>Supprimer</span>
-                            </a>";
-                    }
-                    ?>
-                </td>
             </tr>
         <?php endforeach; ?>
         <!-- Fermer la connexion -->
@@ -243,11 +231,10 @@ if (isset($_SESSION['filteredMissions'])) {
     <?php if (isset($_SESSION['admin'])) { ?>
         <div class="adminButtonContainer">
             <div id="dashboardHomeButton" class="button adminButton" >
-                <a href='../views/dashboardEdit.php' id='dashboardLink' class="link">Tableau de bord</a>
+                <a href='<?php echo $base_url; ?>app/views/dashboardEdit.php' id='dashboardLink' class="link">Tableau de bord</a>
             </div>
         </div>
     <?php } ?>
-    
-    <script src="../../dist/confirmDelete.bundle.js"></script>
+
 </body>
 </html>

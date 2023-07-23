@@ -36,6 +36,7 @@ $safeHouses = $safeHouseObj::getAllSafeHousesPagination($page, $perPage);
     <link rel="stylesheet" href="../../../public/css/dashboard.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" type="text/javascript"></script>
     <title>Planques</title>
+    <meta description="Tableau de modification des planques du KGB présentes en base de données, réservé à l'administrateur">
 </head>
 <body>
     <header id="dashboardHeader">

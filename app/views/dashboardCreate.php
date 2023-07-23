@@ -9,7 +9,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../public/css/dashboard.css">
-    <title>Tableau de bord</title>
+    <title>Tableau de bord de création</title>
+    <meta description="Tableau de bord des administrateurs du KGB permettant de créer de nouvelles entrées en base de données">
 </head>
 <body>
     <header id="dashboardHeader">

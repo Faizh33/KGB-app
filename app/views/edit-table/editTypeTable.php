@@ -32,7 +32,8 @@ $missionTypes = $missionTypeObj::getAllMissionTypesPagination($page, $perPage);
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../../../public/css/dashboard.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" type="text/javascript"></script>
-    <title>Types</title>
+    <title>Types de mission</title>
+    <meta description="Tableau de modification des types de missions du KGB présents en base de données, réservé à l'administrateur">
 </head>
 <body>
     <header id="dashboardHeader">

@@ -33,6 +33,7 @@ $countriesNationalities = $countryNationalityObj::getAllCountriesNationalitiesPa
     <link rel="stylesheet" href="../../../public/css/dashboard.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js" type="text/javascript"></script>
     <title>Pays/Nationalités</title>
+    <meta description="Tableau de modification des associations pays/nationalités du KGB présents en base de données, réservé à l'administrateur">
 </head>
 <body>
     <header id="dashboardHeader">

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../public/css/loginForm.css">
     <title>Se connecter</title>
+    <meta description="Connexion à un compte administrateur sur le site du KGB">
 </head>
 <body>
     <div class="container">

@@ -68,6 +68,7 @@ if (isset($_GET['mission'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../public/css/editTable.css">
     <title>Détail de la mission</title>
+    <meta description="Tableau d'affichage des détails d'une mission du KGB spécifique, accessible à tous">
 </head>
 <body>
     <h1>Détail de la mission</h1>
