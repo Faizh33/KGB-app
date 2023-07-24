@@ -75,10 +75,10 @@ if (isset($_SESSION['filteredMissions'])) {
 
     // Supprimer la variable de session pour ne pas conserver les anciennes données filtrées
     unset($_SESSION['filteredMissions']);
-} else {
+    } else {
     // Utiliser toutes les missions si les données filtrées n'existent pas
     $missionsToShow = $missions;
-}
+    }
 ?>
 
 <!DOCTYPE html>
@@ -108,7 +108,7 @@ if (isset($_SESSION['filteredMissions'])) {
     <h1>Liste des missions du KGB</h1>
         <!-- Formulaire de filtrage -->
         <div class="filterBar">
-        <form method="post" action="../controllers/filterController.php">
+        <form method="post" action="<?php echo $base_url; ?>app/controllers/filterController.php">
             <label for="country" class="filterLabelText">Pays :</label>
             <select name="country" id="country">
                 <option value="">Tous les pays</option>
