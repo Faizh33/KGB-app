@@ -14,7 +14,7 @@ $missionStatusId = $_POST['missionStatus'] ?? '';
 $missionTypeId = $_POST['missionType'] ?? '';
 
 // Construction de la requête SQL en fonction des critères de filtrage
-$query = "SELECT * FROM missions WHERE 1=1";
+$query = "SELECT * FROM Missions WHERE 1=1";
 
 if (!empty($countryId)) {
     $query .= " AND countrynationality_id = :countryId";
